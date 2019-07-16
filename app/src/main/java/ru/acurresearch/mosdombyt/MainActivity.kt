@@ -14,8 +14,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.content_x.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,16 +59,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //navView.setNavigationItemSelectedListener(this)
 
-        save_phone_btn.setOnClickListener {
-            App.prefs.currName = ed_txt_name.text.toString()
-            App.prefs.currPhone = ed_txt_phone.text.toString()
-            startActivity(Intent(createIntentForSellReceiptEdit()))
+        //save_phone_btn.setOnClickListener {
+        //    App.prefs.currName = ed_txt_name.text.toString()
+        //    App.prefs.currPhone = ed_txt_phone.text.toString()
+        //    startActivity(Intent(createIntentForSellReceiptEdit()))
+        //}
+        //skip_tel_btn.setOnClickListener {
+        //    startActivity(Intent(createIntentForSellReceiptEdit()))
+        //}
 
-        }
-        skip_tel_btn.setOnClickListener {
-            startActivity(Intent(createIntentForSellReceiptEdit()))
-        }
+        val listItem = listOf("One", "Two","One", "Two","One", "Two","One", "Two","One", "Two","One", "Two","One", "Two","One", "Two","One", "Two","One", "Two","One", "Two")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listItem)
+        goods_list_view.adapter = adapter
+        //val adapter = ArrayAdapter<String>(
+        //    this,
+        //    android.R.layout.simple_list_item_1, android.R.id.text1, listItem
+        //)
+        goods_list_view.setAdapter(adapter)
 
+
+        //val layoutManager = LinearLayoutManager(this)
+        //layoutManager.orientation = LinearLayoutManager.VERTICAL
+        //order_list_view.layoutManager = layoutManager
+        //var adapter= OrderViewAdapter(listItem, this)
+        //order_list_view.adapter = adapter
 
 
 
