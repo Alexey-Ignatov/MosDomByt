@@ -1,4 +1,4 @@
-package ru.acurresearch.mosdombyt.services;
+package ru.acurresearch.mosdombyt.Services;
 
 import android.content.Intent;
 import android.os.RemoteException;
@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-import ru.acurresearch.mosdombyt.MainActivity;
+import ru.acurresearch.mosdombyt.Activities.MainActivity;
 import ru.evotor.framework.core.IntegrationService;
 import ru.evotor.framework.core.action.event.receipt.discount.ReceiptDiscountEvent;
 import ru.evotor.framework.core.action.event.receipt.discount.ReceiptDiscountEventProcessor;

@@ -1,24 +1,22 @@
-package ru.acurresearch.mosdombyt
+package ru.acurresearch.mosdombyt.Services
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.os.RemoteException
 import android.util.Log
 import android.widget.Toast
-import ru.acurresearch.mosdombyt.services.WorkService
+import ru.acurresearch.mosdombyt.Activities.OrderFinalActivity
+import ru.acurresearch.mosdombyt.App.App
+import ru.acurresearch.mosdombyt.Check
 
-import ru.evotor.framework.core.action.event.cash_drawer.CashDrawerOpenEvent
-import ru.evotor.framework.core.action.event.cash_operations.CashInEvent
-import ru.evotor.framework.core.action.event.cash_operations.CashOutEvent
-import ru.evotor.framework.core.action.event.inventory.ProductCardOpenedEvent
 import ru.evotor.framework.core.action.event.receipt.position_edited.PositionAddedEvent
 import ru.evotor.framework.core.action.event.receipt.position_edited.PositionEditedEvent
 import ru.evotor.framework.core.action.event.receipt.position_edited.PositionRemovedEvent
 import ru.evotor.framework.core.action.event.receipt.receipt_edited.ReceiptClearedEvent
 import ru.evotor.framework.core.action.event.receipt.receipt_edited.ReceiptClosedEvent
 import ru.evotor.framework.core.action.event.receipt.receipt_edited.ReceiptOpenedEvent
+import ru.evotor.framework.receipt.ReceiptApi
 
 /**
  * Получение событий об открытии чека, обновлении базы продуктов или результате изменения чека
@@ -117,7 +115,18 @@ class GlobalReceiver : BroadcastReceiver() {
                         action + "\nData: " + ReceiptClosedEvent.create(bundle)!!.receiptUuid,
                         Toast.LENGTH_SHORT
                     ).show()
-                    val intent = Intent(context, PrintOrderLabel::class.java)
+
+                    var evoReceipt = ReceiptApi.getReceipt(context, ReceiptClosedEvent.create(bundle)!!.receiptUuid)
+                    val checkTocheck = Check.fromEvoReceipt(evoReceipt!!)
+                    if (checkTocheck.position[0].uuid == App.prefs.lastOrder.positionsList[0].uuid){
+                        Toast.makeText(context, "Нашелся!!!!", Toast.LENGTH_SHORT).show()
+                    }
+
+
+
+
+
+                    val intent = Intent(context, OrderFinalActivity::class.java)
                     intent.putExtra(WorkService.EXTRA_NAME_OPERATION, "sell")
 
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

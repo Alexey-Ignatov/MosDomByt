@@ -1,13 +1,23 @@
 package ru.acurresearch.mosdombyt
 
+import android.app.Activity
 import android.util.Log
 import com.google.gson.JsonObject
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import ru.acurresearch.mosdombyt.App.App
+import ru.evotor.framework.core.IntegrationException
+import ru.evotor.framework.core.IntegrationManagerFuture
+import ru.evotor.framework.core.action.command.open_receipt_command.OpenSellReceiptCommand
+import ru.evotor.framework.core.action.event.receipt.changes.position.PositionAdd
+import ru.evotor.framework.inventory.ProductItem
+import ru.evotor.framework.navigation.NavigationApi
 import ru.evotor.framework.receipt.Position
 import ru.evotor.framework.receipt.Receipt
 import ru.evotor.framework.receipt.ReceiptApi
+import java.io.IOException
+import java.math.BigDecimal
 
 import java.util.*
 import java.util.ArrayList
@@ -100,6 +110,17 @@ data class CheckPostition(@SerializedName("pos_uuid")     val uuid: String,
                           @SerializedName("product_name") val name: String,
                           @SerializedName("quantity")     val quantity: Double,
                           @SerializedName("price")        val price: Double){
+    fun toEvotorPositionAdd(): PositionAdd{
+        return   PositionAdd(Position.Builder.newInstance(
+            uuid,
+            productUUID,
+            name,
+            "шт",
+            0,
+            BigDecimal(quantity),
+            BigDecimal(price)
+        ).build())
+    }
 
     companion object {
         fun fromEvoPosition(evoPos : Position ): CheckPostition{
@@ -111,7 +132,111 @@ data class CheckPostition(@SerializedName("pos_uuid")     val uuid: String,
         }
     }
 
+
 }
+
+
+
+
+data class Client(@SerializedName("name") val name: String?,
+                  @SerializedName("phone") val phone: String?)
+
+
+
+
+
+
+data class ServiceItemCustom(@SerializedName("product_uuid") val productUUID: String?,
+                             @SerializedName("product_name") val name: String,
+                             @SerializedName("default_price") val defPrice: Double?,
+                             @SerializedName("default_expires_in") val defExpiresIn: Int?){
+    companion object{
+        fun fromEvoProductItem(evoPos : ProductItem , defPrice: Double? = null,defExpiresIn: Int?  ): ServiceItemCustom{
+            return ServiceItemCustom(evoPos.uuid, evoPos.name, defPrice,defExpiresIn )
+        }
+
+    }
+}
+
+
+
+data class OrderPostition(@SerializedName("uuid")          val uuid: String,
+                          @SerializedName("serv_item")     val serviceItem: ServiceItemCustom,
+                          @SerializedName("quantity")      val quantity: Double,
+                          @SerializedName("price")         val price: Double,
+                          @SerializedName("expires_in")    val expDate: Date?){
+    fun toEvotorPositionAdd(): PositionAdd{
+        return   PositionAdd(Position.Builder.newInstance(
+            uuid,
+            null,
+            serviceItem.name,
+            "шт",
+            0,
+            BigDecimal(quantity),
+            BigDecimal(price)
+        ).build())
+    }
+}
+
+
+
+data class Order(@SerializedName("id")             val uuid: String,
+                 @SerializedName("positions_list") var positionsList: ArrayList<OrderPostition>,
+                 @SerializedName("custom_price")   var custom_price: Double?,
+                 @SerializedName("client")         var client: Client?
+                 ) {
+
+    @SerializedName("is_paid")
+    var isPaid:Boolean = false
+
+
+    val price: Double
+        get() = custom_price ?: positionsList.map { it.price*it.quantity }.sum()
+
+
+    fun realize(activity: Activity){
+        val changes = ArrayList<PositionAdd>()
+        var listItem = ArrayList(positionsList.map { it.toEvotorPositionAdd() })
+        listItem.map { changes.add(it) }
+
+        OpenSellReceiptCommand(changes, null).process(
+            activity
+        ) { integrationManagerFuture ->
+            try {
+                val result = integrationManagerFuture.result
+                val tmp = result.data
+                if (result.type == IntegrationManagerFuture.Result.Type.OK) {
+                    //Чтобы открыть другие документы используйте методы NavigationApi.
+                    activity.startActivity(NavigationApi.createIntentForSellReceiptEdit())
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: IntegrationException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+    companion object {
+        fun fromEvoPosition(evoPos : Position ): CheckPostition{
+            return CheckPostition(evoPos.getUuid(),
+                evoPos.getProductUuid(),
+                evoPos.getName(),
+                evoPos.getQuantity().toDouble(),
+                evoPos.getPrice().toDouble())
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
                                //val productCode: String,
                                //)
 // api fields fields = ('pos_uuid', 'product_uuid', 'product_name', 'quantity', 'price')

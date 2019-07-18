@@ -1,38 +1,17 @@
-package ru.acurresearch.mosdombyt
+package ru.acurresearch.mosdombyt.Services
 
 
-import android.content.Intent
-import android.content.res.AssetManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.RemoteException
-import android.widget.Toast
-import ru.acurresearch.mosdombyt.services.WorkService.EXTRA_NAME_OPERATION
 
-import java.io.IOException
-import java.io.InputStream
 import java.util.ArrayList
 import java.util.HashMap
 
-import ru.evotor.devices.commons.printer.printable.IPrintable
-import ru.evotor.devices.commons.printer.printable.PrintableBarcode
-import ru.evotor.devices.commons.printer.printable.PrintableImage
-import ru.evotor.devices.commons.printer.printable.PrintableText
 import ru.evotor.framework.core.IntegrationService
 import ru.evotor.framework.core.action.event.receipt.changes.receipt.print_extra.SetPrintExtra
 import ru.evotor.framework.core.action.event.receipt.print_extra.PrintExtraRequiredEvent
 import ru.evotor.framework.core.action.event.receipt.print_extra.PrintExtraRequiredEventProcessor
 import ru.evotor.framework.core.action.event.receipt.print_extra.PrintExtraRequiredEventResult
 import ru.evotor.framework.core.action.processor.ActionProcessor
-import ru.evotor.framework.receipt.ExtraKey
-import ru.evotor.framework.receipt.Position
-import ru.evotor.framework.receipt.Receipt
-import ru.evotor.framework.receipt.ReceiptApi
-import ru.evotor.framework.receipt.print_extras.PrintExtraPlacePositionAllSubpositionsFooter
-import ru.evotor.framework.receipt.print_extras.PrintExtraPlacePositionFooter
-import ru.evotor.framework.receipt.print_extras.PrintExtraPlacePrintGroupHeader
-import ru.evotor.framework.receipt.print_extras.PrintExtraPlacePrintGroupSummary
-import ru.evotor.framework.receipt.print_extras.PrintExtraPlacePrintGroupTop
 
 /**
  * Печать внутри кассового чека возврата

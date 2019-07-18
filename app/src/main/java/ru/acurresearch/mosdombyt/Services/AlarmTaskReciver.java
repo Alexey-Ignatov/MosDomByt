@@ -1,4 +1,4 @@
-package ru.acurresearch.mosdombyt.services;
+package ru.acurresearch.mosdombyt.Services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

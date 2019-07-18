@@ -1,4 +1,4 @@
-package ru.acurresearch.mosdombyt
+package ru.acurresearch.mosdombyt.Services
 
 import android.os.RemoteException
 import android.util.Log

@@ -1,10 +1,11 @@
-package ru.acurresearch.mosdombyt
+package ru.acurresearch.mosdombyt.App
 
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.acurresearch.mosdombyt.Constants
 
 
 object ApiProvider {
