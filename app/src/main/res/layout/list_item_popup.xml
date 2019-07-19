@@ -10,7 +10,7 @@
             android:id="@+id/item_list_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="#3B4CAF50"
+            app:cardBackgroundColor="#889CCC65"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -29,8 +29,7 @@
         <activity android:name=".Activities.MainActivity">
         </activity>
         <activity
-                android:name=".Activities.SelectPositionActivity"
-                android:theme="@style/AppTheme.CustomTheme">
+                android:name=".Activities.SelectPositionActivity">
         </activity>
         <activity android:name=".Activities.OrderFinalActivity">
         </activity>
