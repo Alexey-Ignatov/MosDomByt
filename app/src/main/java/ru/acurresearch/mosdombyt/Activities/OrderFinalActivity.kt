@@ -1,13 +1,15 @@
 package ru.acurresearch.mosdombyt.Activities
 
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import kotlinx.android.synthetic.main.activity_print_order_label.*
+import android.view.View
+import kotlinx.android.synthetic.main.activity_order_final.*
 import ru.acurresearch.mosdombyt.Adapters.OrderFinalViewAdapter
-import ru.acurresearch.mosdombyt.Adapters.OrderViewAdapter
 import ru.acurresearch.mosdombyt.App.App
+import ru.acurresearch.mosdombyt.Constants
 import ru.acurresearch.mosdombyt.Order
 import ru.acurresearch.mosdombyt.R
 import ru.evotor.devices.commons.ConnectionWrapper
@@ -20,25 +22,19 @@ import ru.evotor.devices.commons.services.IScalesServiceWrapper
 
 
 class OrderFinalActivity : AppCompatActivity() {
-    lateinit var lastOrder: Order
-
+    lateinit var currOrder: Order
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_print_order_label)
-        lastOrder = App.prefs.lastOrder
+        setContentView(R.layout.activity_order_final)
 
+        var intent = getIntent()
+        currOrder = Order.fromJson(intent.getStringExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL))
         initUi()
+        initListeners()
 
 
-        print_label_btn.setOnClickListener {
-            initPrinter()
-            print("#######   #####    ######  \r\n##   ##  ##   ##      ##   \r\n    ##       ###     ##    \r\n   ##      ####     ####   \r\n  ##      ####         ##  \r\n  ##     ###      ##   ##  \r\n  ##     #######   #####   \r\n                           \r\n")
-
-
-            refreshCart()
-            finish()
-
-        }
+        val suggestedAction = currOrder.suggestAction()
+        updateUIByAction(suggestedAction)
 
 
 
@@ -48,21 +44,76 @@ class OrderFinalActivity : AppCompatActivity() {
 
     }
 
+    fun initListeners(){
+        order_final_pay_btn.setOnClickListener {
+            currOrder.realize(this)
+            orderSendFinishEtc()
+        }
+
+        order_final_close_order_btn.setOnClickListener{
+            currOrder.status = Constants.OrderStatus.CLOSED
+            orderSendFinishEtc()
+
+        }
+
+        order_final_client_print_btn.setOnClickListener{
+            initPrinter()
+            print("#######   #####    ######  \r\n##   ##  ##   ##      ##   \r\n    ##       ###     ##    \r\n   ##      ####     ####   \r\n  ##      ####         ##  \r\n  ##     ###      ##   ##  \r\n  ##     #######   #####   \r\n                           \r\n")
+            orderSendFinishEtc()
+        }
+
+    }
+
+    fun orderSendFinishEtc(){
+        refreshCart()
+        finish()
+    }
+
+    fun updateUIByAction(suggestedAction: String){
+        if (suggestedAction == Constants.OrderSuggestedAction.PAY){
+            order_final_pay_btn.visibility = View.VISIBLE
+            order_final_close_order_btn.visibility = View.INVISIBLE
+            order_final_client_print_btn.visibility = View.INVISIBLE
+        }
+        if (suggestedAction == Constants.OrderSuggestedAction.CLOSE){
+            order_final_pay_btn.visibility = View.INVISIBLE
+            order_final_close_order_btn.visibility = View.VISIBLE
+            order_final_client_print_btn.visibility = View.INVISIBLE
+        }
+        if (suggestedAction == Constants.OrderSuggestedAction.CREATE){
+            order_final_pay_btn.visibility = View.INVISIBLE
+            order_final_close_order_btn.visibility = View.INVISIBLE
+            order_final_client_print_btn.visibility = View.VISIBLE
+        }
+        if (suggestedAction == Constants.OrderSuggestedAction.NOTHING){
+            order_final_pay_btn.visibility = View.INVISIBLE
+            order_final_close_order_btn.visibility = View.INVISIBLE
+            order_final_client_print_btn.visibility = View.INVISIBLE
+        }
+    }
+
     fun refreshCart(){
         App.prefs.selectedPositions = listOf()
     }
 
 
     fun initUi(){
-        order_client_name_holder.text = lastOrder.client!!.name
-        order_client_phone_holder.text = lastOrder.client!!.phone
+        order_client_name_holder.text = currOrder.client!!.name
+        order_client_phone_holder.text = currOrder.client!!.phone
+        order_final_total_price.text = currOrder.price.toString() + " руб."
+        if (currOrder.isPaid ){
+            order_is_paid_text.text = "ОПЛАЧЕН"
+            order_is_paid_text.setTextColor(Color.GREEN)
+        }
+
+
     }
 
     fun initPosistionsListView(){
         var layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         order_list_final.layoutManager = layoutManager
-        var adapter= OrderFinalViewAdapter(lastOrder.positionsList, this)
+        var adapter= OrderFinalViewAdapter(currOrder.positionsList, this)
         order_list_final.adapter = adapter
 
 

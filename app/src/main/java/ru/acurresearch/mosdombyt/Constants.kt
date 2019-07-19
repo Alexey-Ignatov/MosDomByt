@@ -9,10 +9,32 @@ object Constants {
     const val PREFS_SELECTED_POSITIONS = "PREFS_SELECTED_POSITIONS"
     const val PREFS_ALL_ALLOWED_PRODUCTS = "PREFS_ALL_ALLOWED_PRODUCTS"
     const val PREFS_PROD_IN_PROD_POP_UP_PRICE = "PREFS_PROD_IN_PROD_POP_UP_PRICE"
-    const val INENT_PAY_TYPE_PREPAY = "INENT_PAY_TYPE_PREPAY"
-    const val INENT_PAY_TYPE_POSTPAY = "INENT_PAY_TYPE_POSTPAY"
+    const val INTENT_PAY_TYPE_FIELD = "INENT_PAY_TYPE_FIELD"
     const val PREFS_LAST_ORDER = "PREFS_LAST_ORDER"
+    const val INTENT_ORDER_TO_ORDER_FINAL = "INTENT_ORDER_TO_ORDER_FINAL"
     const val PREFS_ALL_TELS_LIST = "PREFS_ALL_TELS_LIST"
     const val NUMBER_TELS_TO_SHOW = 5
     const val PREFS_COMPLETED_TELS_LIST = "PREFS_COMPLETED_TELS_LIST"
+
+
+    object BillingType {
+        const val PREPAY = "PREPAY"
+        const val POSTPAY = "POSTPAY"
+    }
+
+    object OrderStatus {
+        const val PRE_CREATED = "PRE_CREATED"
+        const val CREATED = "CREATED"
+        const val PENDING = "PENDING"
+        const val IN_PROGRESS = "IN_PROGRESS"
+        const val READY = "READY"
+        const val CLOSED = "CLOSED"
+    }
+
+    object OrderSuggestedAction{
+        const val PAY = "PAY"
+        const val CLOSE = "CLOSE"
+        const val CREATE = "CREATE"
+        const val NOTHING= "NOTHING"
+    }
 }

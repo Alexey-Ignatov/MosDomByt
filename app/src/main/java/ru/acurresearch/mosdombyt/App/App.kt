@@ -9,6 +9,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ru.acurresearch.mosdombyt.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, object: TypeToken<T>() {}.type)
 
@@ -36,11 +37,11 @@ class Prefs(context: Context) {
 
     var lastOrder: Order
         get(){
-            val resStr = prefs.getString(Constants.PREFS_LAST_ORDER, emptyStrListStr)
-            return  Gson().fromJson<Order>(resStr)
+            val resStr = prefs.getString(Constants.PREFS_LAST_ORDER, Order.empty().toJson())
+            return  Order.fromJson(resStr)
         }
         set(value) {
-            prefs.edit().putString(Constants.PREFS_LAST_ORDER, GsonBuilder().create().toJson(value)).apply()
+            prefs.edit().putString(Constants.PREFS_LAST_ORDER, value.toJson()).apply()
         }
 
 
@@ -66,15 +67,6 @@ class Prefs(context: Context) {
         set(value){
             prefs.edit().putString(Constants.PREFS_ALL_ALLOWED_PRODUCTS, GsonBuilder().create().toJson(value)).apply()
         }
-
-    //var currProdInPopUpPrice: ServiceItemCustom
-    //    get(){
-    //        val resStr = prefs.getString(Constants.PREFS_PROD_IN_PROD_POP_UP_PRICE, emptyProductItemCustom)
-    //        return  Gson().fromJson<ServiceItemCustom>(resStr)
-    //    }
-    //    set(value){
-    //        prefs.edit().putString(Constants.PREFS_PROD_IN_PROD_POP_UP_PRICE, GsonBuilder().create().toJson(value)).apply()
-    //    }
 
 }
 

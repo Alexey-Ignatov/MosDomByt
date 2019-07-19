@@ -16,15 +16,14 @@ class ChoosePayTypeActivity : AppCompatActivity() {
 
         post_pay_option_btn.setOnClickListener {
             var intent =  Intent(this, MainActivity::class.java)
-            intent.putExtra("pay_type", Constants.INENT_PAY_TYPE_POSTPAY)
+            intent.putExtra(Constants.INTENT_PAY_TYPE_FIELD, Constants.BillingType.POSTPAY)
             startActivity(intent)
 
         }
         pre_pay_option_btn.setOnClickListener {
             var intent =  Intent(this, MainActivity::class.java)
-            intent.putExtra("pay_type", Constants.INENT_PAY_TYPE_PREPAY)
-            startActivity(intent)
-        }
+            intent.putExtra(Constants.INTENT_PAY_TYPE_FIELD, Constants.BillingType.PREPAY)
+            startActivity(intent)}
         get_compl_order_btn.setOnClickListener {
 
         }

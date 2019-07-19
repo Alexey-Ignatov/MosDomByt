@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import ru.acurresearch.mosdombyt.App.App
+import ru.acurresearch.mosdombyt.App.fromJson
 import ru.evotor.framework.core.IntegrationException
 import ru.evotor.framework.core.IntegrationManagerFuture
 import ru.evotor.framework.core.action.command.open_receipt_command.OpenSellReceiptCommand
@@ -183,8 +184,10 @@ data class OrderPostition(@SerializedName("uuid")          val uuid: String,
 data class Order(@SerializedName("id")             val uuid: String,
                  @SerializedName("positions_list") var positionsList: ArrayList<OrderPostition>,
                  @SerializedName("custom_price")   var custom_price: Double?,
-                 @SerializedName("client")         var client: Client?
-                 ) {
+                 @SerializedName("client")         var client: Client,
+                 @SerializedName("billing_type")   var billType: String,
+                 @SerializedName("status")         var status: String
+) {
 
     @SerializedName("is_paid")
     var isPaid:Boolean = false
@@ -218,15 +221,71 @@ data class Order(@SerializedName("id")             val uuid: String,
     }
 
 
+    fun toJson(): String{
+        return GsonBuilder().create().toJson(this)
+    }
+
+    fun suggestAction(): String{
+        if (billType == Constants.BillingType.PREPAY){
+            if (!isPaid)
+                return Constants.OrderSuggestedAction.PAY
+
+            if (status == Constants.OrderStatus.PRE_CREATED)
+                return Constants.OrderSuggestedAction.CREATE
+
+            if (status == Constants.OrderStatus.READY)
+                return Constants.OrderSuggestedAction.CLOSE
+
+        }
+
+        if (billType == Constants.BillingType.POSTPAY){
+            if (status == Constants.OrderStatus.PRE_CREATED)
+                return Constants.OrderSuggestedAction.CREATE
+
+            if ((status == Constants.OrderStatus.READY) && (!isPaid))
+                return Constants.OrderSuggestedAction.PAY
+
+            if ((status == Constants.OrderStatus.READY) && (isPaid))
+                return Constants.OrderSuggestedAction.CLOSE
+        }
+
+        return Constants.OrderSuggestedAction.NOTHING
+    }
+
+
+
     companion object {
-        fun fromEvoPosition(evoPos : Position ): CheckPostition{
-            return CheckPostition(evoPos.getUuid(),
-                evoPos.getProductUuid(),
-                evoPos.getName(),
-                evoPos.getQuantity().toDouble(),
-                evoPos.getPrice().toDouble())
+        fun fromJson(inpJson : String ): Order{
+            return Gson().fromJson<Order>(inpJson)
+        }
+
+        fun empty(): Order{
+            return Order("",
+                            ArrayList(listOf<OrderPostition>()),
+                null,
+                            Client("", ""),
+                            Constants.BillingType.PREPAY ,
+                            Constants.OrderStatus.PRE_CREATED)
+        }
+        fun newPrePaid(): Order{
+            return Order(UUID.randomUUID().toString(),
+                    ArrayList(listOf<OrderPostition>()),
+                    null,
+                    Client("", ""),
+                    Constants.BillingType.PREPAY ,
+                    Constants.OrderStatus.PRE_CREATED)
+        }
+
+        fun newPostPaid(): Order{
+            return Order(UUID.randomUUID().toString(),
+                ArrayList(listOf<OrderPostition>()),
+                null,
+                Client("", ""),
+                Constants.BillingType.POSTPAY ,
+                Constants.OrderStatus.PRE_CREATED)
         }
     }
+
 
 
 }

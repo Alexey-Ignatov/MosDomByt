@@ -9,6 +9,8 @@ import android.widget.Toast
 import ru.acurresearch.mosdombyt.Activities.OrderFinalActivity
 import ru.acurresearch.mosdombyt.App.App
 import ru.acurresearch.mosdombyt.Check
+import ru.acurresearch.mosdombyt.Constants
+import ru.acurresearch.mosdombyt.Order
 
 import ru.evotor.framework.core.action.event.receipt.position_edited.PositionAddedEvent
 import ru.evotor.framework.core.action.event.receipt.position_edited.PositionEditedEvent
@@ -120,24 +122,21 @@ class GlobalReceiver : BroadcastReceiver() {
                     val checkTocheck = Check.fromEvoReceipt(evoReceipt!!)
                     if (checkTocheck.position[0].uuid == App.prefs.lastOrder.positionsList[0].uuid){
                         Toast.makeText(context, "Нашелся!!!!", Toast.LENGTH_SHORT).show()
+                        var tmpOrder =  App.prefs.lastOrder
+                        tmpOrder.isPaid = true
+                        App.prefs.lastOrder = tmpOrder
+
+                        val intent = Intent(context, OrderFinalActivity::class.java)
+                        intent.putExtra(WorkService.EXTRA_NAME_OPERATION, "sell")
+                        intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, tmpOrder.toJson())
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: RemoteException) {
+                            e.printStackTrace()
+                        }
                     }
-
-
-
-
-
-                    val intent = Intent(context, OrderFinalActivity::class.java)
-                    intent.putExtra(WorkService.EXTRA_NAME_OPERATION, "sell")
-
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    Toast.makeText(context, "Данные отправлены", Toast.LENGTH_SHORT).show()
-
-                    try {
-                        context.startActivity(intent)
-                    } catch (e: RemoteException) {
-                        e.printStackTrace()
-                    }
-
 
                 }
 

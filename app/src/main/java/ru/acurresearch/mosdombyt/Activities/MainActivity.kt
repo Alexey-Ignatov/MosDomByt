@@ -31,33 +31,48 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
     lateinit var adapter: RecyclerView.Adapter<OrderViewAdapter.ViewHolder>
     lateinit var currOrder: Order
+    lateinit var pay_type: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_x)
 
+        var intent = getIntent()
+        pay_type = intent.getStringExtra(Constants.INTENT_PAY_TYPE_FIELD)
+
         clearSelectedGoods()
         displayTypeByPaymentType()
         initSelectedPositionsList()
 
-        currOrder = Order("1", ArrayList(listOf()), null, null)
         refreshAllowedProds()
+        currOrder = if (pay_type == Constants.BillingType.PREPAY)  Order.newPrePaid() else Order.newPostPaid()
+
 
         add_good.setOnClickListener {
             startActivity(Intent(this, SelectPositionActivity::class.java))
         }
+
         create_pre_pay_order.setOnClickListener {
-            //TODO send all to server
 
             currOrder.client = getClientFromForm()
             App.prefs.lastOrder=currOrder
-            currOrder.realize(this)
+
+            var intent = Intent(this, OrderFinalActivity::class.java)
+            intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
+            startActivity(intent)
+            //currOrder.realize(this)
         }
+
         create_post_pay_order.setOnClickListener {
+
             currOrder.client = getClientFromForm()
             App.prefs.lastOrder=currOrder
-            startActivity(Intent(this, OrderFinalActivity::class.java))
+
+            var intent = Intent(this, OrderFinalActivity::class.java)
+            intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
+
+            startActivity(intent)
         }
         //initPrinter()
 
@@ -69,9 +84,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        refreshTotal()
         currOrder.positionsList= ArrayList(App.prefs.selectedPositions)
+        refreshTotal()
 
         adapter= OrderViewAdapter(currOrder.positionsList, this)
         order_list_view.adapter = adapter
@@ -100,13 +114,12 @@ class MainActivity : AppCompatActivity() {
 
 
     fun displayTypeByPaymentType(){
-        var intent = getIntent()
-        val type = intent.getStringExtra("pay_type")
-        if ( type ==Constants.INENT_PAY_TYPE_POSTPAY){
+
+        if ( pay_type ==Constants.BillingType.POSTPAY){
             create_pre_pay_order.visibility = View.INVISIBLE
 
 
-        } else if( type ==Constants.INENT_PAY_TYPE_PREPAY){
+        } else if( pay_type ==Constants.BillingType.PREPAY){
             create_post_pay_order.visibility = View.INVISIBLE
         }
 
