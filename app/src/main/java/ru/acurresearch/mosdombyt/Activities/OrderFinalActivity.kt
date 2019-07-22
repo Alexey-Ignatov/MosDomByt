@@ -22,6 +22,7 @@ import ru.evotor.devices.commons.services.IPrinterServiceWrapper
 import ru.evotor.devices.commons.services.IScalesServiceWrapper
 
 //TODO проверить чтобы список оплаченных совпадал с нашим заказом. Но совпадает - удалить что-то
+//TODO написать ВЫдан, если заказ выдан
 class OrderFinalActivity : AppCompatActivity() {
     lateinit var currOrder: Order
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,12 +68,14 @@ class OrderFinalActivity : AppCompatActivity() {
                 //TODO получить с сервера номер заказа и картинку для печати
                 initPrinter()
                 print("#######   #####    ######  \r\n##   ##  ##   ##      ##   \r\n    ##       ###     ##    \r\n   ##      ####     ####   \r\n  ##      ####         ##  \r\n  ##     ###      ##   ##  \r\n  ##     #######   #####   \r\n                           \r\n")
+                orderSendFinishEtc()
             }
             alertDialog.setNegativeButton("Нет") { dialog, id ->
                 dialog.cancel()
             }
+            alertDialog.create().show()
 
-            orderSendFinishEtc()
+
         }
 
     }
