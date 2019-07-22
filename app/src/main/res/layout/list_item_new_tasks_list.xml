@@ -61,7 +61,7 @@
                             app:layout_constraintVertical_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/textView15" android:layout_marginStart="8dp"/>
                     <TextView
-                            android:text="Осталось"
+                            android:text="Часов осталось"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:id="@+id/textView16"
                             app:layout_constraintTop_toTopOf="parent"

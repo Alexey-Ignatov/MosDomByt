@@ -18,9 +18,10 @@ class OrderSearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_order_search)
 
 
-        initOrdersListView(ArrayList((1..10).map{Order.newPostPaid()}))
+
         search_act_search_btn.setOnClickListener {
-            //TODO perform search
+            initOrdersListView(ArrayList((1..10).map{Order.newPostPaid()}))
+            //TODO fetch data from server
         }
 
     }

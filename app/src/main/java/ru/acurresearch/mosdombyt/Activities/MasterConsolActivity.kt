@@ -18,7 +18,6 @@ import ru.acurresearch.mosdombyt.Master
 import ru.acurresearch.mosdombyt.Task
 
 class MasterConsolActivity : AppCompatActivity() {
-    //var taskList  = ArrayList<Task>(listOf())
 
     private var mViewPager: ViewPager? = null
 
@@ -28,7 +27,7 @@ class MasterConsolActivity : AppCompatActivity() {
 
 
 
-
+        //Todo fetch data from server
         App.prefs.allMasters = ArrayList((1..5).map { Master("Имя Человека "+ it.toString(), "Специализация Человека "+ it.toString() ) })
         rebuildScreen()
 
@@ -41,13 +40,8 @@ class MasterConsolActivity : AppCompatActivity() {
 
         var tmp_arr = ArrayList(App.prefs.lastOrder.toTaskList())
         //tmp_arr[0].status = Constants.TaskStatus.IN_WORK
-        //tmp_arr[1].status = Constants.TaskStatus.IN_WORK
-        //tmp_arr[2].status = Constants.TaskStatus.IN_WORK
+        //tmp_arr[1].status = Constants.TaskStatus.COMPLETE
         //tmp_arr[3].status = Constants.TaskStatus.IN_WORK
-        //tmp_arr[4].status = Constants.TaskStatus.COMPLETE
-        //tmp_arr[5].status = Constants.TaskStatus.COMPLETE
-        //tmp_arr[6].status = Constants.TaskStatus.COMPLETE
-        //tmp_arr[7].status = Constants.TaskStatus.COMPLETE
 
         App.prefs.allTasks = tmp_arr
 

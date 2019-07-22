@@ -1,5 +1,6 @@
 package ru.acurresearch.mosdombyt.Activities
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -51,14 +52,26 @@ class OrderFinalActivity : AppCompatActivity() {
         }
 
         order_final_close_order_btn.setOnClickListener{
+            //TODO Send data to server закрытие заказа
             currOrder.status = Constants.OrderStatus.CLOSED
             orderSendFinishEtc()
 
         }
 
         order_final_client_print_btn.setOnClickListener{
-            initPrinter()
-            print("#######   #####    ######  \r\n##   ##  ##   ##      ##   \r\n    ##       ###     ##    \r\n   ##      ####     ####   \r\n  ##      ####         ##  \r\n  ##     ###      ##   ##  \r\n  ##     #######   #####   \r\n                           \r\n")
+            //TODO Send data to server открытие заказа
+            val alertDialog = AlertDialog.Builder(this)
+            alertDialog.setTitle("Распечатать ярляк с номер заказа для внутреннего использования?")
+            alertDialog.setCancelable(false)
+            alertDialog.setPositiveButton("Да") { dialog, id ->
+                //TODO получить с сервера номер заказа и картинку для печати
+                initPrinter()
+                print("#######   #####    ######  \r\n##   ##  ##   ##      ##   \r\n    ##       ###     ##    \r\n   ##      ####     ####   \r\n  ##      ####         ##  \r\n  ##     ###      ##   ##  \r\n  ##     #######   #####   \r\n                           \r\n")
+            }
+            alertDialog.setNegativeButton("Нет") { dialog, id ->
+                dialog.cancel()
+            }
+
             orderSendFinishEtc()
         }
 

@@ -15,6 +15,7 @@ import ru.acurresearch.mosdombyt.Activities.MainActivity
 import ru.acurresearch.mosdombyt.Activities.OrderFinalActivity
 import ru.acurresearch.mosdombyt.App.App
 import android.content.DialogInterface
+import android.widget.Toast
 import ru.acurresearch.mosdombyt.Activities.MasterConsolActivity
 import java.text.SimpleDateFormat
 import java.time.Period
@@ -57,25 +58,13 @@ class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : Re
             view.complete_item_exp_in_holder.text = simpleDateFormat.format(value.orderPostition.expDate!!)
             view.complete_item_name.text = value.orderPostition.serviceItem.name
             view.complete_item_order_no_holder.text = value.orderInternalId ?: "???"
-            view.complete_items_days_left.text = TimeUnit.DAYS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
+            view.complete_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
             view.complete_item_master.text = value.master?.name ?: "???"
 
 
 
             view.setOnClickListener {
-                val alertDialog = AlertDialog.Builder(context)
-                alertDialog.setTitle("Выберете мастера")
-                //alertDialog.setMessage("Alert message to be shown")
-
-                val masters = App.prefs.allMasters.map { it.name }.toTypedArray()
-                alertDialog.setItems(masters) { dialog, which ->
-                    value.takeInWork(App.prefs.allMasters[which])
-                    (context as MasterConsolActivity).rebuildScreen()
-
-                }
-
-                //val dialog = builder.create()
-                alertDialog.create().show()
+                Toast.makeText(context, "Щелкнуто!", Toast.LENGTH_SHORT).show()
 
 
             }

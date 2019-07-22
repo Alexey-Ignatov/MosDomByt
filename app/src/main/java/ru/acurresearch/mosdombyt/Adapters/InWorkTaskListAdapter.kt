@@ -23,6 +23,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
+
+
 class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : RecyclerView.Adapter<InWorkTaskListAdapter.ViewHolder>() {
 
     // Gets the number of animals in the list
@@ -58,7 +60,7 @@ class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : Recy
             view.in_work_item_exp_in_holder.text = simpleDateFormat.format(value.orderPostition.expDate!!)
             view.in_work_item_name.text = value.orderPostition.serviceItem.name
             view.in_work_item_order_no_holder.text = value.orderInternalId ?: "???"
-            view.in_work_items_days_left.text = TimeUnit.DAYS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
+            view.in_work_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
             view.in_work_item_master.text = value.master?.name ?: "???"
 
 
@@ -66,15 +68,19 @@ class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : Recy
 
             view.setOnClickListener {
                 val alertDialog = AlertDialog.Builder(context)
-                alertDialog.setTitle("Выберете мастера")
-                //alertDialog.setMessage("Alert message to be shown")
-
-                val masters = App.prefs.allMasters.map { it.name }.toTypedArray()
-                alertDialog.setItems(masters) { dialog, which ->
-                    value.takeInWork(App.prefs.allMasters[which])
+                alertDialog.setTitle("Завершить выполнение заказа?")
+                //alertDialog.setMessage("Alert message to be shown"
+                alertDialog.setCancelable(true)
+                alertDialog.setPositiveButton("Да") { dialog, id ->
+                        // if this button is clicked, close
+                        // current activity
+                    value.finish()
                     (context as MasterConsolActivity).rebuildScreen()
+                    }
+                alertDialog.setNegativeButton("Нет") { dialog, id ->
+                        dialog.cancel()
+                    }
 
-                }
 
                 //val dialog = builder.create()
                 alertDialog.create().show()

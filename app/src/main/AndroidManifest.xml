@@ -32,19 +32,19 @@
         -->
         <activity android:name=".Activities.MainActivity">
         </activity>
-        <activity android:name=".Activities.OrderSearchActivity">
-        </activity>
+
 
         <activity android:name=".Activities.SelectPositionActivity">
         </activity>
         <activity android:name=".Activities.OrderFinalActivity">
         </activity>
+        <activity android:name=".Activities.OrderSearchActivity">
+        </activity>
 
         <activity
                 android:name=".Activities.ChoosePayTypeActivity"
                 android:icon="@mipmap/ic_launcher"
-                android:label="Example tile"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:label="Создание заказа">
             <meta-data
                     android:name="ru.evotor.launcher.BACKGROUND_COLOR"
                     android:value="#133788" />
@@ -56,7 +56,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.MasterConsolActivity">
+        <activity android:name=".Activities.MasterConsolActivity"
+                  android:icon="@mipmap/ic_launcher"
+                  android:label="Очередь работ">>
             <meta-data
                     android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
                     android:value="#133788"/>
@@ -67,6 +69,8 @@
                 <category android:name="android.intent.category.EVOTOR"/>
             </intent-filter>
         </activity>
+
+
 
         <service
                 android:name=".Services.WorkService"
