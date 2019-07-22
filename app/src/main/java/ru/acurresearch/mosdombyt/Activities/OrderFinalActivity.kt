@@ -62,7 +62,7 @@ class OrderFinalActivity : AppCompatActivity() {
         order_final_client_print_btn.setOnClickListener{
             //TODO Send data to server открытие заказа
             val alertDialog = AlertDialog.Builder(this)
-            alertDialog.setTitle("Распечатать ярляк с номер заказа для внутреннего использования?")
+            alertDialog.setTitle("Распечатать ярлык с номером заказа для внутреннего использования?")
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton("Да") { dialog, id ->
                 //TODO получить с сервера номер заказа и картинку для печати
