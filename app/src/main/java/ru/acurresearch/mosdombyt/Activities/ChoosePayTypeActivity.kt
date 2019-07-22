@@ -25,7 +25,8 @@ class ChoosePayTypeActivity : AppCompatActivity() {
             intent.putExtra(Constants.INTENT_PAY_TYPE_FIELD, Constants.BillingType.PREPAY)
             startActivity(intent)}
         get_compl_order_btn.setOnClickListener {
-
+            var intent =  Intent(this, OrderSearchActivity::class.java)
+            startActivity(intent)
         }
         regular_pay_btn.setOnClickListener {
             startActivity(createIntentForSellReceiptEdit())

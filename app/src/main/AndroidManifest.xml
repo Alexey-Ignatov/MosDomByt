@@ -24,15 +24,67 @@
             android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Activities.OrderSearchActivity">
+        <!--
+        <activity
+                android:name=".Activities.ChoosePayTypeActivity"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        -->
         <activity android:name=".Activities.MainActivity">
         </activity>
-        <activity
-                android:name=".Activities.SelectPositionActivity">
+        <activity android:name=".Activities.OrderSearchActivity">
+        </activity>
+
+        <activity android:name=".Activities.SelectPositionActivity">
         </activity>
         <activity android:name=".Activities.OrderFinalActivity">
         </activity>
+
+        <activity
+                android:name=".Activities.ChoosePayTypeActivity"
+                android:icon="@mipmap/ic_launcher"
+                android:label="Example tile"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="ru.evotor.launcher.BACKGROUND_COLOR"
+                    android:value="#133788" />
+            <intent-filter>
+                <action android:name="ru.evotor.intent.action.SELL_MAIN" />
+
+                <category android:name="android.intent.category.EVOTOR" />
+
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".Activities.MasterConsolActivity">
+            <meta-data
+                    android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
+                    android:value="#133788"/>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.EVOTOR"/>
+            </intent-filter>
+        </activity>
+
+        <service
+                android:name=".Services.WorkService"
+                android:enabled="true"
+                android:exported="true"
+                android:icon="@mipmap/ic_launcher"
+                android:label="MosDomByt">
+            <intent-filter android:priority="20">
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <action android:name="evo.v2.receipt.sell.receiptDiscount"/>
+            </intent-filter>
+
+            <meta-data
+                    android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
+                    android:value="#00FF00"/>
+        </service>
+
         <!--
                         <service
                                 android:name=".SplitGroupService"
@@ -66,18 +118,7 @@
                 android:name="app_uuid"
                 android:value="8a67d769-e419-49e9-b17f-a2c58d8c94c6"/>
 
-        <activity android:name=".Activities.ChoosePayTypeActivity">
-            <meta-data
-                    android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
-                    android:value="#133788"/>
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.EVOTOR"/>
-            </intent-filter>
-        </activity>
         <!--
        <service
                android:name=".PutExtraEventService"
@@ -214,22 +255,7 @@
             </intent-filter>
         </receiver>
 
-        <service
-                android:name=".Services.WorkService"
-                android:enabled="true"
-                android:exported="true"
-                android:icon="@mipmap/ic_launcher"
-                android:label="MosDomByt">
-            <intent-filter android:priority="20">
-                <category android:name="android.intent.category.DEFAULT"/>
 
-                <action android:name="evo.v2.receipt.sell.receiptDiscount"/>
-            </intent-filter>
-
-            <meta-data
-                    android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
-                    android:value="#00FF00"/>
-        </service>
 
         <receiver
                 android:name=".Services.AlarmTaskReciver"

@@ -68,6 +68,27 @@ class Prefs(context: Context) {
             prefs.edit().putString(Constants.PREFS_ALL_ALLOWED_PRODUCTS, GsonBuilder().create().toJson(value)).apply()
         }
 
+
+
+    var allMasters: List<Master>
+    get(){
+        val resStr = prefs.getString(Constants.PREFS_ALL_MASTERS, emptyStrListStr)
+        return  Gson().fromJson<List<Master>>(resStr)
+    }
+    set(value){
+        prefs.edit().putString(Constants.PREFS_ALL_MASTERS, GsonBuilder().create().toJson(value)).apply()
+    }
+
+
+    var allTasks: List<Task>
+        get(){
+            val resStr = prefs.getString(Constants.PREFS_ALL_TASKS, emptyStrListStr)
+            return  Gson().fromJson<List<Task>>(resStr)
+        }
+        set(value){
+            prefs.edit().putString(Constants.PREFS_ALL_TASKS, GsonBuilder().create().toJson(value)).apply()
+        }
+
 }
 
 

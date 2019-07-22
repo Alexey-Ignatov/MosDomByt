@@ -24,6 +24,9 @@ import kotlin.math.roundToInt
 
 
 
+
+
+
 class SelectPositionActivity : Activity() {
     var currProdInPopUpPrice: ServiceItemCustom? = null
     var currSelectedPostionPrice: Double = 0.0
@@ -46,11 +49,22 @@ class SelectPositionActivity : Activity() {
 
         pop_up_deadline_add_btn.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val deadlineDate = Date(datePickerDeadline.year,
+            calendar.set(Calendar.YEAR, datePickerDeadline.year)
+            calendar.set(Calendar.MONTH, datePickerDeadline.month)
+            calendar.set(Calendar.DATE, datePickerDeadline.dayOfMonth)
+            calendar.set(Calendar.HOUR_OF_DAY, timePickerDeadline.currentHour)
+            calendar.set(Calendar.MINUTE, timePickerDeadline.currentMinute)
+            val deadlineDate = calendar.time
+            Toast.makeText(this, "Дедлайн " + deadlineDate.toString(), Toast.LENGTH_SHORT).show()
+
+
+
+            val deadlineDateSep = Date(datePickerDeadline.year,
                          datePickerDeadline.month,
                          datePickerDeadline.dayOfMonth,
                          timePickerDeadline.currentHour,
                          timePickerDeadline.currentMinute)
+
             currSelectedPostionExpDate = deadlineDate
             addSelectedPosition()
             finish()
@@ -123,6 +137,8 @@ class SelectPositionActivity : Activity() {
             currSelectedPostionExpDate)
         newPositionsList.add(newCheckPos)
         App.prefs.selectedPositions = newPositionsList
+        Toast.makeText(this, "Дедлайн c диска selectposition addSelectedPosition" + App.prefs.selectedPositions[0].expDate.toString(), Toast.LENGTH_SHORT).show()
+
     }
 
 

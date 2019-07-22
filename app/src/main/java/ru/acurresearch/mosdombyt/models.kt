@@ -186,7 +186,8 @@ data class Order(@SerializedName("id")             val uuid: String,
                  @SerializedName("custom_price")   var custom_price: Double?,
                  @SerializedName("client")         var client: Client,
                  @SerializedName("billing_type")   var billType: String,
-                 @SerializedName("status")         var status: String
+                 @SerializedName("status")         var status: String,
+                 @SerializedName("internal_id")    var internalId: String? = null
 ) {
 
     @SerializedName("is_paid")
@@ -252,7 +253,9 @@ data class Order(@SerializedName("id")             val uuid: String,
         return Constants.OrderSuggestedAction.NOTHING
     }
 
-
+    fun toTaskList():List<Task>{
+        return positionsList.map {Task(it,internalId,Constants.TaskStatus.NEW) }
+    }
 
     companion object {
         fun fromJson(inpJson : String ): Order{
@@ -286,8 +289,27 @@ data class Order(@SerializedName("id")             val uuid: String,
         }
     }
 
+}
+
+data class Master(@SerializedName("name") val name: String,
+                  @SerializedName("specialization") val specialization: String)
 
 
+data class Task(@SerializedName("order_position")  val orderPostition: OrderPostition,
+                @SerializedName("order_internal_id")  val orderInternalId: String?,
+                @SerializedName("status") var status: String,
+                @SerializedName("master") var master: Master? = null){
+
+    fun takeInWork(assignedMaster: Master?){
+        //TODO send info to server
+        master = assignedMaster
+        status = Constants.TaskStatus.IN_WORK
+    }
+    fun finish(){
+        //TODO send info to server
+        status = Constants.TaskStatus.COMPLETE
+
+    }
 }
 
 

@@ -12,9 +12,10 @@ object Constants {
     const val INTENT_PAY_TYPE_FIELD = "INENT_PAY_TYPE_FIELD"
     const val PREFS_LAST_ORDER = "PREFS_LAST_ORDER"
     const val INTENT_ORDER_TO_ORDER_FINAL = "INTENT_ORDER_TO_ORDER_FINAL"
-    const val PREFS_ALL_TELS_LIST = "PREFS_ALL_TELS_LIST"
+    const val PREFS_ALL_TASKS = "PREFS_ALL_TASKS"
     const val NUMBER_TELS_TO_SHOW = 5
-    const val PREFS_COMPLETED_TELS_LIST = "PREFS_COMPLETED_TELS_LIST"
+    const val PREFS_ALL_MASTERS = "PREFS_ALL_MASTERS"
+    const val DATE_PATTERN = "yyyy-MM-dd HH:mm"
 
 
     object BillingType {
@@ -29,6 +30,12 @@ object Constants {
         const val IN_PROGRESS = "IN_PROGRESS"
         const val READY = "READY"
         const val CLOSED = "CLOSED"
+    }
+
+    object TaskStatus {
+        const val NEW = "NEW"
+        const val IN_WORK = "IN_WORK"
+        const val COMPLETE = "COMPLETE"
     }
 
     object OrderSuggestedAction{

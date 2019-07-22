@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+            android:id="@+id/complete_item_list_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#599C9C9C"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="2dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="2dp">
+
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+        >
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/complete_close_btn"
+                    android:id="@+id/linearLayout4"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+                <TextView
+                        android:id="@+id/complete_item_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Очень очень длинное название услуги, одних из самых длинных на свете"
+                        android:textSize="16sp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_gravity="center_horizontal"/>
+                <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                            android:text="3 дня"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/complete_items_days_left"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="4dp"/>
+                    <TextView
+                            android:text="Иван"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/complete_item_master"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@+id/textView15" android:layout_marginStart="8dp"/>
+                    <TextView
+                            android:text="Осталось"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/textView16"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintEnd_toStartOf="@+id/complete_items_days_left"
+                            android:layout_marginEnd="8dp"/>
+                    <TextView
+                            android:text="Мастер"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/textView15"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="4dp"/>
+                </android.support.constraint.ConstraintLayout>
+                <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:text="Заказ"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/textView17"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="4dp"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+                    <TextView
+                            android:text="N1212"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/complete_item_order_no_holder"
+                            android:textSize="15sp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:textAlignment="viewStart" app:layout_constraintVertical_bias="1.0"
+                            app:layout_constraintStart_toEndOf="@+id/textView17" android:layout_marginStart="8dp"/>
+                    <TextView
+                            android:text="13:45 01.01.2019"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/complete_item_exp_in_holder"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="4dp"
+                            android:textAlignment="viewEnd" app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+                    <TextView
+                            android:text="Выдача"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView18"
+                            app:layout_constraintEnd_toStartOf="@+id/complete_item_exp_in_holder"
+                            android:layout_marginEnd="8dp" app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+            </LinearLayout>
+            <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" app:srcCompat="@drawable/ic_done_black_24dp"
+                    android:id="@+id/complete_close_btn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

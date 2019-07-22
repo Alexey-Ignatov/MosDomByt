@@ -26,6 +26,9 @@ import ru.evotor.framework.core.IntegrationManagerFuture
 import ru.evotor.framework.core.action.command.open_receipt_command.OpenSellReceiptCommand
 import ru.evotor.framework.navigation.NavigationApi.createIntentForSellReceiptEdit
 import java.io.IOException
+import android.content.DialogInterface
+import android.content.DialogInterface.BUTTON_NEUTRAL
+import android.support.v7.app.AlertDialog
 
 
 class MainActivity : AppCompatActivity() {
@@ -58,6 +61,10 @@ class MainActivity : AppCompatActivity() {
             currOrder.client = getClientFromForm()
             App.prefs.lastOrder=currOrder
 
+            Toast.makeText(this, "Дедлайн c диска Main lastOrder" + App.prefs.lastOrder.positionsList[0].expDate.toString(), Toast.LENGTH_SHORT).show()
+
+
+
             var intent = Intent(this, OrderFinalActivity::class.java)
             intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
             startActivity(intent)
@@ -69,13 +76,16 @@ class MainActivity : AppCompatActivity() {
             currOrder.client = getClientFromForm()
             App.prefs.lastOrder=currOrder
 
+
+            Toast.makeText(this, "Дедлайн c диска Main lastOrder" + App.prefs.lastOrder.positionsList[0].expDate.toString(), Toast.LENGTH_SHORT).show()
+
+
             var intent = Intent(this, OrderFinalActivity::class.java)
             intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
 
             startActivity(intent)
         }
         //initPrinter()
-
 
 
         //sendCheck()

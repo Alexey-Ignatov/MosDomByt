@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
 
     <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/my_scroll">
+            android:layout_height="match_parent" android:id="@+id/my_scroll" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btm_layout" android:layout_marginBottom="90dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                       android:orientation="vertical">
             <TextView
-                    android:text="Введите данные пользователя"
+                    android:text="Введите данные клиента"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/textView5"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toEndOf="parent" android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent" android:textSize="20sp"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="4dp" android:textStyle="bold"/>
             <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -31,7 +34,7 @@
                         android:id="@+id/linearLayout"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.14"
                         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent">
+                        app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp">
                     <android.support.constraint.ConstraintLayout
                             android:layout_width="280dp"
                             android:layout_height="wrap_content"
@@ -41,7 +44,7 @@
                                 android:layout_width="91dp"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/textView3"
-                                android:textSize="14sp" android:textAlignment="viewEnd"
+                                android:textSize="16sp" android:textAlignment="viewEnd"
                                 android:layout_marginEnd="24dp"
                                 app:layout_constraintEnd_toStartOf="@+id/ed_txt_name"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -55,7 +58,7 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 android:layout_marginEnd="8dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" android:textSize="14sp"/>
+                                app:layout_constraintTop_toTopOf="parent" android:textSize="16sp"/>
                     </android.support.constraint.ConstraintLayout>
                     <android.support.constraint.ConstraintLayout
                             android:layout_width="280dp"
@@ -68,7 +71,7 @@
                                 android:ems="10"
                                 android:id="@+id/ed_txt_phone"
                                 android:hint="79631234567"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"/>
@@ -79,7 +82,7 @@
                                 android:text=" Телефон"
                                 android:ems="10"
                                 android:id="@+id/editText"
-                                app:layout_constraintBottom_toBottomOf="parent" android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent" android:textSize="16sp"
                                 app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="24dp"
                                 app:layout_constraintEnd_toStartOf="@+id/ed_txt_phone"
                                 android:textAlignment="viewEnd"/>
@@ -100,8 +103,9 @@
                         android:layout_height="wrap_content" android:id="@+id/total_count_txt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintHorizontal_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
-                        android:textSize="18sp" app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        android:textSize="20sp" app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
             </android.support.constraint.ConstraintLayout>
             <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
@@ -127,11 +131,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/order_list_view"
                         app:layout_constraintBottom_toTopOf="@+id/create_post_pay_order"
-                        app:layout_constraintVertical_bias="1.0">
+                        app:layout_constraintVertical_bias="1.0" android:layout_marginTop="8dp">
 
                     <FrameLayout
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
@@ -152,29 +156,33 @@
                 </android.support.constraint.ConstraintLayout>
 
             </android.support.constraint.ConstraintLayout>
-            <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp" android:layout_marginTop="32dp">
-
-                <Button
-                        android:text="Перейти к оплате"
-                        android:layout_width="0dp"
-                        android:layout_height="70dp"
-                        android:id="@+id/create_pre_pay_order"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                        android:textColorLink="#00D11111"
-                        android:background="#87FFCA28" android:textSize="20sp"/>
-                <Button
-                        android:text="Создать заказ"
-                        android:layout_width="0dp"
-                        android:layout_height="70dp" android:id="@+id/create_post_pay_order"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginBottom="-1dp" android:background="#87EC407A" android:textSize="20sp"/>
-            </android.support.constraint.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/btm_layout" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+                android:text="Перейти к оплате"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:id="@+id/create_pre_pay_order"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                android:textColorLink="#00D11111"
+                android:background="#FFA726" android:textSize="20sp"/>
+        <Button
+                android:text="Создать заказ"
+                android:layout_width="0dp"
+                android:layout_height="70dp" android:id="@+id/create_post_pay_order"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="-1dp" android:background="#AB47BC" android:textSize="20sp"
+                app:layout_constraintVertical_bias="0.0"/>
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
