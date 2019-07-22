@@ -45,7 +45,6 @@ class MasterConsolActivity : AppCompatActivity() {
 
         App.prefs.allTasks = tmp_arr
 
-        Toast.makeText(this, "Дедлайн c диска MAsterConsol rebuildScreen" + tmp_arr[0].orderPostition.expDate.toString(), Toast.LENGTH_SHORT).show()
 
 
         val sectionsPagerAdapter = SectionsPageAdapter( supportFragmentManager)

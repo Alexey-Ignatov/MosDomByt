@@ -64,7 +64,6 @@ class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : Re
 
 
             view.setOnClickListener {
-                Toast.makeText(context, "Щелкнуто!", Toast.LENGTH_SHORT).show()
 
 
             }

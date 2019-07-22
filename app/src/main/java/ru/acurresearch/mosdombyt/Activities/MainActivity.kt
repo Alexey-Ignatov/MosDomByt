@@ -61,14 +61,11 @@ class MainActivity : AppCompatActivity() {
             currOrder.client = getClientFromForm()
             App.prefs.lastOrder=currOrder
 
-            Toast.makeText(this, "Дедлайн c диска Main lastOrder" + App.prefs.lastOrder.positionsList[0].expDate.toString(), Toast.LENGTH_SHORT).show()
-
 
 
             var intent = Intent(this, OrderFinalActivity::class.java)
             intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
             startActivity(intent)
-            //currOrder.realize(this)
         }
 
         create_post_pay_order.setOnClickListener {
@@ -76,8 +73,6 @@ class MainActivity : AppCompatActivity() {
             currOrder.client = getClientFromForm()
             App.prefs.lastOrder=currOrder
 
-
-            Toast.makeText(this, "Дедлайн c диска Main lastOrder" + App.prefs.lastOrder.positionsList[0].expDate.toString(), Toast.LENGTH_SHORT).show()
 
 
             var intent = Intent(this, OrderFinalActivity::class.java)

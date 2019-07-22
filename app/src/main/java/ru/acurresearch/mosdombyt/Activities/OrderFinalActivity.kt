@@ -21,7 +21,7 @@ import ru.evotor.devices.commons.printer.printable.PrintableText
 import ru.evotor.devices.commons.services.IPrinterServiceWrapper
 import ru.evotor.devices.commons.services.IScalesServiceWrapper
 
-
+//TODO проверить чтобы список оплаченных совпадал с нашим заказом. Но совпадает - удалить что-то
 class OrderFinalActivity : AppCompatActivity() {
     lateinit var currOrder: Order
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -137,7 +137,6 @@ class SelectPositionActivity : Activity() {
             currSelectedPostionExpDate)
         newPositionsList.add(newCheckPos)
         App.prefs.selectedPositions = newPositionsList
-        Toast.makeText(this, "Дедлайн c диска selectposition addSelectedPosition" + App.prefs.selectedPositions[0].expDate.toString(), Toast.LENGTH_SHORT).show()
 
     }
 

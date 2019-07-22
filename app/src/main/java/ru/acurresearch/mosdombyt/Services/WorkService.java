@@ -37,7 +37,6 @@ public class WorkService extends IntegrationService {
                 Log.e("FROM IntegrationService", "action");
                 Intent intent = new Intent(WorkService.this, MainActivity.class);
                 intent.putExtra(EXTRA_NAME_OPERATION, "sell");
-                Toast.makeText(getApplicationContext(),"Данные отправлены", Toast.LENGTH_SHORT).show();
 
                 try {
                     callback.startActivity(intent);

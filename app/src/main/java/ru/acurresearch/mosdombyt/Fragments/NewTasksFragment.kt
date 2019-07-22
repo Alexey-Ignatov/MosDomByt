@@ -32,7 +32,6 @@ class NewTasksFragment() : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view =  inflater.inflate(R.layout.new_task_fragment_master_consol, container, false)
-        Toast.makeText(context, "Введите onCreateView", Toast.LENGTH_SHORT).show()
 
         initTaskList(view)
 

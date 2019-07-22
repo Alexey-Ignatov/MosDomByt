@@ -121,7 +121,6 @@ class GlobalReceiver : BroadcastReceiver() {
                     var evoReceipt = ReceiptApi.getReceipt(context, ReceiptClosedEvent.create(bundle)!!.receiptUuid)
                     val checkTocheck = Check.fromEvoReceipt(evoReceipt!!)
                     if (checkTocheck.position[0].uuid == App.prefs.lastOrder.positionsList[0].uuid){
-                        Toast.makeText(context, "Нашелся!!!!", Toast.LENGTH_SHORT).show()
                         var tmpOrder =  App.prefs.lastOrder
                         tmpOrder.isPaid = true
                         App.prefs.lastOrder = tmpOrder
