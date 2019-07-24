@@ -7,9 +7,14 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_order_final.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import ru.acurresearch.mosdombyt.Adapters.OrderFinalViewAdapter
 import ru.acurresearch.mosdombyt.App.App
+import ru.acurresearch.mosdombyt.Check
 import ru.acurresearch.mosdombyt.Constants
 import ru.acurresearch.mosdombyt.Order
 import ru.acurresearch.mosdombyt.R
@@ -20,6 +25,8 @@ import ru.evotor.devices.commons.printer.PrinterDocument
 import ru.evotor.devices.commons.printer.printable.PrintableText
 import ru.evotor.devices.commons.services.IPrinterServiceWrapper
 import ru.evotor.devices.commons.services.IScalesServiceWrapper
+import ru.evotor.framework.receipt.Receipt
+import ru.evotor.framework.receipt.ReceiptApi
 
 //TODO проверить чтобы список оплаченных совпадал с нашим заказом. Но совпадает - удалить что-то
 //TODO написать ВЫдан, если заказ выдан
@@ -49,18 +56,23 @@ class OrderFinalActivity : AppCompatActivity() {
     fun initListeners(){
         order_final_pay_btn.setOnClickListener {
             currOrder.realize(this)
-            orderSendFinishEtc()
+            orderSendRefreshEtc()
+            finish()
         }
 
         order_final_close_order_btn.setOnClickListener{
             //TODO Send data to server закрытие заказа
             currOrder.status = Constants.OrderStatus.CLOSED
-            orderSendFinishEtc()
+            orderSendRefreshEtc()
+            finish()
 
         }
 
         order_final_client_print_btn.setOnClickListener{
             //TODO Send data to server открытие заказа
+            currOrder.status = Constants.OrderStatus.CREATED
+
+
             val alertDialog = AlertDialog.Builder(this)
             alertDialog.setTitle("Распечатать ярлык с номером заказа для внутреннего использования?")
             alertDialog.setCancelable(false)
@@ -68,21 +80,46 @@ class OrderFinalActivity : AppCompatActivity() {
                 //TODO получить с сервера номер заказа и картинку для печати
                 initPrinter()
                 print("#######   #####    ######  \r\n##   ##  ##   ##      ##   \r\n    ##       ###     ##    \r\n   ##      ####     ####   \r\n  ##      ####         ##  \r\n  ##     ###      ##   ##  \r\n  ##     #######   #####   \r\n                           \r\n")
-                orderSendFinishEtc()
+                finish()
             }
             alertDialog.setNegativeButton("Нет") { dialog, id ->
-                dialog.cancel()
+                finish()
             }
             alertDialog.create().show()
 
-
+            orderSendRefreshEtc()
         }
 
     }
 
-    fun orderSendFinishEtc(){
+    fun sendOrder(order: Order){
+        //TODO нормально описать ошибки
+        fun onSuccess(resp_data: String){
+
+        }
+
+        val call = App.api.sendOrder(order)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.e("processServerRquests",response.errorBody().toString() )
+                if (response.isSuccessful)
+                    if (response.isSuccessful)
+                        onSuccess(response.body()!!)
+                    else
+                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+            }
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e("sendPhone", "Sorry, unable to make request", t)
+                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
+
+    }
+
+    fun orderSendRefreshEtc(){
+        sendOrder(currOrder)
         refreshCart()
-        finish()
+
     }
 
     fun updateUIByAction(suggestedAction: String){

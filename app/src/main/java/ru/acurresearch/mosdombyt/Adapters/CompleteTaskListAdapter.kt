@@ -50,14 +50,14 @@ class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : Re
 
         // Holds the TextView that will add each animal to
         fun setData(value: Task, pos: Int) {
-            val time_diff = value.orderPostition.expDate!!.getTime() - Date().getTime()
+            val time_diff = value.expDate!!.getTime() - Date().getTime()
             val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN)
 
 
 
-            view.complete_item_exp_in_holder.text = simpleDateFormat.format(value.orderPostition.expDate!!)
-            view.complete_item_name.text = value.orderPostition.serviceItem.name
-            view.complete_item_order_no_holder.text = value.orderInternalId ?: "???"
+            view.complete_item_exp_in_holder.text = simpleDateFormat.format(value.expDate!!)
+            view.complete_item_name.text = value.name ?: "???"
+            view.complete_item_order_no_holder.text = value.orderInternalId?.toString() ?: "???"
             view.complete_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
             view.complete_item_master.text = value.master?.name ?: "???"
 

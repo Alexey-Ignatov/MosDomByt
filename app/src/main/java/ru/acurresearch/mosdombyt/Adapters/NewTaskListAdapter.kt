@@ -50,13 +50,13 @@ class NewTaskListAdapter(val items : List<Task>, val context: Context) : Recycle
         // Holds the TextView that will add each animal to
         fun setData(value: Task, pos: Int) {
 
-            val time_diff = value.orderPostition.expDate!!.getTime() - Date().getTime()
+            val time_diff = value.expDate!!.getTime() - Date().getTime()
             val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN)
 
 
-            view.new_task_item_exp_in_holder.text = simpleDateFormat.format(value.orderPostition.expDate!!)
-            view.new_task_item_name.text = value.orderPostition.serviceItem.name
-            view.new_task_item_order_no_holder.text = value.orderInternalId ?: "???"
+            view.new_task_item_exp_in_holder.text = simpleDateFormat.format(value.expDate!!)
+            view.new_task_item_name.text = value.name ?: "???"
+            view.new_task_item_order_no_holder.text = value.orderInternalId?.toString() ?: "???"
             view.new_task_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
             view.new_task_item_master.text = value.master?.name ?: "???"
 
@@ -70,6 +70,7 @@ class NewTaskListAdapter(val items : List<Task>, val context: Context) : Recycle
                 alertDialog.setItems(masters) { dialog, which ->
                     value.takeInWork(App.prefs.allMasters[which])
                     (context as MasterConsolActivity).rebuildScreen()
+                    (context as MasterConsolActivity).fetchAndRebuildTasks()
                 }
 
                 //val dialog = builder.create()

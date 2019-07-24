@@ -53,13 +53,13 @@ class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : Recy
         fun setData(value: Task, pos: Int) {
 
 
-            val time_diff = value.orderPostition.expDate!!.getTime() - Date().getTime()
+            val time_diff = value.expDate!!.getTime() - Date().getTime()
             val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN)
 
 
-            view.in_work_item_exp_in_holder.text = simpleDateFormat.format(value.orderPostition.expDate!!)
-            view.in_work_item_name.text = value.orderPostition.serviceItem.name
-            view.in_work_item_order_no_holder.text = value.orderInternalId ?: "???"
+            view.in_work_item_exp_in_holder.text = simpleDateFormat.format(value.expDate!!)
+            view.in_work_item_name.text = value.name ?: "???"
+            view.in_work_item_order_no_holder.text = value.orderInternalId?.toString() ?: "???"
             view.in_work_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
             view.in_work_item_master.text = value.master?.name ?: "???"
 
@@ -76,6 +76,7 @@ class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : Recy
                         // current activity
                     value.finish()
                     (context as MasterConsolActivity).rebuildScreen()
+                    (context as MasterConsolActivity).fetchAndRebuildTasks()
                     }
                 alertDialog.setNegativeButton("Нет") { dialog, id ->
                         dialog.cancel()

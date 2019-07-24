@@ -61,8 +61,6 @@ class MainActivity : AppCompatActivity() {
             currOrder.client = getClientFromForm()
             App.prefs.lastOrder=currOrder
 
-
-
             var intent = Intent(this, OrderFinalActivity::class.java)
             intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
             startActivity(intent)
@@ -103,9 +101,29 @@ class MainActivity : AppCompatActivity() {
 
     fun refreshAllowedProds(){
         //TODO get from server data
-        val my_goods = ProductQuery().price.notEqual(BigDecimal.valueOf(0)).execute(this).toList()
-        App.prefs.allAllowedProducts = my_goods.map {
-            ServiceItemCustom.fromEvoProductItem(it!!,10.0, 3600*24)}
+        //val my_goods = ProductQuery().price.notEqual(BigDecimal.valueOf(0)).execute(this).toList()
+         //my_goods.map {ServiceItemCustom.fromEvoProductItem(it!!,10.0, 3600*24)}
+
+        fun onSuccess(resp_data: List<ServiceItemCustom>){
+            App.prefs.allAllowedProducts = resp_data
+        }
+
+        val call = App.api.fetchAllowedProds()
+        call.enqueue(object : Callback<List<ServiceItemCustom>> {
+            override fun onResponse(call: Call<List<ServiceItemCustom>>, response: Response<List<ServiceItemCustom>>) {
+                Log.e("processServerRquests",response.errorBody().toString() )
+                if (response.isSuccessful)
+                    if (response.isSuccessful)
+                        onSuccess(response.body()!!)
+                    else
+                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+            }
+            override fun onFailure(call: Call<List<ServiceItemCustom>>, t: Throwable) {
+                Log.e("sendPhone", "Sorry, unable to make request", t)
+                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 
 
@@ -131,33 +149,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun sendCheck(){
-        val evoReceipt = ReceiptApi.getReceipt(this, Receipt.Type.SELL)
-        val checkToSend = Check.fromEvoReceipt(evoReceipt!!)
-        App.prefs.currCheck = checkToSend
 
-
-        fun onSuccess(resp_data: String){
-
-        }
-
-        val call = App.api.sendCheckServ(App.prefs.currCheck)
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.e("processServerRquests",response.errorBody().toString() )
-                if (response.isSuccessful)
-                    if (response.isSuccessful)
-                            onSuccess(response.body()!!)
-                    else
-                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
-            }
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.e("sendPhone", "Sorry, unable to make request", t)
-                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(),Toast.LENGTH_SHORT).show()
-            }
-        })
-
-    }
 
     fun clearSelectedGoods(){
         App.prefs.selectedPositions = listOf()

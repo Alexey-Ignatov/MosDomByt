@@ -6,16 +6,23 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import ru.acurresearch.mosdombyt.Adapters.SectionsPageAdapter
 import kotlinx.android.synthetic.main.activity_master_consol.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import ru.acurresearch.mosdombyt.App.App
 import ru.acurresearch.mosdombyt.Constants
 import ru.acurresearch.mosdombyt.Fragments.CompleteTasksFragment
 import ru.acurresearch.mosdombyt.Fragments.InWorkTasksFragment
 import ru.acurresearch.mosdombyt.Fragments.NewTasksFragment
 import ru.acurresearch.mosdombyt.Master
+import ru.acurresearch.mosdombyt.ServiceItemCustom
 import ru.acurresearch.mosdombyt.Task
+//TODO прилепить фетчинг новых товаров к апдейту таворов по эвоторовской базе
+//TODO Ускорить, обновляеться все очень медленно
 
 class MasterConsolActivity : AppCompatActivity() {
 
@@ -25,26 +32,34 @@ class MasterConsolActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(ru.acurresearch.mosdombyt.R.layout.activity_master_consol)
 
-
-
-        //Todo fetch data from server
-        App.prefs.allMasters = ArrayList((1..5).map { Master("Имя Человека "+ it.toString(), "Специализация Человека "+ it.toString() ) })
+        fetchAndRebuildTasks()
+        fetchMasters()
         rebuildScreen()
 
     }
+    fun fetchMasters(){
+        fun onSuccess(resp_data: List<Master>){
+            App.prefs.allMasters =  resp_data
+        }
+
+        val call = App.api.fetchMasters()
+        call.enqueue(object : Callback<List<Master>> {
+            override fun onResponse(call: Call<List<Master>>, response: Response<List<Master>>) {
+                Log.e("processServerRquests",response.errorBody().toString() )
+                if (response.isSuccessful)
+                    if (response.isSuccessful)
+                        onSuccess(response.body()!!)
+                    else
+                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+            }
+            override fun onFailure(call: Call<List<Master>>, t: Throwable) {
+                Log.e("sendPhone", "Sorry, unable to make request", t)
+                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     fun rebuildScreen(){
-
-        //Todo fetch data from server
-        //taskList = ArrayList(App.prefs.lastOrder.toTaskList())
-        //вот тут было как бы с сервера
-
-        var tmp_arr = ArrayList(App.prefs.lastOrder.toTaskList())
-        //tmp_arr[0].status = Constants.TaskStatus.IN_WORK
-        //tmp_arr[1].status = Constants.TaskStatus.COMPLETE
-        //tmp_arr[3].status = Constants.TaskStatus.IN_WORK
-
-        App.prefs.allTasks = tmp_arr
-
 
 
         val sectionsPagerAdapter = SectionsPageAdapter( supportFragmentManager)
@@ -53,18 +68,34 @@ class MasterConsolActivity : AppCompatActivity() {
         sectionsPagerAdapter.addFragment(CompleteTasksFragment(), "Готовые")
 
 
-
         view_pager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(ru.acurresearch.mosdombyt.R.id.tabs)
         tabs.setupWithViewPager(view_pager)
 
     }
 
+    fun fetchAndRebuildTasks(){
+        fun onSuccess(resp_data: List<Task>){
+            App.prefs.allTasks =  resp_data
+            rebuildScreen()
+        }
 
-
-
-
-
+        val call = App.api.fetchTasks()
+        call.enqueue(object : Callback<List<Task>> {
+            override fun onResponse(call: Call<List<Task>>, response: Response<List<Task>>) {
+                Log.e("processServerRquests",response.errorBody().toString() )
+                if (response.isSuccessful)
+                    if (response.isSuccessful)
+                        onSuccess(response.body()!!)
+                    else
+                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+            }
+            override fun onFailure(call: Call<List<Task>>, t: Throwable) {
+                Log.e("sendPhone", "Sorry, unable to make request", t)
+                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
 
 

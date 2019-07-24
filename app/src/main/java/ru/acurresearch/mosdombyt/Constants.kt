@@ -19,23 +19,23 @@ object Constants {
 
 
     object BillingType {
-        const val PREPAY = "PREPAY"
-        const val POSTPAY = "POSTPAY"
+        const val PREPAY = "PREP"
+        const val POSTPAY = "POST"
     }
 
     object OrderStatus {
         const val PRE_CREATED = "PRE_CREATED"
-        const val CREATED = "CREATED"
-        const val PENDING = "PENDING"
-        const val IN_PROGRESS = "IN_PROGRESS"
-        const val READY = "READY"
-        const val CLOSED = "CLOSED"
+        const val CREATED = "CRTD"
+        const val PENDING = "PEND"
+        const val IN_PROGRESS = "INWK"
+        const val READY = "REDY"
+        const val CLOSED = "CLSD"
     }
 
     object TaskStatus {
-        const val NEW = "NEW"
-        const val IN_WORK = "IN_WORK"
-        const val COMPLETE = "COMPLETE"
+        const val NEW = "CRTD"
+        const val IN_WORK = "INWK"
+        const val COMPLETE = "REDY"
     }
 
     object OrderSuggestedAction{

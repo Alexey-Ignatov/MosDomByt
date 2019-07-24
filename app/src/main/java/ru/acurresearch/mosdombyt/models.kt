@@ -2,10 +2,14 @@ package ru.acurresearch.mosdombyt
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.JsonObject
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import ru.acurresearch.mosdombyt.App.App
 import ru.acurresearch.mosdombyt.App.fromJson
 import ru.evotor.framework.core.IntegrationException
@@ -147,13 +151,14 @@ data class Client(@SerializedName("name") val name: String?,
 
 
 
-data class ServiceItemCustom(@SerializedName("product_uuid") val productUUID: String?,
+data class ServiceItemCustom(@SerializedName("uuid") val uuid: String?,
+                             @SerializedName("product_uuid") val productUUID: String?,
                              @SerializedName("product_name") val name: String,
                              @SerializedName("default_price") val defPrice: Double?,
-                             @SerializedName("default_expires_in") val defExpiresIn: Int?){
+                             @SerializedName("default_expires_delta") val defExpiresIn: Int?){
     companion object{
         fun fromEvoProductItem(evoPos : ProductItem , defPrice: Double? = null,defExpiresIn: Int?  ): ServiceItemCustom{
-            return ServiceItemCustom(evoPos.uuid, evoPos.name, defPrice,defExpiresIn )
+            return ServiceItemCustom(UUID.randomUUID().toString(),evoPos.uuid, evoPos.name, defPrice,defExpiresIn )
         }
 
     }
@@ -162,10 +167,14 @@ data class ServiceItemCustom(@SerializedName("product_uuid") val productUUID: St
 
 
 data class OrderPostition(@SerializedName("uuid")          val uuid: String,
-                          @SerializedName("serv_item")     val serviceItem: ServiceItemCustom,
+                                                                 val serviceItem: ServiceItemCustom,
                           @SerializedName("quantity")      val quantity: Double,
                           @SerializedName("price")         val price: Double,
                           @SerializedName("expires_in")    val expDate: Date?){
+
+    @SerializedName("serv_item")
+    val servItem_uuid = serviceItem.productUUID
+
     fun toEvotorPositionAdd(): PositionAdd{
         return   PositionAdd(Position.Builder.newInstance(
             uuid,
@@ -181,13 +190,15 @@ data class OrderPostition(@SerializedName("uuid")          val uuid: String,
 
 
 
+
 data class Order(@SerializedName("id")             val uuid: String,
                  @SerializedName("positions_list") var positionsList: ArrayList<OrderPostition>,
                  @SerializedName("custom_price")   var custom_price: Double?,
                  @SerializedName("client")         var client: Client,
                  @SerializedName("billing_type")   var billType: String,
                  @SerializedName("status")         var status: String,
-                 @SerializedName("internal_id")    var internalId: String? = null
+                 @SerializedName("created_at")     var dateCreated: Date?=null,
+                 @SerializedName("id_in_store")    var internalId: Int? = null
 ) {
 
     @SerializedName("is_paid")
@@ -254,7 +265,7 @@ data class Order(@SerializedName("id")             val uuid: String,
     }
 
     fun toTaskList():List<Task>{
-        return positionsList.map {Task(it,internalId,Constants.TaskStatus.NEW) }
+        return positionsList.map {Task(0, it.serviceItem.name,it.expDate,internalId,Constants.TaskStatus.NEW) }
     }
 
     companion object {
@@ -291,12 +302,15 @@ data class Order(@SerializedName("id")             val uuid: String,
 
 }
 
-data class Master(@SerializedName("name") val name: String,
-                  @SerializedName("specialization") val specialization: String)
+data class Master(  @SerializedName("id")  val id: Int?,
+                    @SerializedName("name") val name: String,
+                    @SerializedName("specialization") val specialization: String)
 
 
-data class Task(@SerializedName("order_position")  val orderPostition: OrderPostition,
-                @SerializedName("order_internal_id")  val orderInternalId: String?,
+data class Task(@SerializedName("id")  val id: Int,
+                @SerializedName("name")  val name: String?,
+                @SerializedName("exp_date")  val expDate: Date?,
+                @SerializedName("order_internal_id")  val orderInternalId: Int?,
                 @SerializedName("status") var status: String,
                 @SerializedName("master") var master: Master? = null){
 
@@ -304,11 +318,34 @@ data class Task(@SerializedName("order_position")  val orderPostition: OrderPost
         //TODO send info to server
         master = assignedMaster
         status = Constants.TaskStatus.IN_WORK
+        syncServer()
     }
     fun finish(){
         //TODO send info to server
         status = Constants.TaskStatus.COMPLETE
+        syncServer()
 
+    }
+
+    fun syncServer(){
+        fun onSuccess(resp_data: Task){
+
+        }
+
+        val call = App.api.updTask(this, id)
+        call.enqueue(object : Callback<Task> {
+            override fun onResponse(call: Call<Task>, response: Response<Task>) {
+                Log.e("processServerRquests",response.errorBody().toString() )
+                if (response.isSuccessful)
+                    if (response.isSuccessful)
+                        onSuccess(response.body()!!)
+                    else
+                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+            }
+            override fun onFailure(call: Call<Task>, t: Throwable) {
+                Log.e("sendPhone", "Sorry, unable to make request", t)
+            }
+        })
     }
 }
 
