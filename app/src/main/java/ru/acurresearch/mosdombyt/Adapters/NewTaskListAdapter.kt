@@ -23,7 +23,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class NewTaskListAdapter(val items : List<Task>, val context: Context) : RecyclerView.Adapter<NewTaskListAdapter.ViewHolder>() {
+class NewTaskListAdapter(val items : ArrayList<Task>, val context: Context) : RecyclerView.Adapter<NewTaskListAdapter.ViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -69,7 +69,6 @@ class NewTaskListAdapter(val items : List<Task>, val context: Context) : Recycle
                 val masters = App.prefs.allMasters.map { it.name }.toTypedArray()
                 alertDialog.setItems(masters) { dialog, which ->
                     value.takeInWork(App.prefs.allMasters[which])
-                    (context as MasterConsolActivity).rebuildScreen()
                     (context as MasterConsolActivity).fetchAndRebuildTasks()
                 }
 

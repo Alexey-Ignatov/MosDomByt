@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.Toast
 import ru.acurresearch.mosdombyt.Adapters.SectionsPageAdapter
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_master_consol.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ru.acurresearch.mosdombyt.Adapters.NewTaskListAdapter
 import ru.acurresearch.mosdombyt.App.App
 import ru.acurresearch.mosdombyt.Constants
 import ru.acurresearch.mosdombyt.Fragments.CompleteTasksFragment
@@ -23,10 +25,13 @@ import ru.acurresearch.mosdombyt.ServiceItemCustom
 import ru.acurresearch.mosdombyt.Task
 //TODO прилепить фетчинг новых товаров к апдейту таворов по эвоторовской базе
 //TODO Ускорить, обновляеться все очень медленно
+//TODO добавить проверку на пустоту имени и телефона, иначе сервер упадет!!!
 
 class MasterConsolActivity : AppCompatActivity() {
 
-    private var mViewPager: ViewPager? = null
+    var newTasksItems = ArrayList<Task>(listOf())
+    var inWorkTasksItems = ArrayList<Task>(listOf())
+    var completeTasksItems = ArrayList<Task>(listOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +39,6 @@ class MasterConsolActivity : AppCompatActivity() {
 
         fetchAndRebuildTasks()
         fetchMasters()
-        rebuildScreen()
 
     }
     fun fetchMasters(){
@@ -59,13 +63,14 @@ class MasterConsolActivity : AppCompatActivity() {
         })
     }
 
-    fun rebuildScreen(){
+    fun buildScreen(){
 
 
         val sectionsPagerAdapter = SectionsPageAdapter( supportFragmentManager)
         sectionsPagerAdapter.addFragment(NewTasksFragment(), "Новые")
         sectionsPagerAdapter.addFragment(InWorkTasksFragment(), "В работе")
         sectionsPagerAdapter.addFragment(CompleteTasksFragment(), "Готовые")
+
 
 
         view_pager.adapter = sectionsPagerAdapter
@@ -77,7 +82,7 @@ class MasterConsolActivity : AppCompatActivity() {
     fun fetchAndRebuildTasks(){
         fun onSuccess(resp_data: List<Task>){
             App.prefs.allTasks =  resp_data
-            rebuildScreen()
+            buildScreen()
         }
 
         val call = App.api.fetchTasks()

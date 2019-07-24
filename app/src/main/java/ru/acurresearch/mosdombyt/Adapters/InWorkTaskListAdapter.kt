@@ -75,7 +75,6 @@ class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : Recy
                         // if this button is clicked, close
                         // current activity
                     value.finish()
-                    (context as MasterConsolActivity).rebuildScreen()
                     (context as MasterConsolActivity).fetchAndRebuildTasks()
                     }
                 alertDialog.setNegativeButton("Нет") { dialog, id ->

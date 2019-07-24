@@ -20,7 +20,7 @@ object ApiProvider {
 object GsonConverterProvider {
     fun provide(): GsonConverterFactory {
         val gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             .serializeNulls()
             .create()
 

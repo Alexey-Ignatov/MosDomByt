@@ -44,11 +44,12 @@ class NewTasksFragment() : Fragment() {
         return view
     }
     fun initTaskList(view: View){
+        (context as MasterConsolActivity).newTasksItems =ArrayList( App.prefs.allTasks.filter { it.status == Constants.TaskStatus.NEW })
         var task_list = view.findViewById(R.id.new_task_list) as RecyclerView
         var layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         task_list.layoutManager = layoutManager
-        var adapter = NewTaskListAdapter(App.prefs.allTasks.filter { it.status == Constants.TaskStatus.NEW }, context!!)
+        var adapter = NewTaskListAdapter((context as MasterConsolActivity).newTasksItems, context!!)
         task_list.adapter = adapter
     }
 

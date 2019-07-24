@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import ru.acurresearch.mosdombyt.Activities.MasterConsolActivity
 import ru.acurresearch.mosdombyt.Adapters.InWorkTaskListAdapter
 import ru.acurresearch.mosdombyt.Adapters.NewTaskListAdapter
 import ru.acurresearch.mosdombyt.App.App
@@ -29,11 +30,13 @@ class InWorkTasksFragment : Fragment() {
         return view
     }
     fun initTaskList(view: View){
+        (context as MasterConsolActivity).inWorkTasksItems =ArrayList( App.prefs.allTasks.filter { it.status == Constants.TaskStatus.IN_WORK })
+
         var task_list = view.findViewById(R.id.in_work_task_list) as RecyclerView
         var layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         task_list.layoutManager = layoutManager
-        var adapter = InWorkTaskListAdapter(App.prefs.allTasks.filter { it.status == Constants.TaskStatus.IN_WORK }, context!!)
+        var adapter = InWorkTaskListAdapter((context as MasterConsolActivity).inWorkTasksItems, context!!)
         task_list.adapter = adapter
 
     }

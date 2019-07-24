@@ -51,7 +51,7 @@ class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : Re
         // Holds the TextView that will add each animal to
         fun setData(value: Task, pos: Int) {
             val time_diff = value.expDate!!.getTime() - Date().getTime()
-            val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN)
+            val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN, Locale.getDefault())
 
 
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import ru.acurresearch.mosdombyt.Activities.MasterConsolActivity
 import ru.acurresearch.mosdombyt.Adapters.CompleteTaskListAdapter
 import ru.acurresearch.mosdombyt.Adapters.NewTaskListAdapter
 import ru.acurresearch.mosdombyt.App.App
@@ -33,11 +34,13 @@ class CompleteTasksFragment : Fragment() {
         return view
     }
     fun initTaskList(view: View){
+        (context as MasterConsolActivity).completeTasksItems =ArrayList( App.prefs.allTasks.filter { it.status == Constants.TaskStatus.COMPLETE })
+
         var task_list = view.findViewById(R.id.complete_task_list) as RecyclerView
         var layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         task_list.layoutManager = layoutManager
-        var adapter = CompleteTaskListAdapter(App.prefs.allTasks.filter { it.status == Constants.TaskStatus.COMPLETE }, context!!)
+        var adapter = CompleteTaskListAdapter((context as MasterConsolActivity).completeTasksItems, context!!)
         task_list.adapter = adapter
     }
     companion object {
