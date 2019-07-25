@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_item.view.*
+import kotlinx.android.synthetic.main.list_item_complete_tasks_list.view.*
 import kotlinx.android.synthetic.main.list_item_search.view.*
 import ru.acurresearch.mosdombyt.Activities.MainActivity
 import ru.acurresearch.mosdombyt.Activities.OrderFinalActivity
@@ -45,7 +46,7 @@ class OrderSearchListAdapter(val items : ArrayList<Order>, val context: Context)
             view.search_act_name_ph.text = value.client.name
             view.search_act_phone_ph.text = value.client.phone
             view.search_act_sum_ph.text = value.price.toString() + " руб."
-            view.search_act_order_id_ph.text = "?????"
+            view.search_act_order_id_ph.text = value.internalId?.toString() ?: "???"
 
 
             view.setOnClickListener {

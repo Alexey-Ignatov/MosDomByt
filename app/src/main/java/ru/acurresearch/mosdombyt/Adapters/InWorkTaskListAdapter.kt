@@ -21,11 +21,10 @@ import ru.acurresearch.mosdombyt.Activities.MasterConsolActivity
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
-
-
-class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : RecyclerView.Adapter<InWorkTaskListAdapter.ViewHolder>() {
+class InWorkTaskListAdapter(val items : ArrayList<Task>, val context: Context) : RecyclerView.Adapter<InWorkTaskListAdapter.ViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -74,8 +73,18 @@ class InWorkTaskListAdapter(val items : List<Task>, val context: Context) : Recy
                 alertDialog.setPositiveButton("Да") { dialog, id ->
                         // if this button is clicked, close
                         // current activity
-                    value.finish()
-                    (context as MasterConsolActivity).fetchAndRebuildTasks()
+                    value.finish(context)
+
+                    val removeIndex = getAdapterPosition()
+                    items.removeAt(removeIndex)
+                    notifyItemRemoved(removeIndex)
+
+                    val position = (context as MasterConsolActivity).completeTasksItems.size
+                    (context as MasterConsolActivity).completeTasksItems.add(position, value)
+                    (context as MasterConsolActivity).adapterCompleteTask.notifyItemInserted(position)
+                    (context as MasterConsolActivity).dumpTasksToDisk()
+
+                    //(context as MasterConsolActivity).fetchAndBuildTasks()
                     }
                 alertDialog.setNegativeButton("Нет") { dialog, id ->
                         dialog.cancel()

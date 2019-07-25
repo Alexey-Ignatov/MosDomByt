@@ -1,6 +1,7 @@
 package ru.acurresearch.mosdombyt
 
 import android.app.Activity
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.gson.JsonObject
@@ -167,7 +168,7 @@ data class ServiceItemCustom(@SerializedName("uuid") val uuid: String?,
 
 
 data class OrderPostition(@SerializedName("uuid")          val uuid: String,
-                                                                 val serviceItem: ServiceItemCustom,
+                          @SerializedName("serv_item_full")  val serviceItem: ServiceItemCustom,
                           @SerializedName("quantity")      val quantity: Double,
                           @SerializedName("price")         val price: Double,
                           @SerializedName("expires_in")    val expDate: Date?){
@@ -191,14 +192,15 @@ data class OrderPostition(@SerializedName("uuid")          val uuid: String,
 
 
 
-data class Order(@SerializedName("id")             val uuid: String,
+data class Order(@SerializedName("id")             val id: Int?,
                  @SerializedName("positions_list") var positionsList: ArrayList<OrderPostition>,
                  @SerializedName("custom_price")   var custom_price: Double?,
                  @SerializedName("client")         var client: Client,
                  @SerializedName("billing_type")   var billType: String,
-                 @SerializedName("status")         var status: String,
+                 @SerializedName("order_status")   var status: String,
                  @SerializedName("created_at")     var dateCreated: Date?=null,
-                 @SerializedName("id_in_store")    var internalId: Int? = null
+                 @SerializedName("id_in_store")    var internalId: Int? = null,
+                 @SerializedName("id_in_store_for_print") var printLabel: String? = null
 ) {
 
     @SerializedName("is_paid")
@@ -232,7 +234,6 @@ data class Order(@SerializedName("id")             val uuid: String,
         }
     }
 
-
     fun toJson(): String{
         return GsonBuilder().create().toJson(this)
     }
@@ -261,11 +262,58 @@ data class Order(@SerializedName("id")             val uuid: String,
                 return Constants.OrderSuggestedAction.CLOSE
         }
 
+        if (!isPaid)
+            return Constants.OrderSuggestedAction.PAY
+
         return Constants.OrderSuggestedAction.NOTHING
     }
 
     fun toTaskList():List<Task>{
         return positionsList.map {Task(0, it.serviceItem.name,it.expDate,internalId,Constants.TaskStatus.NEW) }
+    }
+
+    fun close(contex: Context){
+        status = Constants.OrderStatus.CLOSED
+        if (id == null)
+            return
+
+        syncStatus(contex)
+
+    }
+
+    fun setPaid(contex: Context){
+        isPaid = true
+        if (id == null)
+            return
+
+        syncStatus(contex)
+
+    }
+
+    fun syncStatus(contex: Context){
+        fun onSuccess(resp_data: Order){
+            Toast.makeText(contex, "Статус заказа изменен", Toast.LENGTH_SHORT).show()
+        }
+        var call : Call<Order>? = null
+        if (id != null){
+            call = App.api.updOrderStatus(this, id)
+        }
+        else{
+            call = App.api.sendOrder(this)
+        }
+        call.enqueue(object : Callback<Order> {
+            override fun onResponse(call: Call<Order>, response: Response<Order>) {
+                Log.e("processServerRquests",response.errorBody().toString() )
+                if (response.isSuccessful)
+                    if (response.isSuccessful)
+                        onSuccess(response.body()!!)
+                    else
+                        Toast.makeText(contex,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
+            }
+            override fun onFailure(call: Call<Order>, t: Throwable) {
+                Toast.makeText(contex,"Проверьте подключение к интернету!", Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     companion object {
@@ -274,7 +322,7 @@ data class Order(@SerializedName("id")             val uuid: String,
         }
 
         fun empty(): Order{
-            return Order("",
+            return Order(null,
                             ArrayList(listOf<OrderPostition>()),
                 null,
                             Client("", ""),
@@ -282,7 +330,7 @@ data class Order(@SerializedName("id")             val uuid: String,
                             Constants.OrderStatus.PRE_CREATED)
         }
         fun newPrePaid(): Order{
-            return Order(UUID.randomUUID().toString(),
+            return Order(null,
                     ArrayList(listOf<OrderPostition>()),
                     null,
                     Client("", ""),
@@ -291,7 +339,7 @@ data class Order(@SerializedName("id")             val uuid: String,
         }
 
         fun newPostPaid(): Order{
-            return Order(UUID.randomUUID().toString(),
+            return Order(null,
                 ArrayList(listOf<OrderPostition>()),
                 null,
                 Client("", ""),
@@ -314,22 +362,20 @@ data class Task(@SerializedName("id")  val id: Int,
                 @SerializedName("status") var status: String,
                 @SerializedName("master") var master: Master? = null){
 
-    fun takeInWork(assignedMaster: Master?){
-        //TODO send info to server
+    fun takeInWork(assignedMaster: Master?, contex: Context){
         master = assignedMaster
         status = Constants.TaskStatus.IN_WORK
-        syncServer()
+        syncServer(contex)
     }
-    fun finish(){
-        //TODO send info to server
+    fun finish(contex: Context){
         status = Constants.TaskStatus.COMPLETE
-        syncServer()
+        syncServer(contex)
 
     }
 
-    fun syncServer(){
+    fun syncServer(contex: Context){
         fun onSuccess(resp_data: Task){
-
+            Toast.makeText(contex, "Статус заказа изменен", Toast.LENGTH_SHORT).show()
         }
 
         val call = App.api.updTask(this, id)

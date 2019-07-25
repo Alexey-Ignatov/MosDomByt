@@ -23,23 +23,9 @@ class InWorkTasksFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view =  inflater.inflate(R.layout.in_work_fragment_master_consol, container, false)
-
-        initTaskList(view)
-
+        (context as MasterConsolActivity).initInWorkTaskList(view)
 
         return view
     }
-    fun initTaskList(view: View){
-        (context as MasterConsolActivity).inWorkTasksItems =ArrayList( App.prefs.allTasks.filter { it.status == Constants.TaskStatus.IN_WORK })
-
-        var task_list = view.findViewById(R.id.in_work_task_list) as RecyclerView
-        var layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        task_list.layoutManager = layoutManager
-        var adapter = InWorkTaskListAdapter((context as MasterConsolActivity).inWorkTasksItems, context!!)
-        task_list.adapter = adapter
-
-    }
-
 
 }

@@ -17,33 +17,12 @@ import ru.acurresearch.mosdombyt.R
 
 
 class CompleteTasksFragment : Fragment() {
-
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view =  inflater.inflate(R.layout.complete_task_fragment_master_consol, container, false)
-
-        initTaskList(view)
-
-
-
-
-
-
+        (context as MasterConsolActivity).initTaskCompleteList(view)
 
         return view
     }
-    fun initTaskList(view: View){
-        (context as MasterConsolActivity).completeTasksItems =ArrayList( App.prefs.allTasks.filter { it.status == Constants.TaskStatus.COMPLETE })
 
-        var task_list = view.findViewById(R.id.complete_task_list) as RecyclerView
-        var layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        task_list.layoutManager = layoutManager
-        var adapter = CompleteTaskListAdapter((context as MasterConsolActivity).completeTasksItems, context!!)
-        task_list.adapter = adapter
-    }
-    companion object {
-        private val TAG = "Tab1Fragment"
-    }
+
 }

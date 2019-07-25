@@ -151,16 +151,28 @@
                         app:layout_constraintBottom_toBottomOf="parent" tools:text="100.0" android:textStyle="bold"/>
             </android.support.constraint.ConstraintLayout>
             <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:layout_marginTop="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_marginTop="16dp">
 
-                <TextView
-                        android:text="НЕ ОПЛАЧЕН"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/order_is_paid_text"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintEnd_toEndOf="parent" android:textSize="36sp" android:textColor="#E91E63"/>
-            </android.support.constraint.ConstraintLayout>
+            <TextView
+                    android:text="НЕ ОПЛАЧЕН"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/order_is_paid_text"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintEnd_toEndOf="parent" android:textSize="36sp" android:textColor="#E91E63"/>
+        </android.support.constraint.ConstraintLayout>
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_marginTop="16dp">
+
+            <TextView
+                    android:text="Новый"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/order_status_text"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintEnd_toEndOf="parent" android:textSize="36sp" android:textColor="#5C6BC0"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+        </android.support.constraint.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
     <android.support.constraint.ConstraintLayout

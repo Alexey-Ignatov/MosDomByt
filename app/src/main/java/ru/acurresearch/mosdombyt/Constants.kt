@@ -30,6 +30,7 @@ object Constants {
         const val IN_PROGRESS = "INWK"
         const val READY = "REDY"
         const val CLOSED = "CLSD"
+        val MAP_TO_RUSSIAN = mapOf(PRE_CREATED to "НОВЫЙ", CREATED to "ОЖИДАНИЕ", READY to "ВЫДАЧА", CLOSED to "ЗАКРЫТ",IN_PROGRESS to "В РАБОТЕ" )
     }
 
     object TaskStatus {
@@ -43,5 +44,6 @@ object Constants {
         const val CLOSE = "CLOSE"
         const val CREATE = "CREATE"
         const val NOTHING= "NOTHING"
+
     }
 }

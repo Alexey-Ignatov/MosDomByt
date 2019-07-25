@@ -24,7 +24,7 @@ interface Api {
 
 
     @POST("/api/orders/")
-    fun sendOrder(@Body orderToSend: Order): Call<String>
+    fun sendOrder(@Body orderToSend: Order): Call<Order>
 
 
     @GET("/api/servitems/")
@@ -37,8 +37,14 @@ interface Api {
     @GET("/api/tasks/")
     fun fetchTasks() : Call<List<Task>>
 
+    @GET("/api/orders/search/{SEARCHSTR}/")
+    fun searchOrder(@Path("SEARCHSTR") searchStr: String) : Call<List<Order>>
+
     @PUT("/api/tasks/{ID}/")
     fun updTask(@Body task: Task, @Path("ID") task_id: Int) :  Call<Task>
+
+    @PUT("/api/orders/update/{ID}/")
+    fun updOrderStatus(@Body order: Order, @Path("ID") order_id: Int) :  Call<Order>
 
 
 }

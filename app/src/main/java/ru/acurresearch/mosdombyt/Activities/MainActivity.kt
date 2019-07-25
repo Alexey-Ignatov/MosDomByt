@@ -57,26 +57,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         create_pre_pay_order.setOnClickListener {
+            if (ed_txt_name.text.toString() != "" && ed_txt_phone.text.toString() != ""){
 
-            currOrder.client = getClientFromForm()
-            App.prefs.lastOrder=currOrder
+                currOrder.client = Client(ed_txt_name.text.toString(), ed_txt_phone.text.toString())
+                App.prefs.lastOrder=currOrder
 
-            var intent = Intent(this, OrderFinalActivity::class.java)
-            intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
-            startActivity(intent)
+                var intent = Intent(this, OrderFinalActivity::class.java)
+                intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "Введите данные клиента. ", Toast.LENGTH_SHORT).show()
+            }
         }
 
         create_post_pay_order.setOnClickListener {
+            if (ed_txt_name.text.toString() != "" && ed_txt_phone.text.toString() != ""){
+                currOrder.client = Client(ed_txt_name.text.toString(), ed_txt_phone.text.toString())
+                App.prefs.lastOrder=currOrder
 
-            currOrder.client = getClientFromForm()
-            App.prefs.lastOrder=currOrder
 
+                var intent = Intent(this, OrderFinalActivity::class.java)
+                intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
 
-
-            var intent = Intent(this, OrderFinalActivity::class.java)
-            intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
-
-            startActivity(intent)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "Введите данные клиента", Toast.LENGTH_SHORT).show()
+            }
         }
         //initPrinter()
 
@@ -100,9 +106,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun refreshAllowedProds(){
-        //TODO get from server data
-        //val my_goods = ProductQuery().price.notEqual(BigDecimal.valueOf(0)).execute(this).toList()
-         //my_goods.map {ServiceItemCustom.fromEvoProductItem(it!!,10.0, 3600*24)}
 
         fun onSuccess(resp_data: List<ServiceItemCustom>){
             App.prefs.allAllowedProducts = resp_data
@@ -120,7 +123,7 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onFailure(call: Call<List<ServiceItemCustom>>, t: Throwable) {
                 Log.e("sendPhone", "Sorry, unable to make request", t)
-                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(getApplicationContext(),"ВНИМАНИЕ! Не удалось получить товары!", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -150,39 +153,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     fun clearSelectedGoods(){
         App.prefs.selectedPositions = listOf()
     }
 
 
 
-    fun createCheckFromSelected(){
-        val changes = ArrayList<PositionAdd>()
-        var listItem = ArrayList(App.prefs.selectedPositions.map { it.toEvotorPositionAdd() })
-        listItem.map { changes.add(it) }
 
-
-        OpenSellReceiptCommand(changes, null).process(
-            this
-        ) { integrationManagerFuture ->
-            try {
-                val result = integrationManagerFuture.result
-                if (result.type == IntegrationManagerFuture.Result.Type.OK) {
-                    //Чтобы открыть другие документы используйте методы NavigationApi.
-                    startActivity(createIntentForSellReceiptEdit())
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: IntegrationException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun getClientFromForm(): Client{
-        return Client(ed_txt_name.text.toString(), ed_txt_phone.text.toString())
-    }
 
 
 

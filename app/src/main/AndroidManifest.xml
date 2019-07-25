@@ -44,7 +44,7 @@
         <activity
                 android:name=".Activities.ChoosePayTypeActivity"
                 android:icon="@mipmap/ic_launcher"
-                android:label="Создание заказа">
+                android:label="Заказы">
             <meta-data
                     android:name="ru.evotor.launcher.BACKGROUND_COLOR"
                     android:value="#133788" />

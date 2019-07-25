@@ -38,6 +38,7 @@ class OrderFinalActivity : AppCompatActivity() {
 
         var intent = getIntent()
         currOrder = Order.fromJson(intent.getStringExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL))
+        App.prefs.lastOrder = currOrder
         initUi()
         initListeners()
 
@@ -56,51 +57,52 @@ class OrderFinalActivity : AppCompatActivity() {
     fun initListeners(){
         order_final_pay_btn.setOnClickListener {
             currOrder.realize(this)
-            orderSendRefreshEtc()
+            refreshCart()
             finish()
         }
 
         order_final_close_order_btn.setOnClickListener{
-            //TODO Send data to server закрытие заказа
-            currOrder.status = Constants.OrderStatus.CLOSED
-            orderSendRefreshEtc()
+
+            currOrder.close(this)
+            App.prefs.lastOrder = currOrder
             finish()
 
         }
 
         order_final_client_print_btn.setOnClickListener{
-            //TODO Send data to server открытие заказа
             currOrder.status = Constants.OrderStatus.CREATED
-
-
-            val alertDialog = AlertDialog.Builder(this)
-            alertDialog.setTitle("Распечатать ярлык с номером заказа для внутреннего использования?")
-            alertDialog.setCancelable(false)
-            alertDialog.setPositiveButton("Да") { dialog, id ->
-                //TODO получить с сервера номер заказа и картинку для печати
-                initPrinter()
-                print("#######   #####    ######  \r\n##   ##  ##   ##      ##   \r\n    ##       ###     ##    \r\n   ##      ####     ####   \r\n  ##      ####         ##  \r\n  ##     ###      ##   ##  \r\n  ##     #######   #####   \r\n                           \r\n")
-                finish()
-            }
-            alertDialog.setNegativeButton("Нет") { dialog, id ->
-                finish()
-            }
-            alertDialog.create().show()
-
-            orderSendRefreshEtc()
+            sendOrderGetLabel(currOrder)
         }
 
     }
 
-    fun sendOrder(order: Order){
+    fun createPrintLabelDialog(asciArtOrderNo: String){
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Распечатать ярлык с номером заказа для внутреннего использования?")
+        alertDialog.setCancelable(false)
+        alertDialog.setPositiveButton("Да") { dialog, id ->
+            initPrinter()
+            print(asciArtOrderNo)
+            finish()
+        }
+        alertDialog.setNegativeButton("Нет") { dialog, id ->
+            finish()
+        }
+        alertDialog.create().show()
+    }
+
+
+    fun sendOrderGetLabel(order: Order){
         //TODO нормально описать ошибки
-        fun onSuccess(resp_data: String){
+        fun onSuccess(resp_data: Order){
+            createPrintLabelDialog(resp_data.printLabel!!)
+            refreshCart()
 
         }
 
         val call = App.api.sendOrder(order)
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+        call.enqueue(object : Callback<Order> {
+            override fun onResponse(call: Call<Order>, response: Response<Order>) {
                 Log.e("processServerRquests",response.errorBody().toString() )
                 if (response.isSuccessful)
                     if (response.isSuccessful)
@@ -108,17 +110,10 @@ class OrderFinalActivity : AppCompatActivity() {
                     else
                         Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
             }
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.e("sendPhone", "Sorry, unable to make request", t)
-                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<Order>, t: Throwable) {
+                Toast.makeText(getApplicationContext(),"ВНИМАНИЕ! Не удалось создать заказ. Проверьте подключение к Интернету!", Toast.LENGTH_LONG).show()
             }
         })
-
-    }
-
-    fun orderSendRefreshEtc(){
-        sendOrder(currOrder)
-        refreshCart()
 
     }
 
@@ -154,6 +149,7 @@ class OrderFinalActivity : AppCompatActivity() {
         order_client_name_holder.text = currOrder.client!!.name
         order_client_phone_holder.text = currOrder.client!!.phone
         order_final_total_price.text = currOrder.price.toString() + " руб."
+        order_status_text.text = Constants.OrderStatus.MAP_TO_RUSSIAN[currOrder.status]
         if (currOrder.isPaid ){
             order_is_paid_text.text = "ОПЛАЧЕН"
             order_is_paid_text.setTextColor(Color.GREEN)
@@ -168,7 +164,6 @@ class OrderFinalActivity : AppCompatActivity() {
         order_list_final.layoutManager = layoutManager
         var adapter= OrderFinalViewAdapter(currOrder.positionsList, this)
         order_list_final.adapter = adapter
-
 
     }
 

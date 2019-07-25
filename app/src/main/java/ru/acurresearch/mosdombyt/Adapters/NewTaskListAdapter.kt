@@ -21,6 +21,9 @@ import ru.acurresearch.mosdombyt.Activities.MasterConsolActivity
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import android.R.attr.data
+
+
 
 
 class NewTaskListAdapter(val items : ArrayList<Task>, val context: Context) : RecyclerView.Adapter<NewTaskListAdapter.ViewHolder>() {
@@ -68,11 +71,20 @@ class NewTaskListAdapter(val items : ArrayList<Task>, val context: Context) : Re
 
                 val masters = App.prefs.allMasters.map { it.name }.toTypedArray()
                 alertDialog.setItems(masters) { dialog, which ->
-                    value.takeInWork(App.prefs.allMasters[which])
-                    (context as MasterConsolActivity).fetchAndRebuildTasks()
-                }
 
-                //val dialog = builder.create()
+                    value.takeInWork(App.prefs.allMasters[which], context)
+
+                    val removeIndex = getAdapterPosition()
+                    items.removeAt(removeIndex)
+                    notifyItemRemoved(removeIndex)
+
+                    val position = (context as MasterConsolActivity).inWorkTasksItems.size
+                    (context as MasterConsolActivity).inWorkTasksItems.add(position, value)
+                    (context as MasterConsolActivity).adapterInWorkTask.notifyItemInserted(position)
+                    (context as MasterConsolActivity).dumpTasksToDisk()
+
+                    //(context as MasterConsolActivity).fetchAndBuildTasks()
+                }
                 alertDialog.create().show()
 
             }
