@@ -24,27 +24,30 @@ interface Api {
 
 
     @POST("/api/orders/")
-    fun sendOrder(@Body orderToSend: Order): Call<Order>
+    fun sendOrder(@Body orderToSend: Order, @Header("Authorization-Acur") token: String): Call<Order>
 
 
     @GET("/api/servitems/")
-    fun fetchAllowedProds() : Call<List<ServiceItemCustom>>
+    fun fetchAllowedProds(@Header("Authorization-Acur") token: String) : Call<List<ServiceItemCustom>>
 
     @GET("/api/masters/")
-    fun fetchMasters() : Call<List<Master>>
+    fun fetchMasters(@Header("Authorization-Acur") token: String) : Call<List<Master>>
 
 
     @GET("/api/tasks/")
-    fun fetchTasks() : Call<List<Task>>
+    fun fetchTasks(@Header("Authorization-Acur") token: String) : Call<List<Task>>
 
     @GET("/api/orders/search/{SEARCHSTR}/")
-    fun searchOrder(@Path("SEARCHSTR") searchStr: String) : Call<List<Order>>
+    fun searchOrder(@Path("SEARCHSTR") searchStr: String, @Header("Authorization-Acur") token: String) : Call<List<Order>>
 
     @PUT("/api/tasks/{ID}/")
-    fun updTask(@Body task: Task, @Path("ID") task_id: Int) :  Call<Task>
+    fun updTask(@Body task: Task, @Path("ID") task_id: Int, @Header("Authorization-Acur") token: String) :  Call<Task>
 
     @PUT("/api/orders/update/{ID}/")
-    fun updOrderStatus(@Body order: Order, @Path("ID") order_id: Int) :  Call<Order>
+    fun updOrderStatus(@Body order: Order, @Path("ID") order_id: Int, @Header("Authorization-Acur") token: String) :  Call<Order>
+
+    @POST("/api/cashbox/register-token/")
+    fun getToken(@Body token: SiteToken) :  Call<CashBoxServerData>
 
 
 }

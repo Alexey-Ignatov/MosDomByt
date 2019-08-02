@@ -16,6 +16,7 @@ object Constants {
     const val NUMBER_TELS_TO_SHOW = 5
     const val PREFS_ALL_MASTERS = "PREFS_ALL_MASTERS"
     const val DATE_PATTERN = "yyyy-MM-dd HH:mm"
+    const val CASHBOX_SERVER_DATA = "CASHBOX_SERVER_DATA"
 
 
     object BillingType {

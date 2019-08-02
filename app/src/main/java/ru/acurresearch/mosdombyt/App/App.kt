@@ -21,6 +21,8 @@ class Prefs(context: Context) {
     val emptyCheckStr = GsonBuilder().create().toJson(emptyCheck)
     val emptyStrListStr = GsonBuilder().create().toJson(listOf<String>())
     val emptyProductItemCustom = GsonBuilder().create().toJson(ServiceItemCustom("","", "",0.0, 1000000))
+    val emptyCashBoxServerData = CashBoxServerData("", "")
+    val emptyCoxServerDataStr =  GsonBuilder().create().toJson(emptyCashBoxServerData)
 
 
     var currCheck: Check
@@ -87,6 +89,15 @@ class Prefs(context: Context) {
         }
         set(value){
             prefs.edit().putString(Constants.PREFS_ALL_TASKS, GsonBuilder().create().toJson(value)).apply()
+        }
+
+    var cashBoxServerData: CashBoxServerData
+        get(){
+            val resStr = prefs.getString(Constants.CASHBOX_SERVER_DATA, emptyCoxServerDataStr)
+            return  Gson().fromJson<CashBoxServerData>(resStr)
+        }
+        set(value){
+            prefs.edit().putString(Constants.CASHBOX_SERVER_DATA, GsonBuilder().create().toJson(value)).apply()
         }
 
 }

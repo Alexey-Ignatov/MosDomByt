@@ -111,14 +111,13 @@ class MainActivity : AppCompatActivity() {
             App.prefs.allAllowedProducts = resp_data
         }
 
-        val call = App.api.fetchAllowedProds()
+        val call = App.api.fetchAllowedProds(App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<List<ServiceItemCustom>> {
             override fun onResponse(call: Call<List<ServiceItemCustom>>, response: Response<List<ServiceItemCustom>>) {
                 Log.e("processServerRquests",response.errorBody().toString() )
                 if (response.isSuccessful)
-                    if (response.isSuccessful)
-                        onSuccess(response.body()!!)
-                    else
+                    onSuccess(response.body()!!)
+                else
                         Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
             }
             override fun onFailure(call: Call<List<ServiceItemCustom>>, t: Throwable) {

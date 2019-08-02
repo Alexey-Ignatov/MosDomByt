@@ -108,15 +108,14 @@ class MasterConsolActivity : AppCompatActivity() {
             App.prefs.allMasters =  resp_data
         }
 
-        val call = App.api.fetchMasters()
+        val call = App.api.fetchMasters(App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<List<Master>> {
             override fun onResponse(call: Call<List<Master>>, response: Response<List<Master>>) {
                 Log.e("processServerRquests",response.errorBody().toString() )
                 if (response.isSuccessful)
-                    if (response.isSuccessful)
-                        onSuccess(response.body()!!)
-                    else
-                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    onSuccess(response.body()!!)
+                else
+                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
             }
             override fun onFailure(call: Call<List<Master>>, t: Throwable) {
                 Log.e("sendPhone", "Sorry, unable to make request", t)
@@ -147,15 +146,14 @@ class MasterConsolActivity : AppCompatActivity() {
             buildScreen()
         }
 
-        val call = App.api.fetchTasks()
+        val call = App.api.fetchTasks(App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<List<Task>> {
             override fun onResponse(call: Call<List<Task>>, response: Response<List<Task>>) {
                 Log.e("processServerRquests",response.errorBody().toString() )
                 if (response.isSuccessful)
-                    if (response.isSuccessful)
-                        onSuccess(response.body()!!)
-                    else
-                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    onSuccess(response.body()!!)
+                else
+                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
             }
             override fun onFailure(call: Call<List<Task>>, t: Throwable) {
                 Log.e("sendPhone", "Sorry, unable to make request", t)

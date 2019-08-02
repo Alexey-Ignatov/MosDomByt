@@ -48,14 +48,13 @@ class OrderSearchActivity : AppCompatActivity() {
 
         }
 
-        val call = App.api.searchOrder(searchString)
+        val call = App.api.searchOrder(searchString, App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<List<Order>> {
             override fun onResponse(call: Call<List<Order>>, response: Response<List<Order>>) {
                 if (response.isSuccessful)
-                    if (response.isSuccessful)
-                        onSuccess(response.body()!!)
-                    else
-                        Toast.makeText(this@OrderSearchActivity,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
+                    onSuccess(response.body()!!)
+                else
+                    Toast.makeText(this@OrderSearchActivity,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<List<Order>>, t: Throwable) {
                 Toast.makeText(getApplicationContext(),"Проверьте подключение к интернету!", Toast.LENGTH_LONG).show()

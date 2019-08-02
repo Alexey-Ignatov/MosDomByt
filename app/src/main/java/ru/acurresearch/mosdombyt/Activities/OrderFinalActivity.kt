@@ -27,6 +27,7 @@ import ru.evotor.devices.commons.services.IPrinterServiceWrapper
 import ru.evotor.devices.commons.services.IScalesServiceWrapper
 import ru.evotor.framework.receipt.Receipt
 import ru.evotor.framework.receipt.ReceiptApi
+import java.util.*
 
 //TODO проверить чтобы список оплаченных совпадал с нашим заказом. Но совпадает - удалить что-то
 //TODO написать ВЫдан, если заказ выдан
@@ -100,15 +101,15 @@ class OrderFinalActivity : AppCompatActivity() {
 
         }
 
-        val call = App.api.sendOrder(order)
+        order.dateCreated = Date()
+        val call = App.api.sendOrder(order, App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<Order> {
             override fun onResponse(call: Call<Order>, response: Response<Order>) {
                 Log.e("processServerRquests",response.errorBody().toString() )
                 if (response.isSuccessful)
-                    if (response.isSuccessful)
-                        onSuccess(response.body()!!)
-                    else
-                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    onSuccess(response.body()!!)
+                else
+                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
             }
             override fun onFailure(call: Call<Order>, t: Throwable) {
                 Toast.makeText(getApplicationContext(),"ВНИМАНИЕ! Не удалось создать заказ. Проверьте подключение к Интернету!", Toast.LENGTH_LONG).show()

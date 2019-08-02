@@ -294,21 +294,22 @@ data class Order(@SerializedName("id")             val id: Int?,
         fun onSuccess(resp_data: Order){
             Toast.makeText(contex, "Статус заказа изменен", Toast.LENGTH_SHORT).show()
         }
+
+        dateCreated = Date()
         var call : Call<Order>? = null
         if (id != null){
-            call = App.api.updOrderStatus(this, id)
+            call = App.api.updOrderStatus(this, id, App.prefs.cashBoxServerData.authHeader)
         }
         else{
-            call = App.api.sendOrder(this)
+            call = App.api.sendOrder(this, App.prefs.cashBoxServerData.authHeader)
         }
         call.enqueue(object : Callback<Order> {
             override fun onResponse(call: Call<Order>, response: Response<Order>) {
                 Log.e("processServerRquests",response.errorBody().toString() )
                 if (response.isSuccessful)
-                    if (response.isSuccessful)
-                        onSuccess(response.body()!!)
-                    else
-                        Toast.makeText(contex,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
+                    onSuccess(response.body()!!)
+                else
+                    Toast.makeText(contex,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<Order>, t: Throwable) {
                 Toast.makeText(contex,"Проверьте подключение к интернету!", Toast.LENGTH_LONG).show()
@@ -378,15 +379,14 @@ data class Task(@SerializedName("id")  val id: Int,
             Toast.makeText(contex, "Статус заказа изменен", Toast.LENGTH_SHORT).show()
         }
 
-        val call = App.api.updTask(this, id)
+        val call = App.api.updTask(this, id, App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<Task> {
             override fun onResponse(call: Call<Task>, response: Response<Task>) {
                 Log.e("processServerRquests",response.errorBody().toString() )
                 if (response.isSuccessful)
-                    if (response.isSuccessful)
-                        onSuccess(response.body()!!)
-                    else
-                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    onSuccess(response.body()!!)
+                else
+                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
             }
             override fun onFailure(call: Call<Task>, t: Throwable) {
                 Log.e("sendPhone", "Sorry, unable to make request", t)
@@ -399,9 +399,17 @@ data class Task(@SerializedName("id")  val id: Int,
 
 
 
+data class SiteToken(val token: String)
+data class CashBoxServerData(val token: String,
+                             val cashbox_uuid: String){
+    val authHeader: String
+        get() = "Bearer "+token
+}
 
 
-                               //val productCode: String,
+
+
+//val productCode: String,
                                //)
 // api fields fields = ('pos_uuid', 'product_uuid', 'product_name', 'quantity', 'price')
 

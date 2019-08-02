@@ -40,6 +40,8 @@
         </activity>
         <activity android:name=".Activities.OrderSearchActivity">
         </activity>
+        <activity android:name=".Activities.TokenActivity">
+        </activity>
 
         <activity
                 android:name=".Activities.ChoosePayTypeActivity"
@@ -51,6 +53,9 @@
             <intent-filter>
                 <action android:name="ru.evotor.intent.action.SELL_MAIN" />
 
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+
                 <category android:name="android.intent.category.EVOTOR" />
 
             </intent-filter>
@@ -58,14 +63,12 @@
 
         <activity android:name=".Activities.MasterConsolActivity"
                   android:icon="@mipmap/ic_launcher"
-                  android:label="Очередь работ">>
+                  android:label="Очередь работ">
             <meta-data
                     android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
                     android:value="#133788"/>
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.EVOTOR"/>
             </intent-filter>
         </activity>
