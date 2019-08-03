@@ -171,6 +171,7 @@ data class OrderPostition(@SerializedName("uuid")          val uuid: String,
                           @SerializedName("serv_item_full")  val serviceItem: ServiceItemCustom,
                           @SerializedName("quantity")      val quantity: Double,
                           @SerializedName("price")         val price: Double,
+                          @SerializedName("product_name")  val productName: String,
                           @SerializedName("expires_in")    val expDate: Date?){
 
     @SerializedName("serv_item")

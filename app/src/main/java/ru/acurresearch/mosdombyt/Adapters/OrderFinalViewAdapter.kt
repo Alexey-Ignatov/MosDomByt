@@ -38,7 +38,7 @@ class OrderFinalViewAdapter(val items : ArrayList<OrderPostition>, val context: 
 
         // Holds the TextView that will add each animal to
         fun setData(value: OrderPostition, pos: Int) {
-            view.serv_item_name.text = value.serviceItem.name
+            view.serv_item_name.text = value.productName
             view.position_price.text = value.price.toString() + " руб."
             //view.item_list_card.setCardBackgroundColor(Color.RED)
             //if (phone in App.prefs.completePollPhonesList)

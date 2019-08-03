@@ -134,6 +134,7 @@ class SelectPositionActivity : Activity() {
             currProdInPopUpPrice!!,
             1.0,
             currSelectedPostionPrice,
+            currProdInPopUpPrice!!.name,
             currSelectedPostionExpDate)
         newPositionsList.add(newCheckPos)
         App.prefs.selectedPositions = newPositionsList
