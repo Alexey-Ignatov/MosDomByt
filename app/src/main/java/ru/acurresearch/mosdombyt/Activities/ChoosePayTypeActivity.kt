@@ -4,10 +4,14 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_choose_pay_type.*
 import ru.acurresearch.mosdombyt.App.App
+import ru.acurresearch.mosdombyt.App.fromJson
+import ru.acurresearch.mosdombyt.CashBoxServerData
 import ru.acurresearch.mosdombyt.Constants
 import ru.acurresearch.mosdombyt.R
+import ru.acurresearch.mosdombyt.Task
 import ru.evotor.framework.navigation.NavigationApi.createIntentForSellReceiptEdit
 
 class ChoosePayTypeActivity : AppCompatActivity() {
@@ -15,7 +19,6 @@ class ChoosePayTypeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_pay_type)
-
 
         if (isRegistered().not()){
             startActivity(Intent(this, TokenActivity::class.java))
@@ -54,6 +57,7 @@ class ChoosePayTypeActivity : AppCompatActivity() {
                 startActivity(createIntentForSellReceiptEdit())
         }
     }
+
 
     fun isRegistered(): Boolean{
         return App.prefs.cashBoxServerData != App.prefs.emptyCashBoxServerData

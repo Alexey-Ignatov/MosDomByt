@@ -22,8 +22,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.R.attr.data
-
-
+import android.util.Log
+import android.widget.Toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class NewTaskListAdapter(val items : ArrayList<Task>, val context: Context) : RecyclerView.Adapter<NewTaskListAdapter.ViewHolder>() {

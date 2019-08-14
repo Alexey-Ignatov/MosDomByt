@@ -22,7 +22,6 @@ interface Api {
 
 
 
-
     @POST("/api/orders/")
     fun sendOrder(@Body orderToSend: Order, @Header("Authorization-Acur") token: String): Call<Order>
 
@@ -41,10 +40,10 @@ interface Api {
     fun searchOrder(@Path("SEARCHSTR") searchStr: String, @Header("Authorization-Acur") token: String) : Call<List<Order>>
 
     @PUT("/api/tasks/{ID}/")
-    fun updTask(@Body task: Task, @Path("ID") task_id: Int, @Header("Authorization-Acur") token: String) :  Call<Task>
+    fun syncServerTask(@Body task: Task, @Path("ID") task_id: Int, @Header("Authorization-Acur") token: String) :  Call<Task>
 
     @PUT("/api/orders/update/{ID}/")
-    fun updOrderStatus(@Body order: Order, @Path("ID") order_id: Int, @Header("Authorization-Acur") token: String) :  Call<Order>
+    fun syncOrderStatus(@Body order: Order, @Path("ID") order_id: Int, @Header("Authorization-Acur") token: String) :  Call<Order>
 
     @POST("/api/cashbox/register-token/")
     fun getToken(@Body token: SiteToken) :  Call<CashBoxServerData>

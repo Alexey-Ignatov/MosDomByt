@@ -119,10 +119,11 @@ class GlobalReceiver : BroadcastReceiver() {
                     ).show()
 
                     var evoReceipt = ReceiptApi.getReceipt(context, ReceiptClosedEvent.create(bundle)!!.receiptUuid)
+
                     val checkTocheck = Check.fromEvoReceipt(evoReceipt!!)
                     if (checkTocheck.position[0].uuid == App.prefs.lastOrder.positionsList[0].uuid){
                         var tmpOrder =  App.prefs.lastOrder
-                        tmpOrder.setPaid(context)
+                        tmpOrder.setPaid(context, evoReceipt!!.header.uuid)
                         App.prefs.lastOrder = tmpOrder
 
                         val intent = Intent(context, OrderFinalActivity::class.java)

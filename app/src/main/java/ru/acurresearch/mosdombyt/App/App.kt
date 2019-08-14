@@ -20,7 +20,7 @@ class Prefs(context: Context) {
 
     val emptyCheckStr = GsonBuilder().create().toJson(emptyCheck)
     val emptyStrListStr = GsonBuilder().create().toJson(listOf<String>())
-    val emptyProductItemCustom = GsonBuilder().create().toJson(ServiceItemCustom("","", "",0.0, 1000000))
+    val emptyProductItemCustom = GsonBuilder().create().toJson(ServiceItemCustom("","", "",0.0, 24*365.0))
     val emptyCashBoxServerData = CashBoxServerData("", "")
     val emptyCoxServerDataStr =  GsonBuilder().create().toJson(emptyCashBoxServerData)
 

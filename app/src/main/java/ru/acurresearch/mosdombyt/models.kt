@@ -13,6 +13,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.acurresearch.mosdombyt.App.App
 import ru.acurresearch.mosdombyt.App.fromJson
+import ru.acurresearch.mosdombyt.Utils.syncOrder
+import ru.acurresearch.mosdombyt.Utils.syncTask
 import ru.evotor.framework.core.IntegrationException
 import ru.evotor.framework.core.IntegrationManagerFuture
 import ru.evotor.framework.core.action.command.open_receipt_command.OpenSellReceiptCommand
@@ -156,9 +158,9 @@ data class ServiceItemCustom(@SerializedName("uuid") val uuid: String?,
                              @SerializedName("product_uuid") val productUUID: String?,
                              @SerializedName("product_name") val name: String,
                              @SerializedName("default_price") val defPrice: Double?,
-                             @SerializedName("default_expires_delta") val defExpiresIn: Int?){
+                             @SerializedName("default_expires_delta") val defExpiresIn: Double?){
     companion object{
-        fun fromEvoProductItem(evoPos : ProductItem , defPrice: Double? = null,defExpiresIn: Int?  ): ServiceItemCustom{
+        fun fromEvoProductItem(evoPos : ProductItem , defPrice: Double? = null,defExpiresIn: Double?  ): ServiceItemCustom{
             return ServiceItemCustom(UUID.randomUUID().toString(),evoPos.uuid, evoPos.name, defPrice,defExpiresIn )
         }
 
@@ -175,7 +177,7 @@ data class OrderPostition(@SerializedName("uuid")          val uuid: String,
                           @SerializedName("expires_in")    val expDate: Date?){
 
     @SerializedName("serv_item")
-    val servItem_uuid = serviceItem.productUUID
+    val servItem_uuid = serviceItem.uuid
 
     fun toEvotorPositionAdd(): PositionAdd{
         return   PositionAdd(Position.Builder.newInstance(
@@ -184,8 +186,8 @@ data class OrderPostition(@SerializedName("uuid")          val uuid: String,
             serviceItem.name,
             "шт",
             0,
-            BigDecimal(quantity),
-            BigDecimal(price)
+            BigDecimal(price),
+            BigDecimal(quantity)
         ).build())
     }
 }
@@ -201,7 +203,8 @@ data class Order(@SerializedName("id")             val id: Int?,
                  @SerializedName("order_status")   var status: String,
                  @SerializedName("created_at")     var dateCreated: Date?=null,
                  @SerializedName("id_in_store")    var internalId: Int? = null,
-                 @SerializedName("id_in_store_for_print") var printLabel: String? = null
+                 @SerializedName("id_in_store_for_print") var printLabel: String? = null,
+                 @SerializedName("evotor_receipt_uuid") var evoResUuid: String? = null
 ) {
 
     @SerializedName("is_paid")
@@ -273,50 +276,29 @@ data class Order(@SerializedName("id")             val id: Int?,
         return positionsList.map {Task(0, it.serviceItem.name,it.expDate,internalId,Constants.TaskStatus.NEW) }
     }
 
-    fun close(contex: Context){
+    fun close(context: Context){
         status = Constants.OrderStatus.CLOSED
         if (id == null)
             return
 
-        syncStatus(contex)
 
+        syncOrder(context, this@Order)
     }
 
-    fun setPaid(contex: Context){
+    fun setPaid(context: Context, evor_receipt_uuid: String){
+        evoResUuid = evor_receipt_uuid
         isPaid = true
+
+        //Создание заказа у нас бывает только по соотвествующей кнопке.
+        // Если заказ не был создан (id==null), при оплате мы его не синхронизируем - он будет синхронизирован позже
         if (id == null)
             return
 
-        syncStatus(contex)
+        syncOrder(context, this@Order)
 
     }
 
-    fun syncStatus(contex: Context){
-        fun onSuccess(resp_data: Order){
-            Toast.makeText(contex, "Статус заказа изменен", Toast.LENGTH_SHORT).show()
-        }
 
-        dateCreated = Date()
-        var call : Call<Order>? = null
-        if (id != null){
-            call = App.api.updOrderStatus(this, id, App.prefs.cashBoxServerData.authHeader)
-        }
-        else{
-            call = App.api.sendOrder(this, App.prefs.cashBoxServerData.authHeader)
-        }
-        call.enqueue(object : Callback<Order> {
-            override fun onResponse(call: Call<Order>, response: Response<Order>) {
-                Log.e("processServerRquests",response.errorBody().toString() )
-                if (response.isSuccessful)
-                    onSuccess(response.body()!!)
-                else
-                    Toast.makeText(contex,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
-            }
-            override fun onFailure(call: Call<Order>, t: Throwable) {
-                Toast.makeText(contex,"Проверьте подключение к интернету!", Toast.LENGTH_LONG).show()
-            }
-        })
-    }
 
     companion object {
         fun fromJson(inpJson : String ): Order{
@@ -364,36 +346,18 @@ data class Task(@SerializedName("id")  val id: Int,
                 @SerializedName("status") var status: String,
                 @SerializedName("master") var master: Master? = null){
 
-    fun takeInWork(assignedMaster: Master?, contex: Context){
+    fun takeInWork(assignedMaster: Master?, context: Context){
         master = assignedMaster
         status = Constants.TaskStatus.IN_WORK
-        syncServer(contex)
+        syncTask(context, this@Task)
     }
-    fun finish(contex: Context){
+    fun finish(context: Context){
         status = Constants.TaskStatus.COMPLETE
-        syncServer(contex)
+        syncTask(context, this@Task)
 
     }
 
-    fun syncServer(contex: Context){
-        fun onSuccess(resp_data: Task){
-            Toast.makeText(contex, "Статус заказа изменен", Toast.LENGTH_SHORT).show()
-        }
 
-        val call = App.api.updTask(this, id, App.prefs.cashBoxServerData.authHeader)
-        call.enqueue(object : Callback<Task> {
-            override fun onResponse(call: Call<Task>, response: Response<Task>) {
-                Log.e("processServerRquests",response.errorBody().toString() )
-                if (response.isSuccessful)
-                    onSuccess(response.body()!!)
-                else
-                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
-            }
-            override fun onFailure(call: Call<Task>, t: Throwable) {
-                Log.e("sendPhone", "Sorry, unable to make request", t)
-            }
-        })
-    }
 }
 
 

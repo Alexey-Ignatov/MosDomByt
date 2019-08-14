@@ -77,7 +77,7 @@ class SelectPositionActivity : Activity() {
     }
     fun initDeadlineTimePicker(value: ServiceItemCustom){
         val cal = Calendar.getInstance()
-        cal.time = Date().addSeconds(value.defExpiresIn ?: 0)
+        cal.time = Date().addSeconds(((value.defExpiresIn?:0.0)*3600).toInt() )
         val hours = cal.get(Calendar.HOUR_OF_DAY)
         val minutes = cal.get(Calendar.MINUTE)
 

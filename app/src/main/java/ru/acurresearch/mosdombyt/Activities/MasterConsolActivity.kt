@@ -1,5 +1,6 @@
 package ru.acurresearch.mosdombyt.Activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -44,11 +45,21 @@ class MasterConsolActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ru.acurresearch.mosdombyt.R.layout.activity_master_consol)
-
+        if (isRegistered().not()){
+            startActivity(Intent(this, TokenActivity::class.java))
+        }
         fetchAndBuildTasks()
         fetchMasters()
 
 
+
+
+
+
+
+    }
+    fun isRegistered(): Boolean{
+        return App.prefs.cashBoxServerData != App.prefs.emptyCashBoxServerData
     }
     fun dumpTasksToDisk(){
         var arrListToDump = ArrayList(listOf<Task>())
