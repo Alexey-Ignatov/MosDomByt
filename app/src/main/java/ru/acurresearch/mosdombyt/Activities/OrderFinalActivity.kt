@@ -79,7 +79,7 @@ class OrderFinalActivity : AppCompatActivity() {
 
     fun createPrintLabelDialog(asciArtOrderNo: String){
         val alertDialog = AlertDialog.Builder(this)
-        alertDialog.setTitle("Распечатать ярлык с номером заказа для внутреннего использования?")
+        alertDialog.setTitle("Распечатать ярлык с номером заказа?")
         alertDialog.setCancelable(false)
         alertDialog.setPositiveButton("Да") { dialog, id ->
             initPrinter()
@@ -96,6 +96,7 @@ class OrderFinalActivity : AppCompatActivity() {
     fun sendOrderGetLabel(order: Order){
         //TODO нормально описать ошибки
         fun onSuccess(resp_data: Order){
+            print(resp_data.printKvitok!!)
             createPrintLabelDialog(resp_data.printLabel!!)
             refreshCart()
 

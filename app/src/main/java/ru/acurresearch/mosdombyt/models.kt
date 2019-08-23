@@ -203,7 +203,8 @@ data class Order(@SerializedName("id")             val id: Int?,
                  @SerializedName("order_status")   var status: String,
                  @SerializedName("created_at")     var dateCreated: Date?=null,
                  @SerializedName("id_in_store")    var internalId: Int? = null,
-                 @SerializedName("id_in_store_for_print") var printLabel: String? = null,
+                 @SerializedName("in_house_kvitok") var printLabel: String? = null,
+                 @SerializedName("clients_kvitok")  var printKvitok: String? = null,
                  @SerializedName("evotor_receipt_uuid") var evoResUuid: String? = null
 ) {
 
