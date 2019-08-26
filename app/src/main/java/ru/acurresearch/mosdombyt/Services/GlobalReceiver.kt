@@ -11,6 +11,7 @@ import ru.acurresearch.mosdombyt.App.App
 import ru.acurresearch.mosdombyt.Check
 import ru.acurresearch.mosdombyt.Constants
 import ru.acurresearch.mosdombyt.Order
+import ru.acurresearch.mosdombyt.Utils.syncOrder
 
 import ru.evotor.framework.core.action.event.receipt.position_edited.PositionAddedEvent
 import ru.evotor.framework.core.action.event.receipt.position_edited.PositionEditedEvent
@@ -36,11 +37,7 @@ class GlobalReceiver : BroadcastReceiver() {
                 //Чек продажи был успешно открыт
                 "evotor.intent.action.receipt.sell.OPENED" -> {
                     Log.e(javaClass.simpleName, "Data:" + ReceiptOpenedEvent.create(bundle)!!.receiptUuid)
-                    Toast.makeText(
-                        context,
-                        action + "\nData:" + ReceiptOpenedEvent.create(bundle)!!.receiptUuid,
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
 
                 //Позиция была добавлена в чек продажи
@@ -51,13 +48,7 @@ class GlobalReceiver : BroadcastReceiver() {
                             bundle
                         )!!.position.name
                     )
-                    Toast.makeText(
-                        context,
-                        action + "\nData: " + PositionAddedEvent.create(bundle)!!.receiptUuid + " " + PositionAddedEvent.create(
-                            bundle
-                        )!!.position.name,
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
 
                 //Позиция была отредактирована в чеке продажи
@@ -68,13 +59,7 @@ class GlobalReceiver : BroadcastReceiver() {
                             bundle
                         )!!.position.name
                     )
-                    Toast.makeText(
-                        context,
-                        action + "\nData: " + PositionEditedEvent.create(bundle)!!.receiptUuid + " " + PositionEditedEvent.create(
-                            bundle
-                        )!!.position.name,
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
 
                 //Позиция была удалена из чека продажи
@@ -85,51 +70,41 @@ class GlobalReceiver : BroadcastReceiver() {
                             bundle
                         )!!.position.name
                     )
-                    Toast.makeText(
-                        context,
-                        action + "\nData: " + PositionEditedEvent.create(bundle)!!.receiptUuid + " " + PositionRemovedEvent.create(
-                            bundle
-                        )!!.position.name,
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
 
                 //Обновление базы товаров
                 "evotor.intent.action.inventory.PRODUCTS_UPDATED" -> {
                     Log.e(javaClass.simpleName, "Data: PRODUCTS_UPDATED")
-                    Toast.makeText(context, "Data: PRODUCTS_UPDATED", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "Data: PRODUCTS_UPDATED", Toast.LENGTH_SHORT).show()
                 }
                 //Чек продажи был очищен
                 "evotor.intent.action.receipt.sell.CLEARED" -> {
                     Log.e(javaClass.simpleName, "Data:" + ReceiptClearedEvent.create(bundle)!!.receiptUuid)
-                    Toast.makeText(
-                        context,
-                        action + "\nData: " + ReceiptClearedEvent.create(bundle)!!.receiptUuid,
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                 }
 
                 //Чек продажи был успешно закрыт
                 "evotor.intent.action.receipt.sell.RECEIPT_CLOSED" -> {
                     Log.e(javaClass.simpleName, "Data:" + ReceiptClosedEvent.create(bundle)!!.receiptUuid)
-                    Toast.makeText(
-                        context,
-                        action + "\nData: " + ReceiptClosedEvent.create(bundle)!!.receiptUuid,
-                        Toast.LENGTH_SHORT
-                    ).show()
 
+                    Toast.makeText(context, "Data: Check пробит", Toast.LENGTH_SHORT).show()
                     var evoReceipt = ReceiptApi.getReceipt(context, ReceiptClosedEvent.create(bundle)!!.receiptUuid)
 
                     val checkTocheck = Check.fromEvoReceipt(evoReceipt!!)
                     if (checkTocheck.position[0].uuid == App.prefs.lastOrder.positionsList[0].uuid){
                         var tmpOrder =  App.prefs.lastOrder
-                        tmpOrder.setPaid(context, evoReceipt!!.header.uuid)
+                        tmpOrder.setPaid(context, evoReceipt!!.header.uuid, false)
                         App.prefs.lastOrder = tmpOrder
 
                         val intent = Intent(context, OrderFinalActivity::class.java)
                         intent.putExtra(WorkService.EXTRA_NAME_OPERATION, "sell")
                         intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, tmpOrder.toJson())
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        //если делать синхронизацию до перехода, то бывает, что проходит время на
+                        // обработку события пробиванияя чека и на новый экран попат не получеатся
+                        syncOrder(context, tmpOrder)
 
                         try {
                             context.startActivity(intent)

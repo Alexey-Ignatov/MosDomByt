@@ -110,7 +110,7 @@ class OrderFinalActivity : AppCompatActivity() {
                 if (response.isSuccessful)
                     onSuccess(response.body()!!)
                 else
-                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    Toast.makeText(this@OrderFinalActivity,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<Order>, t: Throwable) {
                 Toast.makeText(getApplicationContext(),"ВНИМАНИЕ! Не удалось создать заказ. Проверьте подключение к Интернету!", Toast.LENGTH_LONG).show()

@@ -10,7 +10,7 @@
             android:id="@+id/in_work_item_list_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="#59AB47BC"
+            app:cardBackgroundColor="#4FAB47BC"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="2dp"

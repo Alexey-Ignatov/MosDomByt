@@ -15,6 +15,7 @@ import ru.acurresearch.mosdombyt.Activities.MainActivity
 import ru.acurresearch.mosdombyt.Activities.OrderFinalActivity
 import ru.acurresearch.mosdombyt.App.App
 import android.content.DialogInterface
+import android.graphics.Color
 import kotlinx.android.synthetic.main.list_item_complete_tasks_list.view.*
 import kotlinx.android.synthetic.main.list_item_new_tasks_list.view.*
 import ru.acurresearch.mosdombyt.Activities.MasterConsolActivity
@@ -55,6 +56,7 @@ class InWorkTaskListAdapter(val items : ArrayList<Task>, val context: Context) :
             val time_diff = value.expDate!!.getTime() - Date().getTime()
             val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN)
 
+            val hoursLeft = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS)
 
             view.in_work_item_exp_in_holder.text = simpleDateFormat.format(value.expDate!!)
             view.in_work_item_name.text = value.name ?: "???"
@@ -62,7 +64,11 @@ class InWorkTaskListAdapter(val items : ArrayList<Task>, val context: Context) :
             view.in_work_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
             view.in_work_item_master.text = value.master?.name ?: "???"
 
-
+            if (hoursLeft < 0) {
+                view.in_work_item_list_card.setCardBackgroundColor(Color.parseColor("#80EF5350"))
+            }else if(hoursLeft < 1){
+                view.in_work_item_list_card.setCardBackgroundColor(Color.parseColor("#4FFFEE58"))
+            }
 
 
             view.setOnClickListener {

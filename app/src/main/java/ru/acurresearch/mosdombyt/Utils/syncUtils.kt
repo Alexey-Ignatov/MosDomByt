@@ -51,10 +51,10 @@ fun syncTask(contex: Context, task: Task){
             if (response.isSuccessful)
                 onSuccess(response.body()!!)
             else
-                Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                Toast.makeText(contex,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
         }
         override fun onFailure(call: Call<Task>, t: Throwable) {
-            Log.e("sendPhone", "Sorry, unable to make request", t)
+            Toast.makeText(contex,"Ошибка! Проверьте подключение к интернету!", Toast.LENGTH_LONG).show()
         }
     })
 }

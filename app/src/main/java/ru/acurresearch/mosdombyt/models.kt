@@ -286,7 +286,7 @@ data class Order(@SerializedName("id")             val id: Int?,
         syncOrder(context, this@Order)
     }
 
-    fun setPaid(context: Context, evor_receipt_uuid: String){
+    fun setPaid(context: Context, evor_receipt_uuid: String, need_sync: Boolean = true){
         evoResUuid = evor_receipt_uuid
         isPaid = true
 
@@ -295,7 +295,8 @@ data class Order(@SerializedName("id")             val id: Int?,
         if (id == null)
             return
 
-        syncOrder(context, this@Order)
+        if (need_sync)
+            syncOrder(context, this@Order)
 
     }
 

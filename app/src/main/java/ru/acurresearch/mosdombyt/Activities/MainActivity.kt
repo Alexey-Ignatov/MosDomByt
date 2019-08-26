@@ -118,10 +118,9 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful)
                     onSuccess(response.body()!!)
                 else
-                        Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    Toast.makeText(this@MainActivity,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<List<ServiceItemCustom>>, t: Throwable) {
-                Log.e("sendPhone", "Sorry, unable to make request", t)
                 Toast.makeText(getApplicationContext(),"ВНИМАНИЕ! Не удалось получить товары!", Toast.LENGTH_SHORT).show()
             }
         })

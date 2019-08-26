@@ -126,11 +126,10 @@ class MasterConsolActivity : AppCompatActivity() {
                 if (response.isSuccessful)
                     onSuccess(response.body()!!)
                 else
-                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    Toast.makeText(this@MasterConsolActivity,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<List<Master>>, t: Throwable) {
-                Log.e("sendPhone", "Sorry, unable to make request", t)
-                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(getApplicationContext(),"Ошибка! Проверьте подключение к интернету!", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -164,11 +163,10 @@ class MasterConsolActivity : AppCompatActivity() {
                 if (response.isSuccessful)
                     onSuccess(response.body()!!)
                 else
-                    Log.e("sendPhone", "Sorry, failure on request "+ response.errorBody())
+                    Toast.makeText(this@MasterConsolActivity,"Ошибка на сервере. Мы устраняем проблему. Повторите позже.", Toast.LENGTH_LONG).show()
             }
             override fun onFailure(call: Call<List<Task>>, t: Throwable) {
-                Log.e("sendPhone", "Sorry, unable to make request", t)
-                Toast.makeText(getApplicationContext(),"Sorry, unable to make request" + t.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(getApplicationContext(),"Ошибка! Проверьте подключение к интернету!", Toast.LENGTH_SHORT).show()
             }
         })
     }

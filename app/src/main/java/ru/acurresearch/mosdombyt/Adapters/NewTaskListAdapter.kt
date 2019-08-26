@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.R.attr.data
+import android.graphics.Color
 import android.util.Log
 import android.widget.Toast
 import retrofit2.Call
@@ -59,12 +60,18 @@ class NewTaskListAdapter(val items : ArrayList<Task>, val context: Context) : Re
             val time_diff = value.expDate!!.getTime() - Date().getTime()
             val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN)
 
-
+            val hoursLeft = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS)
             view.new_task_item_exp_in_holder.text = simpleDateFormat.format(value.expDate!!)
             view.new_task_item_name.text = value.name ?: "???"
             view.new_task_item_order_no_holder.text = value.orderInternalId?.toString() ?: "???"
-            view.new_task_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
+            view.new_task_items_days_left.text = hoursLeft.toString()
             view.new_task_item_master.text = value.master?.name ?: "???"
+
+            if (hoursLeft < 0) {
+                view.new_task_item_list_card.setCardBackgroundColor(Color.parseColor("#80EF5350"))
+            }else if(hoursLeft < 1){
+                view.new_task_item_list_card.setCardBackgroundColor(Color.parseColor("#4FFFEE58"))
+            }
 
 
             view.setOnClickListener {

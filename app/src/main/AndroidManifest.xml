@@ -51,11 +51,9 @@
                     android:name="ru.evotor.launcher.BACKGROUND_COLOR"
                     android:value="#133788" />
             <intent-filter>
-
                 <action android:name="ru.evotor.intent.action.SELL_MAIN" />
-
-
                 <category android:name="android.intent.category.EVOTOR" />
+                <category android:name="android.intent.category.LAUNCHER" />
 
             </intent-filter>
         </activity>
@@ -69,62 +67,63 @@
 
             <intent-filter>
                 <category android:name="android.intent.category.EVOTOR"/>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+
             </intent-filter>
         </activity>
 
 
-
-        <service
-                android:name=".Services.WorkService"
-                android:enabled="true"
-                android:exported="true"
-                android:icon="@mipmap/ic_launcher"
-                android:label="MosDomByt">
-            <intent-filter android:priority="20">
-                <category android:name="android.intent.category.DEFAULT"/>
-
-                <action android:name="evo.v2.receipt.sell.receiptDiscount"/>
-            </intent-filter>
-
-            <meta-data
-                    android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
-                    android:value="#00FF00"/>
-        </service>
-
         <!--
-                        <service
-                                android:name=".SplitGroupService"
-                                android:enabled="true"
-                                android:exported="true">
+                <service
+                        android:name=".Services.WorkService"
+                        android:enabled="true"
+                        android:exported="true"
+                        android:icon="@mipmap/ic_launcher"
+                        android:label="MosDomByt">
+                    <intent-filter android:priority="20">
+                        <category android:name="android.intent.category.DEFAULT"/>
 
-                            <intent-filter android:priority="20">
+                        <action android:name="evo.v2.receipt.sell.receiptDiscount"/>
+                    </intent-filter>
 
-                                <action android:name="evo.v2.receipt.sell.printGroup.REQUIRED" />
-                            </intent-filter>
-                        </service>
-
-               <service
-                       android:name=".MyPrintPaybackService"
-                       android:enabled="true"
-                       android:exported="true">
-                   <intent-filter  android:priority="20">
-                       <action android:name="evo.v2.receipt.sell.printExtra.REQUIRED" />
-                   </intent-filter>
-               </service>
+                    <meta-data
+                            android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
+                            android:value="#00FF00"/>
+                </service>
 
 
+                                <service
+                                        android:name=".SplitGroupService"
+                                        android:enabled="true"
+                                        android:exported="true">
+
+                                    <intent-filter android:priority="20">
+
+                                        <action android:name="evo.v2.receipt.sell.printGroup.REQUIRED" />
+                                    </intent-filter>
+                                </service>
+
+                       <service
+                               android:name=".MyPrintPaybackService"
+                               android:enabled="true"
+                               android:exported="true">
+                           <intent-filter  android:priority="20">
+                               <action android:name="evo.v2.receipt.sell.printExtra.REQUIRED" />
+                           </intent-filter>
+                       </service>
 
 
 
-                                  <meta-data
-                                      android:name="app_uuid"
-                                      android:value="4134ce0a-d86b-46a8-88cd-93c9cdda5b3a"/>
-        -->
+
+
+                                          <meta-data
+                                              android:name="app_uuid"
+                                              android:value="4134ce0a-d86b-46a8-88cd-93c9cdda5b3a"/>
+                -->
         <meta-data
                 android:name="app_uuid"
-                android:value="8a67d769-e419-49e9-b17f-a2c58d8c94c6"/>
+                android:value="7eba6fde-bb08-42a9-89dd-c20d003c40e8"/>
 
 
         <!--
