@@ -54,9 +54,6 @@ class MasterConsolActivity : AppCompatActivity() {
 
 
 
-
-
-
     }
     fun isRegistered(): Boolean{
         return App.prefs.cashBoxServerData != App.prefs.emptyCashBoxServerData

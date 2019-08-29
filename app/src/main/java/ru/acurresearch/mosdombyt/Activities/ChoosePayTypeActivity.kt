@@ -36,7 +36,6 @@ class ChoosePayTypeActivity : AppCompatActivity() {
         }
 
 
-
         post_pay_option_btn.setOnClickListener {
             if (isRegistered()) {
                 var intent = Intent(this, MainActivity::class.java)
@@ -65,72 +64,12 @@ class ChoosePayTypeActivity : AppCompatActivity() {
             }
         }
         regular_pay_btn.setOnClickListener {
-            initPrinter()
-            //two()
-            print("12345678901234567890123456789012\n3456789012345")
-
-
-
-
-
             startActivity(createIntentForSellReceiptEdit())
         }
     }
 
-
     fun isRegistered(): Boolean{
         return App.prefs.cashBoxServerData != App.prefs.emptyCashBoxServerData
     }
-
-
-
-
-    override fun onResume() {
-        super.onResume()
-
-
-    }
-    fun initPrinter(){
-        //Инициализация оборудования
-        DeviceServiceConnector.startInitConnections(applicationContext)
-        DeviceServiceConnector.addConnectionWrapper(object : ConnectionWrapper {
-            override fun onPrinterServiceConnected(printerService: IPrinterServiceWrapper) {
-                Log.e(javaClass.simpleName, "onPrinterServiceConnected")
-            }
-
-            override fun onPrinterServiceDisconnected() {
-                Log.e(javaClass.simpleName, "onPrinterServiceDisconnected")
-            }
-
-            override fun onScalesServiceConnected(scalesService: IScalesServiceWrapper) {
-                Log.e(javaClass.simpleName, "onScalesServiceConnected")
-            }
-
-            override fun onScalesServiceDisconnected() {
-                Log.e(javaClass.simpleName, "onScalesServiceDisconnected")
-            }
-        })
-    }
-
-    fun print(myStr: String){
-        object : Thread() {
-            override fun run() {
-                try {
-
-                    DeviceServiceConnector.getPrinterService().printDocument(
-                        //В настоящий момент печать возможна только на ККМ, встроенной в смарт-терминал,
-                        //поэтому вместо номера устройства всегда следует передавать константу
-                        ru.evotor.devices.commons.Constants.DEFAULT_DEVICE_INDEX,
-                        PrinterDocument(PrintableText(myStr))
-                    )
-                } catch (e: DeviceServiceException) {
-                    e.printStackTrace()
-                }
-
-            }
-        }.start()
-    }
-
-
 
 }
