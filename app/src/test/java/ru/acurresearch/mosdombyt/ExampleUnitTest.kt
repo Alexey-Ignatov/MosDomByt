@@ -1,4 +1,4 @@
-package ru.acurresearch.mosdombyt
+package ru.acurresearch.dombyta
 
 import org.junit.Test
 

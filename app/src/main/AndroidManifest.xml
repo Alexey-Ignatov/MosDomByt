@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="ru.acurresearch.mosdombyt">
+          package="ru.acurresearch.dombyta">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -30,7 +30,7 @@
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         -->
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name="ru.acurresearch.dombyta.Activities.MainActivity">
         </activity>
 
 
@@ -44,7 +44,7 @@
         </activity>
 
         <activity
-                android:name=".Activities.ChoosePayTypeActivity"
+                android:name="ru.acurresearch.dombyta.Activities.ChoosePayTypeActivity"
                 android:icon="@mipmap/ic_launcher"
                 android:label="Заказы">
             <meta-data
@@ -53,8 +53,7 @@
             <intent-filter>
                 <action android:name="ru.evotor.intent.action.SELL_MAIN" />
 
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER" />
+
 
                 <category android:name="android.intent.category.EVOTOR" />
 
@@ -69,7 +68,10 @@
                     android:value="#133788"/>
 
             <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.EVOTOR"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
 
@@ -80,7 +82,7 @@
                         android:enabled="true"
                         android:exported="true"
                         android:icon="@mipmap/ic_launcher"
-                        android:label="MosDomByt">
+                        android:label="dombyta">
                     <intent-filter android:priority="20">
                         <category android:name="android.intent.category.DEFAULT"/>
 
@@ -265,7 +267,7 @@
 
 
         <receiver
-                android:name=".Services.AlarmTaskReciver"
+                android:name="ru.acurresearch.dombyta.Services.AlarmTaskReciver"
                 android:enabled="true"
                 android:exported="true"/>
         <receiver
