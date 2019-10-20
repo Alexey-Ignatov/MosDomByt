@@ -10,7 +10,7 @@ android {
         applicationId "ru.acurresearch.dombyta"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 6
+        versionCode 7
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -51,6 +51,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation 'com.redmadrobot:input-mask-android:5.0.0'
 
 
 }

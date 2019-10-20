@@ -18,7 +18,9 @@ class TokenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_token)
-        receiveToken()
+        App.prefs.cashBoxServerData = CashBoxServerData("0d96c1f1-e454-4339-bf1b-434e628559be", "aa")
+        finish()
+        //receiveToken()
         send_token_btn.setOnClickListener {
             receiveToken()
         }

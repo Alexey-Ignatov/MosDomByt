@@ -29,6 +29,7 @@ import java.io.IOException
 import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_NEUTRAL
 import android.support.v7.app.AlertDialog
+import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +41,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_x)
+
+
+
+        val listener = MaskedTextChangedListener("+7 ([000]) [000]-[00]-[00]", ed_txt_phone)
+
+        ed_txt_phone.addTextChangedListener(listener)
+        ed_txt_phone.onFocusChangeListener = listener
 
         var intent = getIntent()
         pay_type = intent.getStringExtra(Constants.INTENT_PAY_TYPE_FIELD)
@@ -57,31 +65,35 @@ class MainActivity : AppCompatActivity() {
         }
 
         create_pre_pay_order.setOnClickListener {
-            if (ed_txt_name.text.toString() != "" && ed_txt_phone.text.toString() != ""){
-
+            if (ed_txt_name.text.toString() == "" || ed_txt_phone.text.toString() == ""){
+                Toast.makeText(this, "Введите данные клиента. ", Toast.LENGTH_SHORT).show()
+            }else if(currOrder.price == 0.0){
+                Toast.makeText(this, "Добавьте услуги", Toast.LENGTH_SHORT).show()
+            }else {
                 currOrder.client = Client(ed_txt_name.text.toString(), ed_txt_phone.text.toString())
                 App.prefs.lastOrder=currOrder
 
                 var intent = Intent(this, ru.acurresearch.dombyta.Activities.OrderFinalActivity::class.java)
                 intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
                 startActivity(intent)
-            }else{
-                Toast.makeText(this, "Введите данные клиента. ", Toast.LENGTH_SHORT).show()
             }
+
         }
 
         create_post_pay_order.setOnClickListener {
-            if (ed_txt_name.text.toString() != "" && ed_txt_phone.text.toString() != ""){
+            if (ed_txt_name.text.toString() == "" || ed_txt_phone.text.toString() == ""){
+                Toast.makeText(this, "Введите данные клиента. ", Toast.LENGTH_SHORT).show()
+            }else if(currOrder.price == 0.0){
+                Toast.makeText(this, "Добавьте услуги", Toast.LENGTH_SHORT).show()
+            }else {
                 currOrder.client = Client(ed_txt_name.text.toString(), ed_txt_phone.text.toString())
-                App.prefs.lastOrder=currOrder
+                App.prefs.lastOrder = currOrder
 
 
                 var intent = Intent(this, ru.acurresearch.dombyta.Activities.OrderFinalActivity::class.java)
                 intent.putExtra(Constants.INTENT_ORDER_TO_ORDER_FINAL, currOrder.toJson())
 
                 startActivity(intent)
-            }else{
-                Toast.makeText(this, "Введите данные клиента", Toast.LENGTH_SHORT).show()
             }
         }
         //initPrinter()

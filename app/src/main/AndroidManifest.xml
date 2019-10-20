@@ -49,12 +49,9 @@
                 android:label="Заказы">
             <meta-data
                     android:name="ru.evotor.launcher.BACKGROUND_COLOR"
-                    android:value="#133788" />
+                    android:value="#9CCC65" />
             <intent-filter>
                 <action android:name="ru.evotor.intent.action.SELL_MAIN" />
-
-
-
                 <category android:name="android.intent.category.EVOTOR" />
 
             </intent-filter>
@@ -65,7 +62,7 @@
                   android:label="Очередь работ">
             <meta-data
                     android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
-                    android:value="#133788"/>
+                    android:value="#FFAB47BC"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
