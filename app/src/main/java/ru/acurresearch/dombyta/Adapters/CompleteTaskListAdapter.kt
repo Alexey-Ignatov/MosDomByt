@@ -23,7 +23,7 @@ import java.util.*
 import javax.xml.datatype.DatatypeConstants.DAYS
 import java.util.concurrent.TimeUnit
 
-
+//code review: (all adapters) возможна замена groupie или аналогами
 class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : RecyclerView.Adapter<CompleteTaskListAdapter.ViewHolder>() {
 
     // Gets the number of animals in the list
