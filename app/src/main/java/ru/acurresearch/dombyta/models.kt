@@ -230,9 +230,12 @@ data class Order(@SerializedName("id")             val id: Int?,
                 if (result.type == IntegrationManagerFuture.Result.Type.OK) {
                     //Чтобы открыть другие документы используйте методы NavigationApi.
                     activity.startActivity(NavigationApi.createIntentForSellReceiptEdit())
+                        //code review: наличие взаимодействия с ui в логике может 
+                        //привести к неожиданным и случайным последствиям
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
+                //code review: желательно обрабатывать исключения с помощью сервисов по типу crashlytics
             } catch (e: IntegrationException) {
                 e.printStackTrace()
             }
@@ -243,6 +246,7 @@ data class Order(@SerializedName("id")             val id: Int?,
         return GsonBuilder().create().toJson(this)
     }
 
+    //code review: наличие логики (кроме парсинга данных) в моделях нежелательно
     fun suggestAction(): String{
         if (billType == Constants.BillingType.PREPAY){
             if (!isPaid)
@@ -294,7 +298,8 @@ data class Order(@SerializedName("id")             val id: Int?,
         // Если заказ не был создан (id==null), при оплате мы его не синхронизируем - он будет синхронизирован позже
         if (id == null)
             return
-
+        
+        //code review: наличие логики (кроме парсинга данных) в моделях нежелательно
         if (need_sync)
             syncOrder(context, this@Order)
 
