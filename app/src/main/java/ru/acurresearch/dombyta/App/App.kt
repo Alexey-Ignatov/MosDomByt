@@ -13,7 +13,7 @@ import kotlin.collections.ArrayList
 
 inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, object: TypeToken<T>() {}.type)
 
-
+//code review: хранение немаленьких данных в prefs android'a приводит к торможению ui потока и крашам
 class Prefs(context: Context) {
     val prefs = context.getSharedPreferences(Constants.SHARED_FILE_PATH,0)
     val emptyCheck = Check("", Date(), "", listOf())
@@ -112,7 +112,8 @@ class App : Application() {
         api = ApiProvider.provide()
 
     }
-
+    
+    //code review: желательно интегрировать dependency injection в проект
     companion object {
         lateinit var prefs: Prefs
         lateinit var api: Api
