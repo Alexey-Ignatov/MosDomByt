@@ -2,16 +2,9 @@ package ru.acurresearch.dombyta
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
-import com.google.gson.JsonObject
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import ru.acurresearch.dombyta.App.App
 import ru.acurresearch.dombyta.App.fromJson
 import ru.acurresearch.dombyta.Utils.syncOrder
 import ru.acurresearch.dombyta.Utils.syncTask
@@ -23,7 +16,6 @@ import ru.evotor.framework.inventory.ProductItem
 import ru.evotor.framework.navigation.NavigationApi
 import ru.evotor.framework.receipt.Position
 import ru.evotor.framework.receipt.Receipt
-import ru.evotor.framework.receipt.ReceiptApi
 import java.io.IOException
 import java.math.BigDecimal
 
@@ -92,7 +84,7 @@ data class NeedPollResult(val result: Boolean)
 data class Check(       @SerializedName("uuid")         val uuid: String,
                         @SerializedName("check_date")   val date: Date,
                         @SerializedName("check_number") val number: String?,
-                        @SerializedName("check_pos")    val position: List<CheckPostition>){
+                        @SerializedName("check_pos")    val position: List<CheckPosition>){
 
 
     companion object{
@@ -103,7 +95,7 @@ data class Check(       @SerializedName("uuid")         val uuid: String,
                     receipt.header.uuid,
                     receipt.header.date ?: Date()  ,
                     receipt.header.number,
-                    receipt.getPositions().map {CheckPostition.fromEvoPosition(it)  })
+                    receipt.getPositions().map {CheckPosition.fromEvoPosition(it)  })
         }
     }
 }
@@ -113,11 +105,11 @@ data class Check(       @SerializedName("uuid")         val uuid: String,
 
 
 
-data class CheckPostition(@SerializedName("pos_uuid")     val uuid: String,
-                          @SerializedName("product_uuid") val productUUID: String?,
-                          @SerializedName("product_name") val name: String,
-                          @SerializedName("quantity")     val quantity: Double,
-                          @SerializedName("price")        val price: Double){
+data class CheckPosition(@SerializedName("pos_uuid")     val uuid: String,
+                         @SerializedName("product_uuid") val productUUID: String?,
+                         @SerializedName("product_name") val name: String,
+                         @SerializedName("quantity")     val quantity: Double,
+                         @SerializedName("price")        val price: Double){
     fun toEvotorPositionAdd(): PositionAdd{
         return   PositionAdd(Position.Builder.newInstance(
             uuid,
@@ -131,8 +123,8 @@ data class CheckPostition(@SerializedName("pos_uuid")     val uuid: String,
     }
 
     companion object {
-        fun fromEvoPosition(evoPos : Position ): CheckPostition{
-            return CheckPostition(evoPos.getUuid(),
+        fun fromEvoPosition(evoPos : Position ): CheckPosition{
+            return CheckPosition(evoPos.getUuid(),
                                   evoPos.getProductUuid(),
                                   evoPos.getName(),
                                   evoPos.getQuantity().toDouble(),
@@ -391,7 +383,7 @@ data class PhoneNumber(@SerializedName("tel_str") val telStr: String)
 
 object CheckExample{
 
-    val check = Check( "uuid_0097", Date(),"product_name" ,listOf(CheckPostition("pos_uuid_1",
+    val check = Check( "uuid_0097", Date(),"product_name" ,listOf(CheckPosition("pos_uuid_1",
                                                                                                         "product_uuid_2",
                                                                                                         "Milk2.0",
                                                                                                         12.0,

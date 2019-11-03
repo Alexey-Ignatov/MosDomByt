@@ -2,7 +2,7 @@ package ru.acurresearch.dombyta.Activities
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.util.DisplayMetrics
 import android.view.View
@@ -19,13 +19,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 import kotlin.math.roundToInt
-
-
-
-
-
-
-
 
 class SelectPositionActivity : Activity() {
     var currProdInPopUpPrice: ServiceItemCustom? = null
@@ -144,8 +137,8 @@ class SelectPositionActivity : Activity() {
 
     fun createProdsList(){
         val listItem = App.prefs.allAllowedProducts
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         select_good_list.layoutManager = layoutManager
         var adapter= PopGoodsListAdapter(listItem, this, this@SelectPositionActivity)
         select_good_list.adapter = adapter

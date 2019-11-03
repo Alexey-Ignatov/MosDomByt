@@ -1,8 +1,8 @@
 package ru.acurresearch.dombyta.Activities
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_order_search.*
@@ -35,8 +35,8 @@ class OrderSearchActivity : AppCompatActivity() {
     }
 
     fun initOrdersListView(items: ArrayList<Order>){
-        var layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        var layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         search_orders_list.layoutManager = layoutManager
         var adapter= OrderSearchListAdapter(items, this)
         search_orders_list.adapter = adapter

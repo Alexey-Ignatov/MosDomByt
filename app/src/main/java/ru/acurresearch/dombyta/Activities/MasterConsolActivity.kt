@@ -2,13 +2,13 @@ package ru.acurresearch.dombyta.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -80,10 +80,10 @@ class MasterConsolActivity : AppCompatActivity() {
 
         var adapterNewTask = NewTaskListAdapter(newTasksItems, this)
 
-        var layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        var layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 
-        var task_list = view.findViewById(R.id.new_task_list) as RecyclerView
+        var task_list = view.findViewById(R.id.new_task_list) as androidx.recyclerview.widget.RecyclerView
         task_list.layoutManager = layoutManager
         task_list.adapter = adapterNewTask
     }
@@ -91,10 +91,10 @@ class MasterConsolActivity : AppCompatActivity() {
     fun initInWorkTaskList(view: View){
 
 
-        var layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        var layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 
-        var task_list = view.findViewById(R.id.in_work_task_list) as RecyclerView
+        var task_list = view.findViewById(R.id.in_work_task_list) as androidx.recyclerview.widget.RecyclerView
         task_list.layoutManager = layoutManager
         task_list.adapter = adapterInWorkTask
 
@@ -102,10 +102,10 @@ class MasterConsolActivity : AppCompatActivity() {
 
     fun initTaskCompleteList(view: View){
 
-        var layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        var layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 
-        var task_list = view.findViewById(R.id.complete_task_list) as RecyclerView
+        var task_list = view.findViewById(R.id.complete_task_list) as androidx.recyclerview.widget.RecyclerView
         task_list.layoutManager = layoutManager
         task_list.adapter = adapterCompleteTask
     }
@@ -119,7 +119,7 @@ class MasterConsolActivity : AppCompatActivity() {
         val call = App.api.fetchMasters(App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<List<Master>> {
             override fun onResponse(call: Call<List<Master>>, response: Response<List<Master>>) {
-                Log.e("processServerRquests",response.errorBody().toString() )
+                Log.e("processServerRquests",response.errorBody()?.string() )
                 if (response.isSuccessful)
                     onSuccess(response.body()!!)
                 else

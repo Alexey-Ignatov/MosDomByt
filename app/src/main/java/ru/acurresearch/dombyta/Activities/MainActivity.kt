@@ -2,9 +2,9 @@ package ru.acurresearch.dombyta.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -28,12 +28,12 @@ import ru.evotor.framework.navigation.NavigationApi.createIntentForSellReceiptEd
 import java.io.IOException
 import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_NEUTRAL
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var adapter: RecyclerView.Adapter<OrderViewAdapter.ViewHolder>
+    lateinit var adapter: androidx.recyclerview.widget.RecyclerView.Adapter<OrderViewAdapter.ViewHolder>
     lateinit var currOrder: Order
     lateinit var pay_type: String
 
@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         val call = App.api.fetchAllowedProds(App.prefs.cashBoxServerData.authHeader)
         call.enqueue(object : Callback<List<ServiceItemCustom>> {
             override fun onResponse(call: Call<List<ServiceItemCustom>>, response: Response<List<ServiceItemCustom>>) {
-                Log.e("processServerRquests",response.errorBody().toString() )
+                Log.e("processServerRqueAAA",response.errorBody().toString() )
                 if (response.isSuccessful)
                     onSuccess(response.body()!!)
                 else
@@ -142,8 +142,8 @@ class MainActivity : AppCompatActivity() {
 
 
     fun initSelectedPositionsList(){
-        var layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        var layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         order_list_view.layoutManager = layoutManager
         adapter= OrderViewAdapter(ArrayList(), this)
     }

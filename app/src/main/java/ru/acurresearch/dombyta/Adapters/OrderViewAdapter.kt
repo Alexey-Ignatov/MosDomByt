@@ -2,19 +2,16 @@ package ru.acurresearch.dombyta.Adapters
 
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_item.view.*
-import ru.acurresearch.dombyta.Activities.MainActivity
 import ru.acurresearch.dombyta.App.App
-import ru.acurresearch.dombyta.CheckPostition
 import ru.acurresearch.dombyta.OrderPostition
 import ru.acurresearch.dombyta.R
 
 
-class OrderViewAdapter(val items : ArrayList<OrderPostition>, val context: Context) : RecyclerView.Adapter<OrderViewAdapter.ViewHolder>() {
+class OrderViewAdapter(val items : ArrayList<OrderPostition>, val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<OrderViewAdapter.ViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -34,7 +31,7 @@ class OrderViewAdapter(val items : ArrayList<OrderPostition>, val context: Conte
     }
 
 
-    inner class ViewHolder (var view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder (var view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         init {
             view.close_btn.setOnClickListener {
                 val removeIndex = getAdapterPosition()

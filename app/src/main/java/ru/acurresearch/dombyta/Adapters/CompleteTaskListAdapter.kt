@@ -3,7 +3,7 @@ package ru.acurresearch.dombyta.Adapters
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +24,7 @@ import javax.xml.datatype.DatatypeConstants.DAYS
 import java.util.concurrent.TimeUnit
 
 //code review: (all adapters) возможна замена groupie или аналогами
-class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : RecyclerView.Adapter<CompleteTaskListAdapter.ViewHolder>() {
+class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<CompleteTaskListAdapter.ViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -44,7 +44,7 @@ class CompleteTaskListAdapter(val items : List<Task>, val context: Context) : Re
     }
 
 
-    inner class ViewHolder (var view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder (var view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
 
 
