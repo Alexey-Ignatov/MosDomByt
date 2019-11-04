@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.objectbox'
 
 android {
@@ -57,7 +57,7 @@ dependencies {
 
     implementation 'com.redmadrobot:input-mask-android:5.0.0'
 
-    implementation 'ga.nk2ishere.dev:base:1.0r1'
+    implementation 'ga.nk2ishere.dev:base:1.0r3'
     implementation 'ga.nk2ishere.dev:utils:1.0r1'
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.3"
@@ -72,10 +72,10 @@ dependencies {
     implementation 'com.bluelinelabs:conductor-rxlifecycle2:2.1.5'
     implementation 'com.bluelinelabs:conductor-autodispose:2.1.5'
 
-    implementation 'com.github.dimsuz:diff-dispatcher-annotations:0.9.3'
-    annotationProcessor 'com.github.dimsuz:diff-dispatcher-processor:0.9.3'
-//    implementation 'com.github.moxy-community:moxy:2.0.2'
-    annotationProcessor 'com.github.moxy-community:moxy-compiler:2.0.2'
+    implementation 'com.github.dimsuz:diff-dispatcher-annotations:0.9.4'
+    kapt 'com.github.dimsuz:diff-dispatcher-processor:0.9.4'
+    implementation 'com.arello-mobile:moxy:1.5.1'
+    kapt 'com.arello-mobile:moxy-compiler:1.5.1'
 
     implementation "org.koin:koin-core:2.0.1"
     implementation "org.koin:koin-android:2.0.1"
@@ -84,5 +84,5 @@ dependencies {
     implementation 'com.xwray:groupie-kotlin-android-extensions:2.3.0'
 
     implementation 'com.pixplicity.easyprefs:library:1.9.0'
-
+    implementation 'com.hadisatrio:Optional:v1.0.1'
 }

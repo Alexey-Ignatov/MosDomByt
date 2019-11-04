@@ -14,7 +14,8 @@ import ru.evotor.framework.receipt.Position
 import java.math.BigDecimal
 
 @Entity data class CheckPosition(
-    @Id val uuid: String,
+    @Id var id: Long,
+    val uuid: String,
     val productUUID: String?,
     val name: String,
     val quantity: Double,
@@ -45,6 +46,7 @@ import java.math.BigDecimal
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> CheckPosition(
+            id = 0,
             uuid = src["pos_uuid"].asString,
             productUUID = src.getOrNull("product_uuid")?.asString,
             name = src["product_name"].asString,
@@ -54,11 +56,12 @@ import java.math.BigDecimal
 
         fun fromEvoPosition(evoPos : Position) =
             CheckPosition(
-                evoPos.uuid,
-                evoPos.productUuid,
-                evoPos.name,
-                evoPos.quantity.toDouble(),
-                evoPos.price.toDouble()
+                id = 0,
+                uuid = evoPos.uuid,
+                productUUID = evoPos.productUuid,
+                name = evoPos.name,
+                quantity = evoPos.quantity.toDouble(),
+                price = evoPos.price.toDouble()
             )
     }
 

@@ -1,73 +1,76 @@
 package ru.acurresearch.dombyta_new.data.network
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.*
-import ru.acurresearch.dombyta.*
+import ru.acurresearch.dombyta_new.data.common.model.*
+import ru.acurresearch.dombyta_new.data.network.model.*
 
 interface Api {
     @GET("/checkneedpoll/{ID}/")
     fun checkPollNeeded(
         @Path("ID") customerId: String
-    ) : Call<NeedPollResult>
+    ) : Single<NeedPollResult>
 
     @GET("/compl_tels/{NUM}/")
     fun getComplTels(
         @Path("NUM") numberToShow: Int
-    ) : Call<List<String>>
-
+    ) : Observable<String>
 
     @PUT("/setphone/{ID}/")
     fun setPhone(
         @Body phoneNumber: PhoneNumber,
         @Path("ID") uuid: String
-    ): Call<String>
+    ): Single<String>
 
 
     @POST("/api/orders/")
     fun sendOrder(
         @Body orderToSend: Order,
         @Header("Authorization-Acur") token: String
-    ): Call<Order>
+    ): Single<Order>
 
 
     @GET("/api/servitems/")
     fun fetchAllowedProds(
         @Header("Authorization-Acur") token: String
-    ): Call<List<ServiceItemCustom>>
+    ): Observable<ServiceItemCustom>
 
     @GET("/api/masters/")
-    fun fetchMasters(@Header("Authorization-Acur") token: String) : Call<List<Master>>
-
+    fun fetchMasters(
+        @Header("Authorization-Acur") token: String
+    ): Observable<Master>
 
     @GET("/api/tasks/")
     fun fetchTasks(
         @Header("Authorization-Acur") token: String
-    ): Call<List<Task>>
+    ): Observable<Task>
 
     @GET("/api/orders/search/{SEARCHSTR}/")
     fun searchOrder(
         @Path("SEARCHSTR") searchStr: String,
         @Header("Authorization-Acur") token: String
-    ): Call<List<Order>>
+    ): Observable<Order>
 
     @PUT("/api/tasks/{ID}/")
     fun syncServerTask(
         @Body task: Task,
         @Path("ID") task_id: Int,
         @Header("Authorization-Acur") token: String
-    ): Call<Task>
+    ): Single<Task>
 
     @PUT("/api/orders/update/{ID}/")
     fun syncOrderStatus(
         @Body order: Order,
         @Path("ID") order_id: Int,
         @Header("Authorization-Acur") token: String
-    ): Call<Order>
+    ): Single<Order>
 
     @POST("/api/cashbox/register-token/")
     fun getToken(
         @Body token: SiteToken
-    ):  Call<CashBoxServerData>
+    ):  Single<CashBoxServerData>
 
 
 }

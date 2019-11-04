@@ -14,7 +14,7 @@ import io.objectbox.relation.ToOne
 import java.util.*
 
 @Entity data class Task(
-    @Id @SerializedName("id") val id: Int,
+    @Id @SerializedName("id") var id: Long,
     @SerializedName("name")  val name: String?,
     @SerializedName("exp_date")  val expDate: Date?,
     @SerializedName("order_internal_id")  val orderInternalId: Int?,
@@ -33,7 +33,7 @@ import java.util.*
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> Task(
-            id = src.getOrNull("id")?.asInt ?: 0,
+            id = src.getOrNull("id")?.asLong ?: 0,
             name = src.getOrNull("name")?.asString,
             expDate = context.deserialize(src.getOrNull("exp_date") ?: JsonNull.INSTANCE),
             orderInternalId = src.getOrNull("order_internal_id")?.asInt,

@@ -14,7 +14,8 @@ import java.util.*
 
 
 @Entity data class ServiceItemCustom (
-    @Id val uuid: String,
+    @Id var id: Long,
+    val uuid: String,
     val productUUID: String?,
     val name: String,
     val defPrice: Double?,
@@ -32,6 +33,7 @@ import java.util.*
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> ServiceItemCustom(
+            id = 0,
             uuid = src["uuid"].asString,
             productUUID = src.getOrNull("product_uuid")?.asString,
             name = src["product_name"].asString,
@@ -45,6 +47,7 @@ import java.util.*
             defExpiresIn: Double?
         ) =
             ServiceItemCustom(
+                id = 0,
                 uuid = UUID.randomUUID().toString(),
                 productUUID = evoPos.uuid,
                 name = evoPos.name,

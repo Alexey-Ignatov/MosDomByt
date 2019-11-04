@@ -11,7 +11,7 @@ import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
 
 @Entity data class Master(
-    @Id val id: Int,
+    @Id var id: Long,
     val name: String,
     val specialization: String
 ) {
@@ -25,7 +25,7 @@ import io.objectbox.relation.ToOne
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> Master(
-            id = src.getOrNull("id")?.asInt ?: 0,
+            id = src.getOrNull("id")?.asLong ?: 0,
             name = src["name"].asString,
             specialization = src["specialization"].asString
         ) }

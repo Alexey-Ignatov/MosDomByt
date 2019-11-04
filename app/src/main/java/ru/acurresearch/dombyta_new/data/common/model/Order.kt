@@ -13,7 +13,7 @@ import io.objectbox.relation.ToOne
 import java.util.*
 
 @Entity data class Order(
-    @Id val id: Int,
+    @Id var id: Long,
     var customPrice: Double?,
     var billType: String,
     var status: String,
@@ -66,7 +66,7 @@ import java.util.*
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> Order(
-            id = src["id"].asInt,
+            id = src["id"].asLong,
             customPrice = src.getOrNull("custom_price")?.asDouble,
             billType = src["billing_type"].asString,
             status = src["status"].asString,

@@ -17,7 +17,8 @@ import java.math.BigDecimal
 import java.util.*
 
 @Entity data class OrderPosition(
-    @Id val uuid: String,
+    @Id var id: Long,
+    val uuid: String,
     val quantity: Double,
     val price: Double,
     val productName: String,
@@ -50,6 +51,7 @@ import java.util.*
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> OrderPosition(
+            id = 0,
             uuid = src["uuid"].asString,
             quantity = src["quantity"].asDouble,
             price = src["price"].asDouble,

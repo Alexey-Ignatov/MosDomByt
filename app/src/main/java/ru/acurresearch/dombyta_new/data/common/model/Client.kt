@@ -11,7 +11,7 @@ import io.objectbox.relation.ToOne
 import java.util.*
 
 @Entity data class Client(
-    @Id val id: String = UUID.randomUUID().toString(),
+    @Id var id: Long = 0,
     @SerializedName("name") val name: String?,
     @SerializedName("phone") val phone: String?
 ) {

@@ -13,7 +13,8 @@ import java.util.*
 
 
 @Entity data class Check(
-    @Id val uuid: String,
+    @Id var id: Long,
+    val uuid: String,
     val date: Date,
     val number: String?
 ) {
@@ -28,6 +29,7 @@ import java.util.*
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> Check(
+            id = 0,
             uuid = src["uuid"].asString,
             date = context.deserialize(src["check_date"]),
             number = src.getOrNull("check_number")?.asString
@@ -41,6 +43,7 @@ import java.util.*
 
         fun fromEvoReceipt(receipt: Receipt) =
             Check(
+                id = 0,
                 uuid = receipt.header.uuid,
                 date = receipt.header.date ?: Date(),
                 number = receipt.header.number
