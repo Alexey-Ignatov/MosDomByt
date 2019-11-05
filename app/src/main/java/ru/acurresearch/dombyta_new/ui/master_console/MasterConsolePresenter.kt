@@ -104,6 +104,29 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
             }.doOnNext { handleState(it) }
                 .map { MasterConsoleViewUpdateTabsAction(it) }
         }
+
+    private fun handleTaskNewClickedEvent(): ObservableTransformer<MasterConsoleTaskNewClickedEvent, MasterConsoleViewAction> =
+        ObservableTransformer {
+            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleTaskNewClickedEvent, state: MasterConsoleViewPM ->
+                event to state
+            }).doOnNext { (event, state) -> handleState(state) }
+                .map { (event, state) -> MasterConsoleViewShowTaskNewToInWorkDialogAction(
+                    task = event.task,
+                    pm = state
+                ) }
+        }
+
+    private fun handleTaskInWorkClickedEvent(): ObservableTransformer<MasterConsoleTaskInWorkClickedEvent, MasterConsoleViewAction> =
+        ObservableTransformer {
+            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleTaskInWorkClickedEvent, state: MasterConsoleViewPM ->
+                event to state
+            }).doOnNext { (event, state) -> handleState(state) }
+                .map { (event, state) -> MasterConsoleViewShowTaskInWorkToCompleteDialog(
+                    task = event.task,
+                    pm = state
+                ) }
+        }
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         handleViewEvent(MasterConsoleViewInitializeEvent())
@@ -116,6 +139,8 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
             shared.ofType(MasterConsoleViewInitializeEvent::class.java).compose(handleInitializedEvent()),
             shared.ofType(MasterConsoleViewTokenUpdatedEvent::class.java).compose(handleTokenUpdatedEvent()),
             shared.ofType(MasterConsoleViewTaskInWorkEvent::class.java).compose(handleTaskInWorkEvent()),
-            shared.ofType(MasterConsoleViewTaskCompleteEvent::class.java).compose(handleTaskCompleteEvent())
+            shared.ofType(MasterConsoleViewTaskCompleteEvent::class.java).compose(handleTaskCompleteEvent()),
+            shared.ofType(MasterConsoleTaskNewClickedEvent::class.java).compose(handleTaskNewClickedEvent()),
+            shared.ofType(MasterConsoleTaskInWorkClickedEvent::class.java).compose(handleTaskInWorkClickedEvent())
         )
 }

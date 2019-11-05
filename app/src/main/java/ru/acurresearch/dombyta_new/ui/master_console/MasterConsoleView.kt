@@ -23,6 +23,8 @@ data class MasterConsoleViewTaskInWorkEvent(
     val master: Master
 ): MasterConsoleViewEvent()
 data class MasterConsoleViewTaskCompleteEvent(val task: Task): MasterConsoleViewEvent()
+data class MasterConsoleTaskNewClickedEvent(val task: Task): MasterConsoleViewEvent()
+data class MasterConsoleTaskInWorkClickedEvent(val task: Task): MasterConsoleViewEvent()
 
 sealed class MasterConsoleViewAction
 
@@ -32,3 +34,11 @@ data class MasterConsoleViewUpdateTabsAction(val pm: MasterConsoleViewPM): Maste
 sealed class MasterConsoleViewSkipAction: MasterConsoleViewAction()
 
 class MasterConsoleViewShowLoginAction: MasterConsoleViewSkipAction()
+data class MasterConsoleViewShowTaskNewToInWorkDialogAction(
+    val task: Task,
+    val pm: MasterConsoleViewPM
+): MasterConsoleViewSkipAction()
+data class MasterConsoleViewShowTaskInWorkToCompleteDialog(
+    val task: Task,
+    val pm: MasterConsoleViewPM
+): MasterConsoleViewSkipAction()

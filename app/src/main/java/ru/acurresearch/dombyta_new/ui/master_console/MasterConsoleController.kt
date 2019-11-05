@@ -29,30 +29,13 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
         const val TAB_TITLE_NULL = "NULL"
     }
 
-    private val onTaskItemNewClicked: (Task) -> Unit = {
-        val alertDialog = AlertDialog.Builder(view?.context!!)
-        alertDialog.setTitle("Чтобы взять заказ в работу, выберете мастера:")
+    private lateinit var state: MasterConsoleViewPM
 
-        val masters = currentPM.masters.content?.map { it.name }?.toTypedArray() ?: arrayOf()
-        alertDialog.setItems(masters) { dialog, which ->
-            presenter.handleViewEvent(MasterConsoleViewTaskInWorkEvent(it,
-                currentPM.masters.content?.find { it.name == masters[which] }!!
-            ))
-        }
-        alertDialog.create().show()
+    private val onTaskItemNewClicked: (Task) -> Unit = {
+        presenter.handleViewEvent(MasterConsoleTaskNewClickedEvent(it))
     }
     private val onTaskItemInWorkClicked: (Task) -> Unit = {
-        val alertDialog = AlertDialog.Builder(view?.context!!)
-        alertDialog.setTitle("Завершить выполнение заказа?")
-        alertDialog.setCancelable(true)
-        alertDialog.setPositiveButton("Да") { dialog, id ->
-            presenter.handleViewEvent(MasterConsoleViewTaskCompleteEvent(it))
-        }
-        alertDialog.setNegativeButton("Нет") { dialog, id ->
-            dialog.cancel()
-        }
-        alertDialog.create()
-            .show()
+        presenter.handleViewEvent(MasterConsoleTaskInWorkClickedEvent(it))
     }
     private val onTaskItemCompleteClicked: (Task) -> Unit = onTaskItemNewClicked
 
@@ -100,39 +83,66 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
         pagerAdapter.getRouter(view?.view_pager?.currentItem ?: 0)
             ?.backstack?.mapNotNull { it.controller() as? MasterConsolePageController }
             ?.forEach { it.handleUpdateDataEventOutside(
-                masters = currentPM.masters,
+                masters = state.masters,
                 tasks = when(it.id) {
-                    MasterConsolePageController.TASK_ITEM_VIEW_NEW -> currentPM.tasks.copy(
-                        content = currentPM.tasks.content?.filter { it.status == Task.TaskStatus.NEW }
+                    MasterConsolePageController.TASK_ITEM_VIEW_NEW -> state.tasks.copy(
+                        content = state.tasks.content?.filter { it.status == Task.TaskStatus.NEW }
                     )
-                    MasterConsolePageController.TASK_ITEM_VIEW_IN_WORK -> currentPM.tasks.copy(
-                        content = currentPM.tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK }
+                    MasterConsolePageController.TASK_ITEM_VIEW_IN_WORK -> state.tasks.copy(
+                        content = state.tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK }
                     )
-                    MasterConsolePageController.TASK_ITEM_VIEW_COMPLETE -> currentPM.tasks.copy(
-                        content = currentPM.tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE }
+                    MasterConsolePageController.TASK_ITEM_VIEW_COMPLETE -> state.tasks.copy(
+                        content = state.tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE }
                     )
-                    else -> currentPM.tasks
+                    else -> state.tasks
                 }
             ) }
     }
-    //TODO[Major design flaw] base1.1r1 make pageadapter tolerant to controller safe reuse
-    private lateinit var currentPM: MasterConsoleViewPM
 
     private fun initializeTabsAction(action: MasterConsoleViewInitializeTabsAction) {
         view?.view_pager?.adapter = pagerAdapter
         view?.tabs?.setupWithViewPager(view?.view_pager)
 
-        currentPM = action.pm
+        state = action.pm
         updateCurrentPage()
     }
 
     private fun updateTabsAction(action: MasterConsoleViewUpdateTabsAction) {
-        currentPM = action.pm
+        state = action.pm
         updateCurrentPage()
     }
 
     private fun showLoginAction(action: MasterConsoleViewShowLoginAction) {
         startActivityForResult(Intent(activity, TokenActivity::class.java), TokenActivity.REQUEST_CODE)
+    }
+
+    private fun showTaskNewToInWorkDialogAction(action: MasterConsoleViewShowTaskNewToInWorkDialogAction) {
+        val alertDialog = AlertDialog.Builder(view?.context!!)
+        alertDialog.setTitle("Чтобы взять заказ в работу, выберете мастера:")
+
+        val masters = action.pm.masters.content?.map { it.name }?.toTypedArray() ?: arrayOf()
+        alertDialog.setItems(masters) { dialog, which ->
+            presenter.handleViewEvent(MasterConsoleViewTaskInWorkEvent(action.task,
+                action.pm.masters.content?.find { it.name == masters[which] }!!
+            ))
+        }
+        alertDialog.setNegativeButton("Отмена") { dialog, id ->
+            dialog.cancel()
+        }
+        alertDialog.create().show()
+    }
+
+    private fun showTaskInWorkToCompleteDialogAction(action: MasterConsoleViewShowTaskInWorkToCompleteDialog) {
+        val alertDialog = AlertDialog.Builder(view?.context!!)
+        alertDialog.setTitle("Завершить выполнение заказа?")
+        alertDialog.setCancelable(true)
+        alertDialog.setPositiveButton("Да") { dialog, id ->
+            presenter.handleViewEvent(MasterConsoleViewTaskCompleteEvent(action.task))
+        }
+        alertDialog.setNegativeButton("Нет") { dialog, id ->
+            dialog.cancel()
+        }
+        alertDialog.create().show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { when(requestCode) {
@@ -156,6 +166,8 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
 
     override fun applyActionWithSkip(action: MasterConsoleViewAction) { when(action) {
         is MasterConsoleViewShowLoginAction -> showLoginAction(action)
+        is MasterConsoleViewShowTaskNewToInWorkDialogAction -> showTaskNewToInWorkDialogAction(action)
+        is MasterConsoleViewShowTaskInWorkToCompleteDialog -> showTaskInWorkToCompleteDialogAction(action)
     } }
 
 
