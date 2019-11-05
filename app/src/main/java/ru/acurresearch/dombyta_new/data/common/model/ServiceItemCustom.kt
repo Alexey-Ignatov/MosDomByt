@@ -14,13 +14,15 @@ import java.util.*
 
 
 @Entity data class ServiceItemCustom (
-    @Id var id: Long,
+    @Id(assignable = true) var id: Long,
     val uuid: String,
     val productUUID: String?,
     val name: String,
     val defPrice: Double?,
     val defExpiresIn: Double?
 ) {
+    constructor(): this(0, "", "", "", 0.0, 0.0)
+
     lateinit var orderPosition: ToOne<OrderPosition>
 
     companion object {

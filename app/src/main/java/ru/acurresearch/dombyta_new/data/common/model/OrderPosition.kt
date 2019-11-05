@@ -17,13 +17,15 @@ import java.math.BigDecimal
 import java.util.*
 
 @Entity data class OrderPosition(
-    @Id var id: Long,
+    @Id(assignable = true) var id: Long,
     val uuid: String,
     val quantity: Double,
     val price: Double,
     val productName: String,
     val expDate: Date?
 ) {
+    constructor(): this(0, "", 0.0, 0.0, "", Date())
+
     lateinit var serviceItem: ToOne<ServiceItemCustom>
     lateinit var order: ToOne<Order>
 

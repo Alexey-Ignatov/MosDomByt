@@ -14,22 +14,24 @@ import io.objectbox.relation.ToOne
 import java.util.*
 
 @Entity data class Task(
-    @Id @SerializedName("id") var id: Long,
+    @Id(assignable = true) @SerializedName("id") var id: Long,
     @SerializedName("name")  val name: String?,
     @SerializedName("exp_date")  val expDate: Date?,
     @SerializedName("order_internal_id")  val orderInternalId: Int?,
     @SerializedName("status") var status: String
 ) {
+    constructor(): this(0, "", Date(), 0, "")
+
     @SerializedName("master") lateinit var master: ToOne<Master>
 
     companion object {
         val serializer = jsonSerializer<Task> { (src, type, context) -> jsonObject(
             "id" to src.id,
             "name" to src.name,
-            "exp_date" to src.expDate,
+            "exp_date" to context.serialize(src.expDate),
             "order_internal_id" to src.orderInternalId,
             "status" to src.status,
-            "master" to context.serialize(src.master)
+            "master" to context.serialize(src.master.target)
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> Task(
@@ -40,7 +42,6 @@ import java.util.*
             status = src["status"].asString
         ).apply {
             val master = context.deserialize<Master>(src["master"])
-            master.task.target = this
             this.master.target = master
         } }
 

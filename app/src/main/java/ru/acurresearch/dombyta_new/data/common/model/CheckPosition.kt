@@ -14,13 +14,15 @@ import ru.evotor.framework.receipt.Position
 import java.math.BigDecimal
 
 @Entity data class CheckPosition(
-    @Id var id: Long,
+    @Id(assignable = true) var id: Long,
     val uuid: String,
     val productUUID: String?,
     val name: String,
     val quantity: Double,
     val price: Double
 ) {
+    constructor(): this(0, "", "", "", 0.0, 0.0)
+
     lateinit var check: ToOne<Check>
 
     fun toEvotorPositionAdd() =

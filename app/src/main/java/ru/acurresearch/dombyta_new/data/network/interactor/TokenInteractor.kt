@@ -17,13 +17,16 @@ class TokenInteractor(
 ) {
     companion object {
         const val KEY_TOKEN = "TOKEN"
+        const val KEY_DEV_TOKEN = "DEV"
     }
 
     fun updateToken(
         siteToken: SiteToken
     ): Single<CashBoxServerData> =
-        api.getToken(siteToken)
-            .doOnSuccess { Prefs.putString(KEY_TOKEN, gson.toJson(it)) }
+        when(siteToken.token) {
+            KEY_DEV_TOKEN ->  Single.fromCallable { CashBoxServerData("214940b6555e74eeeb800b169fe80673b941b267", "aa") }
+            else -> api.getToken(siteToken)
+        }.doOnSuccess { Prefs.putString(KEY_TOKEN, gson.toJson(it)) }
 
     fun getToken(
     ): Single<Optional<CashBoxServerData>> =

@@ -8,6 +8,9 @@ import ga.nk2ishere.dev.utils.FileLoggingTree
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.logger.EmptyLogger
+import ru.acurresearch.dombyta_new.data.apiModule
+import ru.acurresearch.dombyta_new.data.networkModule
+import ru.acurresearch.dombyta_new.data.serializationModule
 import timber.log.Timber
 
 class App: BaseApplication() {
@@ -19,7 +22,7 @@ class App: BaseApplication() {
             androidContext(this@App)
             logger(EmptyLogger())
             modules(listOf(
-
+                apiModule, networkModule, serializationModule
             ))
         }
         Prefs.Builder()

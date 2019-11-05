@@ -125,6 +125,14 @@
           "id": "3:4877867529061917689",
           "name": "specialization",
           "type": 9
+        },
+        {
+          "id": "4:4660213816043591567",
+          "name": "taskId",
+          "indexId": "3:3528654450923048890",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Task"
         }
       ],
       "relations": []
@@ -364,12 +372,8 @@
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [
-    3528654450923048890
-  ],
-  "retiredPropertyUids": [
-    4660213816043591567
-  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1
 }

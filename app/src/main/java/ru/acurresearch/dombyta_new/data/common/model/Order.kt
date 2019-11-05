@@ -13,7 +13,7 @@ import io.objectbox.relation.ToOne
 import java.util.*
 
 @Entity data class Order(
-    @Id var id: Long,
+    @Id(assignable = true) var id: Long,
     var customPrice: Double?,
     var billType: String,
     var status: String,
@@ -24,6 +24,8 @@ import java.util.*
     var evoResUuid: String?,
     var isPaid: Boolean = false
 ) {
+    constructor(): this(0, 0.0, "", "", Date(), 0, "", "", "", false)
+
     @Backlink(to = "order") lateinit var positionsList: ToMany<OrderPosition>
     lateinit var client: ToOne<Client>
     val price: Double
@@ -61,7 +63,7 @@ import java.util.*
             "clients_kvitok" to src.printKvitok,
             "evotor_receipt_uuid" to src.evoResUuid,
             "positions_list" to jsonArray(src.positionsList.mapTo(ArrayList<JsonElement>()) { context.serialize(it) }),
-            "client" to context.serialize(src.client),
+            "client" to context.serialize(src.client.target),
             "is_paid" to src.isPaid
         ) }
 

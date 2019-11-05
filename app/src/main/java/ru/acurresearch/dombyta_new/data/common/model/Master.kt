@@ -6,16 +6,18 @@ import com.github.salomonbrys.kotson.jsonObject
 import com.github.salomonbrys.kotson.jsonSerializer
 import com.google.gson.annotations.SerializedName
 import ga.nk2ishere.dev.utils.getOrNull
+import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.relation.ToMany
 import io.objectbox.relation.ToOne
 
 @Entity data class Master(
-    @Id var id: Long,
+    @Id(assignable = true) var id: Long,
     val name: String,
     val specialization: String
 ) {
-    lateinit var task: ToOne<Task>
+    constructor(): this(0, "", "")
 
     companion object {
         val serializer = jsonSerializer<Master> { (src, type, context) -> jsonObject(

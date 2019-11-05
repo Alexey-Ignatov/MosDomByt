@@ -2,13 +2,8 @@ package ru.acurresearch.dombyta.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -105,7 +100,7 @@ class MasterConsolActivity : AppCompatActivity() {
         var layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 
-        var task_list = view.findViewById(R.id.complete_task_list) as androidx.recyclerview.widget.RecyclerView
+        var task_list = view.findViewById(R.id.task_list) as androidx.recyclerview.widget.RecyclerView
         task_list.layoutManager = layoutManager
         task_list.adapter = adapterCompleteTask
     }

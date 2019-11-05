@@ -11,10 +11,12 @@ import io.objectbox.relation.ToOne
 import java.util.*
 
 @Entity data class Client(
-    @Id var id: Long = 0,
+    @Id(assignable = true) var id: Long = 0,
     @SerializedName("name") val name: String?,
     @SerializedName("phone") val phone: String?
 ) {
+    constructor(): this(0, "", "")
+
     lateinit var order: ToOne<Order>
 
     companion object {

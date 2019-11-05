@@ -13,11 +13,13 @@ import java.util.*
 
 
 @Entity data class Check(
-    @Id var id: Long,
+    @Id(assignable = true) var id: Long,
     val uuid: String,
     val date: Date,
     val number: String?
 ) {
+    constructor(): this(0, "", Date(), "")
+
     @Backlink(to = "check") lateinit var position: ToMany<CheckPosition>
 
     companion object {

@@ -16,7 +16,7 @@ interface Api {
     @GET("/compl_tels/{NUM}/")
     fun getComplTels(
         @Path("NUM") numberToShow: Int
-    ) : Observable<String>
+    ) : Single<List<String>>
 
     @PUT("/setphone/{ID}/")
     fun setPhone(
@@ -35,23 +35,23 @@ interface Api {
     @GET("/api/servitems/")
     fun fetchAllowedProds(
         @Header("Authorization-Acur") token: String
-    ): Observable<ServiceItemCustom>
+    ): Single<List<ServiceItemCustom>>
 
     @GET("/api/masters/")
     fun fetchMasters(
         @Header("Authorization-Acur") token: String
-    ): Observable<Master>
+    ): Single<List<Master>>
 
     @GET("/api/tasks/")
     fun fetchTasks(
         @Header("Authorization-Acur") token: String
-    ): Observable<Task>
+    ): Single<List<Task>>
 
     @GET("/api/orders/search/{SEARCHSTR}/")
     fun searchOrder(
         @Path("SEARCHSTR") searchStr: String,
         @Header("Authorization-Acur") token: String
-    ): Observable<Order>
+    ): Single<List<Order>>
 
     @PUT("/api/tasks/{ID}/")
     fun syncServerTask(

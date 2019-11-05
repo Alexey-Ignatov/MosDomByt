@@ -40,7 +40,7 @@ class TokenController(args: Bundle): BaseController(args), TokenView, TokenViewP
         activity?.setResult(RESULT_OK, Intent().apply {
             this.putExtra(RESULT_KEY_TOKEN, action.token)
         })
-        activity?.finishActivity(REQUEST_CODE)
+        activity?.finish()
     }
 
     @InjectPresenter lateinit var presenter: TokenPresenter
