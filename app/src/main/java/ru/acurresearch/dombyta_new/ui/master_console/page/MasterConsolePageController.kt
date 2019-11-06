@@ -3,7 +3,6 @@ package ru.acurresearch.dombyta_new.ui.master_console.page
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.xwray.groupie.GroupAdapter
@@ -14,10 +13,9 @@ import kotlinx.android.synthetic.main.complete_task_fragment_master_consol.view.
 import ru.acurresearch.dombyta.R
 import ru.acurresearch.dombyta_new.data.common.model.Master
 import ru.acurresearch.dombyta_new.data.common.model.Task
-import ru.acurresearch.dombyta_new.ui.master_console.item.TaskItemComplete
-import ru.acurresearch.dombyta_new.ui.master_console.item.TaskItemInWork
-import ru.acurresearch.dombyta_new.ui.master_console.item.TaskItemNew
-import timber.log.Timber
+import ru.acurresearch.dombyta_new.ui.master_console.page.item.TaskItemComplete
+import ru.acurresearch.dombyta_new.ui.master_console.page.item.TaskItemInWork
+import ru.acurresearch.dombyta_new.ui.master_console.page.item.TaskItemNew
 
 class MasterConsolePageController(
     args: Bundle,

@@ -26,28 +26,28 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
-            tools:ignore="GoogleAppIndexingWarning">
+            tools:ignore="GoogleAppIndexingWarning,InnerclassSeparator,UnusedAttribute">
         <!--
         <activity
                 android:name=".Activities.ChoosePayTypeActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         -->
-        <activity android:name="ru.acurresearch.dombyta.Activities.MainActivity">
+        <activity android:name="ru.acurresearch.dombyta_new.ui.order.pay.OrderPayActivity">
         </activity>
 
 
-        <activity android:name=".Activities.SelectPositionActivity">
+        <activity android:name="ru.acurresearch.dombyta_new.ui.order.pay.add_good.AddGoodActivity">
         </activity>
         <activity android:name=".Activities.OrderFinalActivity">
         </activity>
-        <activity android:name=".Activities.OrderSearchActivity">
+        <activity android:name="ru.acurresearch.dombyta_new.ui.order.search.OrderSearchActivity">
         </activity>
         <activity android:name="ru.acurresearch.dombyta_new.ui.token.TokenActivity">
         </activity>
 
         <activity
-                android:name="ru.acurresearch.dombyta.Activities.ChoosePayTypeActivity"
+                android:name="ru.acurresearch.dombyta_new.ui.order.ChoosePayTypeActivity"
                 android:icon="@mipmap/ic_launcher"
                 android:label="Заказы">
             <meta-data
@@ -55,7 +55,9 @@
                     android:value="#9CCC65" />
             <intent-filter>
                 <action android:name="ru.evotor.intent.action.SELL_MAIN" />
-                <category android:name="android.intent.category.EVOTOR" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.EVOTOR"/>
+                <category android:name="android.intent.category.LAUNCHER" />
 
             </intent-filter>
         </activity>

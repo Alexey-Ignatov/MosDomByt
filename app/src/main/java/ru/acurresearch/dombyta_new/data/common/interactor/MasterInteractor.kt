@@ -15,7 +15,7 @@ class MasterInteractor(
     ) = api.fetchMasters(token.authHeader)
         .flatMap {
             box.createOrUpdate(it)
-                .andThen(Single.fromCallable { it })
+                .andThen(Single.just(it))
         }
 
     fun getMasters() =

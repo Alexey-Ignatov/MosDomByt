@@ -90,8 +90,8 @@ import java.util.*
                 }
         } }
 
-        fun empty(): Order{
-            return Order(
+        fun empty() =
+            Order(
                 id = 0,
                 customPrice = null,
                 billType = BillingType.PREPAY,
@@ -102,9 +102,8 @@ import java.util.*
                 printKvitok = null,
                 evoResUuid = null
             )
-        }
-        fun newPrePaid(): Order{
-            return Order(
+        fun newPrePaid() =
+            Order(
                 id =0,
                 customPrice = null,
                 billType = BillingType.PREPAY,
@@ -115,10 +114,9 @@ import java.util.*
                 printKvitok = null,
                 evoResUuid = null
             )
-        }
 
-        fun newPostPaid(): Order{
-            return Order(
+        fun newPostPaid() =
+            Order(
                 id = 0,
                 customPrice = null,
                 billType = BillingType.POSTPAY,
@@ -129,7 +127,6 @@ import java.util.*
                 printKvitok = null,
                 evoResUuid = null
             )
-        }
     }
 
     object BillingType {

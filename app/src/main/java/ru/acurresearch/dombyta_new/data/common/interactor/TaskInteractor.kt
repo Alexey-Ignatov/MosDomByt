@@ -16,7 +16,7 @@ class TaskInteractor(
     ) = api.fetchTasks(token.authHeader)
         .flatMap {
             box.createOrUpdate(it)
-                .andThen(Single.fromCallable { it })
+                .andThen(Single.just(it))
         }
 
     fun getTasks() =
