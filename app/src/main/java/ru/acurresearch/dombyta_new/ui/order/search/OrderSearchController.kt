@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.github.dimsuz.diffdispatcher.annotations.DiffElement
+import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ga.nk2ishere.dev.base.BaseController
@@ -58,6 +59,11 @@ class OrderSearchController(args: Bundle): BaseController(args), OrderSearchView
         view.search_act_search_input.addTextChangedListener(ReducedTextWatcher {
             presenter.handleViewEvent(OrderSearchViewSearchStringEditedEvent(it))
         })
+
+        with(MaskedTextChangedListener("+7 ([000]) [000]-[00]-[00]", view.search_act_search_input)) {
+            view.search_act_search_input.addTextChangedListener(this)
+            view.search_act_search_input.onFocusChangeListener = this
+        }
     }
 
     override fun applyAction(action: OrderSearchViewAction) { when(action) {

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ga.nk2ishere.dev.base.BaseController
@@ -85,6 +86,10 @@ class OrderPayController(args: Bundle): BaseController(args), OrderPayView, Orde
         view.ed_txt_phone.addTextChangedListener(
             ReducedTextWatcher { presenter.handleViewEvent(OrderPayViewClientPhoneEditedEvent(it)) }
         )
+        with(MaskedTextChangedListener("+7 ([000]) [000]-[00]-[00]", view.ed_txt_phone)) {
+            view.ed_txt_phone.addTextChangedListener(this)
+            view.ed_txt_phone.onFocusChangeListener = this
+        }
         view.create_pre_pay_order.setOnClickListener { presenter.handleViewEvent(OrderPayViewCreateOrderButtonClickedEvent()) }
         view.create_post_pay_order.setOnClickListener { presenter.handleViewEvent(OrderPayViewCreateOrderButtonClickedEvent()) }
         view.add_good.setOnClickListener { presenter.handleViewEvent(OrderPayViewAddGoodButtonClickedEvent()) }
