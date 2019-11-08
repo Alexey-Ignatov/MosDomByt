@@ -5,6 +5,7 @@ import ga.nk2ishere.dev.base.BaseLCE
 import ga.nk2ishere.dev.base.BasePresenter
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import ru.acurresearch.dombyta_new.data.common.interactor.OrderInteractor
@@ -112,6 +113,10 @@ class OrderFinalPresenter(
                     it.currentOrder.content?.printLabel.isNullOrBlank().not()
                             && it.currentOrder.content?.printKvitok.isNullOrBlank().not()
 //                            && it.printerInitialized.content == true
+                }.switchMapSingle {
+                    orderInteractor.clearCurrentOrder()
+                        .andThen(orderInteractor.saveCurrentOrder(it.currentOrder.content!!, orderAlreadyExists))
+                        .andThen(Single.just(it))
                 }.doOnNext { handleState(it) }
                 .map {
                     handleViewAction(OrderFinalViewPrintLabelAction(it.currentOrder.content!!.printLabel ?: ""))

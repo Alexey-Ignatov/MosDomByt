@@ -1,5 +1,7 @@
 package ru.acurresearch.dombyta_new.data.common.interactor
 
+import com.hadisatrio.optional.Optional
+import com.pixplicity.easyprefs.library.Prefs
 import ga.nk2ishere.dev.utils.RxBoxRepository
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -16,6 +18,11 @@ class OrderInteractor(
     private val boxServiceItemCustom: RxBoxRepository<ServiceItemCustom>,
     private val api: Api
 ) {
+    companion object {
+        const val KEY_CURRENT_ORDER_ID = "CURRENT_ORDER_ID"
+        const val KEY_CURRENT_ORDER_ALREADY_EXISTS = "CURRENT_ORDER_ALREADY_EXISTS"
+    }
+
     private fun mergeOrderPositionsInOrder(
         order: Order
     ) = Completable.fromCallable {
@@ -26,6 +33,28 @@ class OrderInteractor(
             order.positionsList.add(it)
         }
     }
+
+    fun saveCurrentOrder(
+        order: Order,
+        orderAlreadyExists: Boolean
+    ) = Completable.fromCallable {
+        Prefs.putLong(KEY_CURRENT_ORDER_ID, order.id)
+        Prefs.putBoolean(KEY_CURRENT_ORDER_ALREADY_EXISTS, orderAlreadyExists)
+    }
+
+    fun loadCurrentOrder() =
+        Single.fromCallable {
+            Prefs.getLong(KEY_CURRENT_ORDER_ID, -1) to Prefs.getBoolean(KEY_CURRENT_ORDER_ALREADY_EXISTS, false)
+        }.flatMap { (orderId, orderAlreadyExists) ->
+            this.getOrderById(orderId)
+                .map { Optional.of(it) to orderAlreadyExists }
+        }
+
+    fun clearCurrentOrder() =
+        Completable.fromCallable {
+            Prefs.putLong(KEY_CURRENT_ORDER_ID, -1)
+            Prefs.putBoolean(KEY_CURRENT_ORDER_ALREADY_EXISTS, false)
+        }
 
     fun searchOrder(
         token: CashBoxServerData,
