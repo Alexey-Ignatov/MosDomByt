@@ -3,6 +3,7 @@ package ru.acurresearch.dombyta_new.ui.order.pay
 import com.github.dimsuz.diffdispatcher.annotations.DiffElement
 import ga.nk2ishere.dev.base.BaseLCE
 import ga.nk2ishere.dev.base.BaseView
+import ga.nk2ishere.dev.utils.NeverEqualItemContainer
 import ru.acurresearch.dombyta_new.data.common.model.Order
 import ru.acurresearch.dombyta_new.data.common.model.OrderPosition
 
@@ -10,13 +11,13 @@ interface OrderPayView: BaseView<OrderPayViewAction>
 
 @DiffElement(OrderPayViewPMRenderer::class)
 data class OrderPayViewPM(
-    val order: BaseLCE<Order>,
+    val order: BaseLCE<NeverEqualItemContainer<Order>>,
     val clientName: BaseLCE<String>,
     val clientPhone: BaseLCE<String>
 )
 
 interface OrderPayViewPMRenderer {
-    fun renderOrder(order: BaseLCE<Order>)
+    fun renderOrder(order: BaseLCE<NeverEqualItemContainer<Order>>)
 }
 
 sealed class OrderPayViewEvent

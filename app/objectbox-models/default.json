@@ -71,7 +71,13 @@
           "relationTarget": "Client"
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "1:9182292175151773611",
+          "name": "positionsListUnmerged",
+          "targetId": "7:8440458978771518123"
+        }
+      ]
     },
     {
       "id": "2:8792237858713293361",
@@ -138,7 +144,7 @@
           "id": "1:5222894874873136315",
           "name": "id",
           "type": 6,
-          "flags": 129
+          "flags": 1
         },
         {
           "id": "2:7026354325660974205",
@@ -259,7 +265,7 @@
           "id": "1:1827611326286907096",
           "name": "id",
           "type": 6,
-          "flags": 129
+          "flags": 1
         },
         {
           "id": "2:8327114495607164340",
@@ -359,7 +365,7 @@
   ],
   "lastEntityId": "8:7712807616568206182",
   "lastIndexId": "8:9174080361902123665",
-  "lastRelationId": "0:0",
+  "lastRelationId": "1:9182292175151773611",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

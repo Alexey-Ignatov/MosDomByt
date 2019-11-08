@@ -14,7 +14,7 @@ import java.util.*
 
 
 @Entity data class ServiceItemCustom (
-    @Id(assignable = true) var id: Long,
+    @Id var id: Long,
     val uuid: String,
     val productUUID: String?,
     val name: String,

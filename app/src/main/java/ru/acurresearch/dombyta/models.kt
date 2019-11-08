@@ -211,7 +211,7 @@ data class Order(@SerializedName("id")             val id: Int?,
     fun realize(activity: Activity){
         val changes = ArrayList<PositionAdd>()
         var listItem = ArrayList(positionsList.map { it.toEvotorPositionAdd() })
-        listItem.map { changes.add(it) }
+        listItem.forEach { changes.add(it) }
 
         OpenSellReceiptCommand(changes, null).process(
             activity

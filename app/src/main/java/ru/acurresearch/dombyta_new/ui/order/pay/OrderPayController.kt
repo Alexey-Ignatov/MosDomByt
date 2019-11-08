@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.bluelinelabs.conductor.RouterTransaction
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ga.nk2ishere.dev.base.BaseController
 import ga.nk2ishere.dev.base.BaseLCE
+import ga.nk2ishere.dev.utils.NeverEqualItemContainer
 import ga.nk2ishere.dev.utils.ReducedTextWatcher
 import kotlinx.android.synthetic.main.content_x.*
 import kotlinx.android.synthetic.main.content_x.view.*
@@ -20,7 +22,9 @@ import ru.acurresearch.dombyta.Constants
 import ru.acurresearch.dombyta.R
 import ru.acurresearch.dombyta_new.data.common.model.Order
 import ru.acurresearch.dombyta_new.data.common.model.OrderPosition
+import ru.acurresearch.dombyta_new.ui.order.complete.OrderFinalController
 import ru.acurresearch.dombyta_new.ui.order.pay.add_good.AddGoodActivity
+import timber.log.Timber
 
 class OrderPayController(args: Bundle): BaseController(args), OrderPayView, OrderPayViewPMRenderer {
     companion object {
@@ -41,8 +45,9 @@ class OrderPayController(args: Bundle): BaseController(args), OrderPayView, Orde
         presenter.handleViewEvent(OrderPayViewDeleteGoodButtonClickedEvent(it))
     }
 
-    override fun renderOrder(order: BaseLCE<Order>) {
-        order.content?.let {
+    override fun renderOrder(order: BaseLCE<NeverEqualItemContainer<Order>>) {
+        order.content?.item?.let {
+            view?.total_count_txt?.text = "Услуги (${it.price} руб.)"
             goodsAdapter.update(it.positionsList.map {
                 GoodItem(it, deleteGoodClicked)
             })
@@ -59,11 +64,14 @@ class OrderPayController(args: Bundle): BaseController(args), OrderPayView, Orde
     }
 
     private fun showCreateOrderAction(action: OrderPayViewShowCreateOrderAction) {
-
+        router.setRoot(RouterTransaction.with(OrderFinalController.create(
+            orderId = action.orderId,
+            orderAlreadyExists = false
+        )))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { when(requestCode) {
-        AddGoodActivity.ADD_GOOD_REQUEST -> if(data != null && requestCode == AddGoodActivity.ADD_GOOD_RESULT_OK)
+        AddGoodActivity.ADD_GOOD_REQUEST -> if(data != null && resultCode == AddGoodActivity.ADD_GOOD_RESULT_OK)
             presenter.handleViewEvent(OrderPayViewGoodAddedEvent(data.getLongExtra(AddGoodActivity.KEY_ORDER_POSITION_ID, 0)))
     } }
 

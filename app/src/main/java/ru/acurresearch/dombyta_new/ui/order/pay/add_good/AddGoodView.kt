@@ -13,7 +13,7 @@ interface AddGoodView: BaseView<AddGoodViewAction>
 data class AddGoodViewPM(
     val goods: BaseLCE<List<ServiceItemCustom>>,
     val selectedGood: BaseLCE<ServiceItemCustom>,
-    val selectedDate: BaseLCE<Date>,
+    val date: BaseLCE<Date>,
     val price: BaseLCE<String>,
     val listShown: BaseLCE<Boolean>,
     val nameShown: BaseLCE<Boolean>,
@@ -35,6 +35,15 @@ sealed class AddGoodViewEvent
 class AddGoodViewInitializeEvent: AddGoodViewEvent()
 class AddGoodViewAddDeadlineClickedEvent: AddGoodViewEvent()
 data class AddGoodViewPriceEditedEvent(val price: String): AddGoodViewEvent()
+data class AddGoodViewDateEditedEvent(
+    val year: Int,
+    val month: Int,
+    val day: Int
+): AddGoodViewEvent()
+data class AddGoodViewTimeEditedEvent(
+    val hour: Int,
+    val minute: Int
+): AddGoodViewEvent()
 class AddGoodViewPriceClickedEvent: AddGoodViewEvent()
 data class AddGoodViewGoodClickedEvent(val good: ServiceItemCustom): AddGoodViewEvent()
 

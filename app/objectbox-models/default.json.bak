@@ -125,14 +125,6 @@
           "id": "3:4877867529061917689",
           "name": "specialization",
           "type": 9
-        },
-        {
-          "id": "4:4660213816043591567",
-          "name": "taskId",
-          "indexId": "3:3528654450923048890",
-          "type": 11,
-          "flags": 1548,
-          "relationTarget": "Task"
         }
       ],
       "relations": []
@@ -146,7 +138,7 @@
           "id": "1:5222894874873136315",
           "name": "id",
           "type": 6,
-          "flags": 129
+          "flags": 1
         },
         {
           "id": "2:7026354325660974205",
@@ -267,7 +259,7 @@
           "id": "1:1827611326286907096",
           "name": "id",
           "type": 6,
-          "flags": 129
+          "flags": 1
         },
         {
           "id": "2:8327114495607164340",
@@ -372,8 +364,12 @@
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredIndexUids": [
+    3528654450923048890
+  ],
+  "retiredPropertyUids": [
+    4660213816043591567
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

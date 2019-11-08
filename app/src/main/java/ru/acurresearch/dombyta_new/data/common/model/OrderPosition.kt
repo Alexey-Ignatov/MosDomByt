@@ -17,7 +17,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @Entity data class OrderPosition(
-    @Id(assignable = true) var id: Long,
+    @Id var id: Long,
     val uuid: String,
     val quantity: Double,
     val price: Double,
@@ -34,7 +34,7 @@ import java.util.*
             Position.Builder.newInstance(
                 uuid,
                 null,
-                serviceItem.target.name,
+                productName,
                 "шт",
                 0,
                 BigDecimal(price),
@@ -46,10 +46,11 @@ import java.util.*
         val serializer = jsonSerializer<OrderPosition> { (src, type, context) -> jsonObject(
             "uuid" to src.uuid,
             "serv_item_full" to context.serialize(src.serviceItem.target),
+            "serv_item" to src.serviceItem.target?.uuid,
             "quantity" to src.quantity,
             "price" to src.price,
             "product_name" to src.productName,
-            "expires_in" to src.expDate
+            "expires_in" to context.serialize(src.expDate)
         ) }
 
         val deserializer = jsonDeserializer { (src, type, context) -> OrderPosition(

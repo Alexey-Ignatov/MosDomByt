@@ -58,7 +58,7 @@ dependencies {
     implementation 'com.redmadrobot:input-mask-android:5.0.0'
 
     implementation 'ga.nk2ishere.dev:base:1.0r4'
-    implementation 'ga.nk2ishere.dev:utils:1.0r1'
+    implementation 'ga.nk2ishere.dev:utils:1.0r3'
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.3"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
@@ -87,4 +87,9 @@ dependencies {
 
     implementation 'com.pixplicity.easyprefs:library:1.9.0'
     implementation 'com.hadisatrio:Optional:v1.0.1'
+
+    debugImplementation "com.github.ChuckerTeam.Chucker:library:3.0.1"
+    releaseImplementation "com.github.ChuckerTeam.Chucker:library-no-op:3.0.1"
+
+    implementation "joda-time:joda-time:2.10.5"
 }

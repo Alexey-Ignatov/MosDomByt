@@ -5,6 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.bluelinelabs.conductor.RouterTransaction
 import com.github.dimsuz.diffdispatcher.annotations.DiffElement
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.xwray.groupie.GroupAdapter
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_order_search.*
 import kotlinx.android.synthetic.main.activity_order_search.view.*
 import ru.acurresearch.dombyta.R
 import ru.acurresearch.dombyta_new.data.common.model.Order
+import ru.acurresearch.dombyta_new.ui.order.complete.OrderFinalController
 
 class OrderSearchController(args: Bundle): BaseController(args), OrderSearchView, OrderSearchViewPMRenderer {
 
@@ -45,7 +47,10 @@ class OrderSearchController(args: Bundle): BaseController(args), OrderSearchView
     }
 
     private fun showOrderCompleteAction(action: OrderSearchViewShowOrderCompleteAction) {
-
+        router.setRoot(RouterTransaction.with(OrderFinalController.create(
+            orderId = action.orderId,
+            orderAlreadyExists = true
+        )))
     }
 
     @InjectPresenter lateinit var presenter: OrderSearchPresenter
@@ -60,10 +65,10 @@ class OrderSearchController(args: Bundle): BaseController(args), OrderSearchView
             presenter.handleViewEvent(OrderSearchViewSearchStringEditedEvent(it))
         })
 
-        with(MaskedTextChangedListener("+7 ([000]) [000]-[00]-[00]", view.search_act_search_input)) {
-            view.search_act_search_input.addTextChangedListener(this)
-            view.search_act_search_input.onFocusChangeListener = this
-        }
+//        with(MaskedTextChangedListener("+7 ([000]) [000]-[00]-[00]", view.search_act_search_input)) {
+//            view.search_act_search_input.addTextChangedListener(this)
+//            view.search_act_search_input.onFocusChangeListener = this
+//        }
     }
 
     override fun applyAction(action: OrderSearchViewAction) { when(action) {

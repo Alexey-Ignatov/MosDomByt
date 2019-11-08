@@ -3,6 +3,7 @@ package ru.acurresearch.dombyta_new.ui.order.pay
 import com.arellomobile.mvp.InjectViewState
 import ga.nk2ishere.dev.base.BaseLCE
 import ga.nk2ishere.dev.base.BasePresenter
+import ga.nk2ishere.dev.utils.NeverEqualItemContainer
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.functions.BiFunction
@@ -12,6 +13,7 @@ import ru.acurresearch.dombyta.Constants
 import ru.acurresearch.dombyta_new.data.common.interactor.OrderInteractor
 import ru.acurresearch.dombyta_new.data.common.model.Client
 import ru.acurresearch.dombyta_new.data.common.model.Order
+import timber.log.Timber
 
 //TODO name phone price checks
 @InjectViewState
@@ -20,15 +22,19 @@ class OrderPayPresenter(
 ): BasePresenter<OrderPayViewAction, OrderPayViewEvent, OrderPayView, OrderPayViewPM>(), KoinComponent {
     override val TAG: String = "ORDER_PAY"
 
+    companion object {
+        const val PHONE_DEFAULT_LENGTH = 18
+    }
+
     private val orderInteractor: OrderInteractor by inject()
 
     private fun handleInitializeEvent(): ObservableTransformer<OrderPayViewInitializeEvent, OrderPayViewAction> =
         ObservableTransformer {
             it.map { OrderPayViewPM(
                 order = when(paymentType) {
-                    Constants.BillingType.POSTPAY -> BaseLCE(false, Order.newPostPaid(), null)
-                    Constants.BillingType.PREPAY -> BaseLCE(false, Order.newPrePaid(), null)
-                    else -> BaseLCE<Order>(false, null, null)
+                    Constants.BillingType.POSTPAY -> BaseLCE(false, NeverEqualItemContainer(Order.newPostPaid()), null)
+                    Constants.BillingType.PREPAY -> BaseLCE(false, NeverEqualItemContainer(Order.newPrePaid()), null)
+                    else -> BaseLCE<NeverEqualItemContainer<Order>>(false, null, null)
                 },
                 clientName = BaseLCE(false, "", null),
                 clientPhone = BaseLCE(false, "", null)
@@ -64,9 +70,7 @@ class OrderPayPresenter(
         ObservableTransformer {
             it.flatMap { state }
                 .doOnNext { handleState(it) }
-                .map { OrderPayViewShowAddGoodAction(it.order.content!!.apply {
-                    client.target = Client(0, it.clientName.content ?: "", it.clientPhone.content ?: "")
-                }) }
+                .map { OrderPayViewShowAddGoodAction(it.order.content?.item!!) }
         }
 
     private fun handleCreateOrderButtonClickedEvent(): ObservableTransformer<OrderPayViewCreateOrderButtonClickedEvent, OrderPayViewAction> =
@@ -74,16 +78,18 @@ class OrderPayPresenter(
             it.flatMap { state }
                 .filter {
                     it.order.content != null
-                            && it.order.content?.positionsList?.isNullOrEmpty() == false
+                            && it.order.content?.item?.positionsList?.isNullOrEmpty() == false
                             && it.clientName.content.isNullOrBlank().not()
                             && it.clientPhone.content.isNullOrBlank().not()
+                            && it.clientPhone.content?.length == PHONE_DEFAULT_LENGTH
                 }.switchMapSingle { state ->
-                    orderInteractor.saveOrder(state.order.content!!)
-                        .map { state.copy(
-                            order = BaseLCE(false, it, null)
-                        ) }
+                    orderInteractor.saveOrder(state.order.content?.item!!.apply {
+                        client.target = Client(0, state.clientName.content ?: "", state.clientPhone.content ?: "")
+                    }).map { state.copy(
+                        order = BaseLCE(false, NeverEqualItemContainer(it), null)
+                    ) }
                 }.doOnNext { handleState(it) }
-                .map { OrderPayViewShowCreateOrderAction(it.order.content!!.id) }
+                .map { OrderPayViewShowCreateOrderAction(it.order.content?.item!!.id) }
         }
 
     private fun handleGoodAddedEvent(): ObservableTransformer<OrderPayViewGoodAddedEvent, OrderPayViewAction> =
@@ -99,9 +105,9 @@ class OrderPayPresenter(
                 orderInteractor.getOrderPositionById(event.orderPositionId)
                     .map { it to state }
             }.switchMapSingle { (orderPosition, state) ->
-                orderInteractor.addOrderPositionToOrder(state.order.content!!, orderPosition)
+                orderInteractor.addOrderPositionToOrder(state.order.content?.item!!, orderPosition)
                     .map { state.copy(
-                        order = BaseLCE(false, it, null)
+                        order = BaseLCE(false, NeverEqualItemContainer(it), null)
                     ) }
             }.doOnNext { handleState(it) }
                 .map { OrderPayViewUpdatePMAction(it) }
@@ -117,9 +123,9 @@ class OrderPayPresenter(
                     event to state
                 }
             ).switchMapSingle { (event, state) ->
-                orderInteractor.deleteOrderPositionFromOrder(state.order.content!!, event.orderPosition)
+                orderInteractor.deleteOrderPositionFromOrder(state.order.content?.item!!, event.orderPosition)
                     .map { state.copy(
-                        order = BaseLCE(false, it, null)
+                        order = BaseLCE(false, NeverEqualItemContainer(it), null)
                     ) }
             }.doOnNext { handleState(it) }
                 .map { OrderPayViewUpdatePMAction(it) }

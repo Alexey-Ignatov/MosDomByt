@@ -26,7 +26,7 @@ class TaskItemNew(
         viewHolder.itemView.new_task_item_name.text = task.name ?: "???"
         viewHolder.itemView.new_task_item_order_no_holder.text = task.orderInternalId?.toString() ?: "???"
         viewHolder.itemView.new_task_items_days_left.text = hoursLeft.toString()
-        viewHolder.itemView.new_task_item_master.text = task.master.target.name
+        viewHolder.itemView.new_task_item_master.text = task.master.target?.name ?: "???"
 
         if (hoursLeft < 0) viewHolder.itemView.new_task_item_list_card.setCardBackgroundColor(Color.parseColor("#80EF5350"))
         else if(hoursLeft < 1) viewHolder.itemView.new_task_item_list_card.setCardBackgroundColor(Color.parseColor("#4FFFEE58"))

@@ -6,6 +6,10 @@ import ga.nk2ishere.dev.base.BasePresenter
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.functions.BiFunction
+import org.joda.time.DateTime
+import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
+import org.joda.time.LocalTime
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import ru.acurresearch.dombyta_new.data.common.interactor.OrderInteractor
@@ -27,11 +31,11 @@ class AddGoodPresenter: BasePresenter<AddGoodViewAction, AddGoodViewEvent, AddGo
             it.switchMapSingle { tokenInteractor.getToken() }
                 .switchMapSingle { orderInteractor.updateServiceItems(it.orThrow(IllegalStateException("No token is present"))) }
                 .map { BaseLCE(false, it, null) }
-                .onErrorReturn { BaseLCE(false, listOf(), it as? Exception) }
+                .onErrorReturn { it.printStackTrace();BaseLCE(false, listOf(), it as? Exception) }
                 .map { AddGoodViewPM(
                     goods = it,
                     selectedGood = BaseLCE(false, null, null),
-                    selectedDate = BaseLCE(false, null, null),
+                    date = BaseLCE(false, null, null),
                     price = BaseLCE(false, "", null),
                     listShown = BaseLCE(false, true, null),
                     nameShown = BaseLCE(false, false, null),
@@ -47,7 +51,7 @@ class AddGoodPresenter: BasePresenter<AddGoodViewAction, AddGoodViewEvent, AddGo
             it.flatMap { state }
                 .filter {
                     it.selectedGood.content != null
-                            && it.selectedDate.content != null
+                            && it.date.content != null
                             && it.price.content.isNullOrBlank().not()
                             && (it.price.content ?: "").toDoubleOrNull() != null
                 }.doOnNext { handleState(it) }
@@ -58,8 +62,11 @@ class AddGoodPresenter: BasePresenter<AddGoodViewAction, AddGoodViewEvent, AddGo
                         1.0,
                         it.price.content!!.toDouble(),
                         it.selectedGood.content!!.name,
-                        it.selectedDate.content
-                    )
+                        it.date.content
+                    ).apply {
+                        it.selectedGood.content!!.orderPosition.target = this
+                        serviceItem.target = it.selectedGood.content!!
+                    }
                 ) }
                 .map { AddGoodViewResultAction(it.id) }
         }
@@ -105,9 +112,46 @@ class AddGoodPresenter: BasePresenter<AddGoodViewAction, AddGoodViewEvent, AddGo
                 .map { AddGoodViewUpdatePMAction(it) }
         }
 
+    private fun handleDateEditedEvent(): ObservableTransformer<AddGoodViewDateEditedEvent, AddGoodViewAction> =
+        ObservableTransformer {
+            Observable.zip(it, it.flatMap { state }, BiFunction { event: AddGoodViewDateEditedEvent, state: AddGoodViewPM ->
+                event to state
+            }).map { (event, state) -> state.copy(
+                date = BaseLCE(false,
+                    DateTime(state.date.content?.time ?: System.currentTimeMillis())
+                        .year().setCopy(event.year)
+                        .monthOfYear().setCopy(event.month + 1)
+                        .dayOfMonth().setCopy(event.day)
+                        .toDate(),
+                    null
+                )
+            ) }.doOnNext { handleState(it) }
+                .map { AddGoodViewUpdatePMAction(it) }
+        }
+
+    private fun handleTimeEditedEvent(): ObservableTransformer<AddGoodViewTimeEditedEvent, AddGoodViewAction> =
+        ObservableTransformer {
+            Observable.zip(it, it.flatMap { state }, BiFunction { event: AddGoodViewTimeEditedEvent, state: AddGoodViewPM ->
+                event to state
+            }).map { (event, state) -> state.copy(
+                date = BaseLCE(false,
+                    DateTime(state.date.content?.time ?: System.currentTimeMillis())
+                        .hourOfDay().setCopy(event.hour)
+                        .minuteOfHour().setCopy(event.minute)
+                        .secondOfMinute().setCopy(0)
+                        .toDate(),
+                    null)
+            ) }.doOnNext { handleState(it) }
+                .map { AddGoodViewUpdatePMAction(it) }
+        }
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         handleViewEvent(AddGoodViewInitializeEvent())
+        with(DateTime()) {
+            handleViewEvent(AddGoodViewDateEditedEvent(year, monthOfYear, dayOfMonth))
+            handleViewEvent(AddGoodViewTimeEditedEvent(hourOfDay, minuteOfHour))
+        }
     }
 
     override fun isSkipViewAction(viewAction: AddGoodViewAction): Boolean = viewAction is AddGoodViewSkipAction
@@ -118,6 +162,8 @@ class AddGoodPresenter: BasePresenter<AddGoodViewAction, AddGoodViewEvent, AddGo
             shared.ofType(AddGoodViewAddDeadlineClickedEvent::class.java).compose(handleAddDeadlineClickedEvent()),
             shared.ofType(AddGoodViewPriceEditedEvent::class.java).compose(handlePriceEditedEvent()),
             shared.ofType(AddGoodViewGoodClickedEvent::class.java).compose(handleGoodClickedEvent()),
-            shared.ofType(AddGoodViewPriceClickedEvent::class.java).compose(handlePriceClickedEvent())
+            shared.ofType(AddGoodViewPriceClickedEvent::class.java).compose(handlePriceClickedEvent()),
+            shared.ofType(AddGoodViewDateEditedEvent::class.java).compose(handleDateEditedEvent()),
+            shared.ofType(AddGoodViewTimeEditedEvent::class.java).compose(handleTimeEditedEvent())
         )
 }

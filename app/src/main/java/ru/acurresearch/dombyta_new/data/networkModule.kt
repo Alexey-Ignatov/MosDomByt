@@ -1,5 +1,6 @@
 package ru.acurresearch.dombyta_new.data
 
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.StringQualifier
@@ -11,10 +12,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import ru.acurresearch.dombyta_new.data.network.Api
 
 val networkModule = module {
-    single<String>(
+    single(
         qualifier = StringQualifier("BASE_URL"),
         createdAtStart = true
-    ) { "http://acur-research24.ru" }
+    ) { "https://acur-research24.ru" }
 
     single<Api> {
         Retrofit.Builder()
@@ -22,7 +23,11 @@ val networkModule = module {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(get()))
-            .client(OkHttpClient.Builder().build())
+            .client(
+                OkHttpClient.Builder()
+                    .addInterceptor(ChuckerInterceptor(get()))
+                    .build()
+            )
             .build()
             .create(Api::class.java)
     }

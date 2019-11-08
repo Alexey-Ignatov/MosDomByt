@@ -1,12 +1,14 @@
 package ru.acurresearch.dombyta_new.data.common.interactor
 
 import ga.nk2ishere.dev.utils.RxBoxRepository
+import io.reactivex.Completable
 import io.reactivex.Single
 import ru.acurresearch.dombyta_new.data.common.model.Order
 import ru.acurresearch.dombyta_new.data.common.model.OrderPosition
 import ru.acurresearch.dombyta_new.data.common.model.ServiceItemCustom
 import ru.acurresearch.dombyta_new.data.network.Api
 import ru.acurresearch.dombyta_new.data.network.model.CashBoxServerData
+import timber.log.Timber
 
 class OrderInteractor(
     private val box: RxBoxRepository<Order>,
@@ -14,10 +16,26 @@ class OrderInteractor(
     private val boxServiceItemCustom: RxBoxRepository<ServiceItemCustom>,
     private val api: Api
 ) {
+    private fun mergeOrderPositionsInOrder(
+        order: Order
+    ) = Completable.fromCallable {
+        box.box.attach(order)
+        order.positionsList.clear()
+        order.positionsListUnmerged.forEach {
+            boxOrderPosition.box.attach(it)
+            order.positionsList.add(it)
+        }
+    }
+
     fun searchOrder(
         token: CashBoxServerData,
         searchString: String
     ) = api.searchOrder(searchString, token.authHeader)
+        .flattenAsObservable { it }
+        .switchMapSingle {
+            mergeOrderPositionsInOrder(it)
+                .andThen(Single.just(it))
+        }.toList()
 
     fun addOrderPositionToOrder(
         order: Order,
@@ -48,6 +66,18 @@ class OrderInteractor(
         .map {
             it.find { it.id == orderId }
         }
+
+    fun updateOrder(
+        token: CashBoxServerData,
+        order: Order,
+        orderAlreadyExists: Boolean
+    ) = when(orderAlreadyExists) {
+        true -> api.syncOrderStatus(order, order.id.toInt(), token.authHeader)
+        false -> api.sendOrder(order, token.authHeader)
+    }.flatMap {
+        mergeOrderPositionsInOrder(it)
+            .andThen(Single.just(it))
+    }
 
     fun updateServiceItems(
         token: CashBoxServerData

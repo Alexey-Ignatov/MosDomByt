@@ -5,6 +5,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.annotations.SerializedName
 import ga.nk2ishere.dev.utils.getOrNull
+import io.objectbox.BoxStore
 import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -27,29 +28,41 @@ import java.util.*
     constructor(): this(0, 0.0, "", "", Date(), 0, "", "", "", false)
 
     @Backlink(to = "order") lateinit var positionsList: ToMany<OrderPosition>
+    val positionsListUnmerged = mutableListOf<OrderPosition>()
+
     lateinit var client: ToOne<Client>
     val price: Double
-        get() = customPrice ?: positionsList.map { it.price*it.quantity }.sum()
+        get() = customPrice ?: positionsList.map { it.price * it.quantity }.sum()
 
-    fun suggestAction(): String =
-        when {
-            billType == BillingType.PREPAY ->
-                when {
-                    !isPaid -> OrderSuggestedAction.PAY
-                    status == OrderStatus.PRE_CREATED -> OrderSuggestedAction.CREATE
-                    status == OrderStatus.READY -> OrderSuggestedAction.CLOSE
-                    else -> OrderSuggestedAction.NOTHING
-                }
+    fun suggestAction(): String {
+        if (billType == BillingType.PREPAY){
+            if (!isPaid)
+                return OrderSuggestedAction.PAY
 
-            billType == BillingType.POSTPAY -> when {
-                status == OrderStatus.PRE_CREATED -> OrderSuggestedAction.CREATE
-                (status == OrderStatus.READY) && (!isPaid) -> OrderSuggestedAction.PAY
-                (status == OrderStatus.READY) && (isPaid) -> OrderSuggestedAction.CLOSE
-                else -> OrderSuggestedAction.NOTHING
-            }
-            !isPaid -> OrderSuggestedAction.PAY
-            else -> OrderSuggestedAction.NOTHING
+            if (status == OrderStatus.PRE_CREATED)
+                return OrderSuggestedAction.CREATE
+
+            if (status == OrderStatus.READY)
+                return OrderSuggestedAction.CLOSE
+
         }
+
+        if (billType == BillingType.POSTPAY){
+            if (status == OrderStatus.PRE_CREATED)
+                return OrderSuggestedAction.CREATE
+
+            if ((status == OrderStatus.READY) && (!isPaid))
+                return OrderSuggestedAction.PAY
+
+            if ((status == OrderStatus.READY) && (isPaid))
+                return OrderSuggestedAction.CLOSE
+        }
+
+        if (!isPaid)
+            return OrderSuggestedAction.PAY
+
+        return OrderSuggestedAction.NOTHING
+    }
 
     companion object {
         val serializer = jsonSerializer<Order> { (src, type, context) -> jsonObject(
@@ -57,7 +70,7 @@ import java.util.*
             "custom_price" to src.customPrice,
             "billing_type" to src.billType,
             "order_status" to src.status,
-            "created_at" to src.dateCreated,
+            "created_at" to context.serialize(src.dateCreated),
             "id_in_store" to src.internalId,
             "in_house_kvitok" to src.printLabel,
             "clients_kvitok" to src.printKvitok,
@@ -71,7 +84,7 @@ import java.util.*
             id = src["id"].asLong,
             customPrice = src.getOrNull("custom_price")?.asDouble,
             billType = src["billing_type"].asString,
-            status = src["status"].asString,
+            status = src["order_status"].asString,
             dateCreated = context.deserialize(src.getOrNull("created_at") ?: JsonNull.INSTANCE),
             internalId = src.getOrNull("id_in_store")?.asInt,
             printLabel = src.getOrNull("in_house_kvitok")?.asString,
@@ -86,7 +99,7 @@ import java.util.*
             src["positions_list"].asJsonArray.map { context.deserialize<OrderPosition>(it) }
                 .forEach {
                     it.order.target = this
-                    this.positionsList.add(it)
+                     this.positionsListUnmerged.add(it)
                 }
         } }
 

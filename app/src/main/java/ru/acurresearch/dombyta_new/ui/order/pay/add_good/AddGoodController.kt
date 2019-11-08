@@ -14,8 +14,11 @@ import ga.nk2ishere.dev.base.BaseLCE
 import ga.nk2ishere.dev.utils.ReducedTextWatcher
 import kotlinx.android.synthetic.main.activity_select_good.*
 import kotlinx.android.synthetic.main.activity_select_good.view.*
+import org.joda.time.DateTime
 import ru.acurresearch.dombyta.R
 import ru.acurresearch.dombyta_new.data.common.model.ServiceItemCustom
+import timber.log.Timber
+import java.util.*
 
 class AddGoodController(args: Bundle): BaseController(args), AddGoodView, AddGoodViewPMRenderer {
     companion object {
@@ -87,6 +90,14 @@ class AddGoodController(args: Bundle): BaseController(args), AddGoodView, AddGoo
         view.adding_price_holder.addTextChangedListener(ReducedTextWatcher {
             presenter.handleViewEvent(AddGoodViewPriceEditedEvent(it))
         })
+        with(DateTime()) {
+            view.datePickerDeadline.init(this.year, this.monthOfYear, this.dayOfMonth) { view, year, monthOfYear, dayOfMonth ->
+                presenter.handleViewEvent(AddGoodViewDateEditedEvent(year, monthOfYear, dayOfMonth))
+            }
+            view.timePickerDeadline.setOnTimeChangedListener { view, hourOfDay, minute ->
+                presenter.handleViewEvent(AddGoodViewTimeEditedEvent(hourOfDay, minute))
+            }
+        }
     }
 
     override fun applyAction(action: AddGoodViewAction) { when(action) {
