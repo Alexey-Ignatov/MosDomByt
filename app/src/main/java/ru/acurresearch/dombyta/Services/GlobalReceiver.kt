@@ -107,6 +107,7 @@ class GlobalReceiver : BroadcastReceiver() {
                         syncOrder(context, tmpOrder)
 
                         try {
+                            //code review: наличие взаимодействия с ui в сервисе "гарантировано" приводит к крашам
                             context.startActivity(intent)
                         } catch (e: RemoteException) {
                             e.printStackTrace()

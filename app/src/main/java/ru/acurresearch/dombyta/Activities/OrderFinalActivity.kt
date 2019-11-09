@@ -2,9 +2,9 @@ package ru.acurresearch.dombyta.Activities
 
 import android.app.AlertDialog
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -161,8 +161,8 @@ class OrderFinalActivity : AppCompatActivity() {
     }
 
     fun initPosistionsListView(){
-        var layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        var layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         order_list_final.layoutManager = layoutManager
         var adapter= OrderFinalViewAdapter(currOrder.positionsList, this)
         order_list_final.adapter = adapter

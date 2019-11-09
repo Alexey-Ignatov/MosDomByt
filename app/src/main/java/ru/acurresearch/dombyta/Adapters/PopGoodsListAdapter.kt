@@ -3,7 +3,7 @@ package ru.acurresearch.dombyta.Adapters
 
 import android.app.Activity
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import ru.acurresearch.dombyta.Activities.SelectPositionActivity
 import ru.acurresearch.dombyta.ServiceItemCustom
 
 
-class PopGoodsListAdapter(val items : List<ServiceItemCustom>, val context: Context,var activity: Activity) : RecyclerView.Adapter<PopGoodsListAdapter.ViewHolder>() {
+class PopGoodsListAdapter(val items : List<ServiceItemCustom>, val context: Context,var activity: Activity) : androidx.recyclerview.widget.RecyclerView.Adapter<PopGoodsListAdapter.ViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -34,7 +34,7 @@ class PopGoodsListAdapter(val items : List<ServiceItemCustom>, val context: Cont
     }
 
 
-    inner class ViewHolder (var view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder (var view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
 
 
