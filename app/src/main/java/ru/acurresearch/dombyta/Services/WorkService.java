@@ -2,10 +2,10 @@ package ru.acurresearch.dombyta.Services;
 
 import android.content.Intent;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
+
 import ru.acurresearch.dombyta.Activities.MainActivity;
 import ru.evotor.framework.core.IntegrationService;
 import ru.evotor.framework.core.action.event.receipt.discount.ReceiptDiscountEvent;

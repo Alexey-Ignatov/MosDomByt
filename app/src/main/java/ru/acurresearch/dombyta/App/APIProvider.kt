@@ -7,7 +7,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.acurresearch.dombyta.Constants
 
-
+//code review: желательно интегрировать dependency injection в проект
 object ApiProvider {
     fun provide(): Api = Retrofit.Builder()
         .baseUrl(Constants.BASE_URL)

@@ -1,0 +1,375 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:599355300759471571",
+      "lastPropertyId": "11:3478083818351398829",
+      "name": "Order",
+      "properties": [
+        {
+          "id": "1:3177016555405690500",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:4606280664106789952",
+          "name": "customPrice",
+          "type": 8,
+          "flags": 2
+        },
+        {
+          "id": "3:5026932469808087453",
+          "name": "billType",
+          "type": 9
+        },
+        {
+          "id": "4:7686045335063149611",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "5:1765729189802881917",
+          "name": "dateCreated",
+          "type": 10
+        },
+        {
+          "id": "6:7560217671892812769",
+          "name": "internalId",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "7:4171029033831452980",
+          "name": "printLabel",
+          "type": 9
+        },
+        {
+          "id": "8:4335245058873830329",
+          "name": "printKvitok",
+          "type": 9
+        },
+        {
+          "id": "9:5177587909937308912",
+          "name": "evoResUuid",
+          "type": 9
+        },
+        {
+          "id": "10:7155978872480511026",
+          "name": "isPaid",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "11:3478083818351398829",
+          "name": "clientId",
+          "indexId": "1:2284626530960676884",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Client"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8792237858713293361",
+      "lastPropertyId": "4:1094603081312935106",
+      "name": "Client",
+      "properties": [
+        {
+          "id": "1:1338331446256411228",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:7101504682888742508",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:5278863049600661854",
+          "name": "phone",
+          "type": 9
+        },
+        {
+          "id": "4:1094603081312935106",
+          "name": "orderId",
+          "indexId": "2:4273110860065422883",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Order"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8962670567524446453",
+      "lastPropertyId": "4:4660213816043591567",
+      "name": "Master",
+      "properties": [
+        {
+          "id": "1:8526774314192925242",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:6384409560528331279",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:4877867529061917689",
+          "name": "specialization",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:9205310007934826820",
+      "lastPropertyId": "7:1316768197930417549",
+      "name": "ServiceItemCustom",
+      "properties": [
+        {
+          "id": "1:5222894874873136315",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7026354325660974205",
+          "name": "uuid",
+          "type": 9
+        },
+        {
+          "id": "3:7090190124525499943",
+          "name": "productUUID",
+          "type": 9
+        },
+        {
+          "id": "4:8974242734661058693",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:6541959548120305412",
+          "name": "defPrice",
+          "type": 8,
+          "flags": 2
+        },
+        {
+          "id": "6:8383063489252028263",
+          "name": "defExpiresIn",
+          "type": 8,
+          "flags": 2
+        },
+        {
+          "id": "7:1316768197930417549",
+          "name": "orderPositionId",
+          "indexId": "4:6039813691377799525",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "OrderPosition"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:4947801167931941645",
+      "lastPropertyId": "4:4600632642163191009",
+      "name": "Check",
+      "properties": [
+        {
+          "id": "1:5489566047404756991",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:7554756701093830822",
+          "name": "uuid",
+          "type": 9
+        },
+        {
+          "id": "3:8760446144114680796",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "4:4600632642163191009",
+          "name": "number",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:4381482375924316499",
+      "lastPropertyId": "6:7828338772946059771",
+      "name": "Task",
+      "properties": [
+        {
+          "id": "1:5025415553953081516",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:5822642376146500387",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:9197279044723618616",
+          "name": "expDate",
+          "type": 10
+        },
+        {
+          "id": "4:1666307583803000576",
+          "name": "orderInternalId",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "5:2309721807500888105",
+          "name": "status",
+          "type": 9
+        },
+        {
+          "id": "6:7828338772946059771",
+          "name": "masterId",
+          "indexId": "5:5812143350066815715",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Master"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:8440458978771518123",
+      "lastPropertyId": "8:2555130632481184949",
+      "name": "OrderPosition",
+      "properties": [
+        {
+          "id": "1:1827611326286907096",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8327114495607164340",
+          "name": "uuid",
+          "type": 9
+        },
+        {
+          "id": "3:2152780217146999169",
+          "name": "quantity",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "4:8428966092930279570",
+          "name": "price",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "5:3804432225424059513",
+          "name": "productName",
+          "type": 9
+        },
+        {
+          "id": "6:3963271952240740504",
+          "name": "expDate",
+          "type": 10
+        },
+        {
+          "id": "7:8328601480025945495",
+          "name": "serviceItemId",
+          "indexId": "6:2808722125011606589",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "ServiceItemCustom"
+        },
+        {
+          "id": "8:2555130632481184949",
+          "name": "orderId",
+          "indexId": "7:4866649530280999624",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Order"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:7712807616568206182",
+      "lastPropertyId": "7:2163357277064015869",
+      "name": "CheckPosition",
+      "properties": [
+        {
+          "id": "1:1288583220250810497",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:3111058637076252064",
+          "name": "uuid",
+          "type": 9
+        },
+        {
+          "id": "3:7542831990997615936",
+          "name": "productUUID",
+          "type": 9
+        },
+        {
+          "id": "4:7849844545061899599",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:4904840911635266289",
+          "name": "quantity",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "6:3712863258712726787",
+          "name": "price",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "7:2163357277064015869",
+          "name": "checkId",
+          "indexId": "8:9174080361902123665",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Check"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "8:7712807616568206182",
+  "lastIndexId": "8:9174080361902123665",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [
+    3528654450923048890
+  ],
+  "retiredPropertyUids": [
+    4660213816043591567
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="ru.acurresearch.dombyta">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="ru.acurresearch.dombyta">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -17,34 +18,29 @@
     <uses-permission android:name="ru.evotor.pushnotifications.PUSH_RECEIVE"/>
 
     <application
-            android:name=".App.App"
+            android:name="ru.acurresearch.dombyta_new.App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-        <!--
-        <activity
-                android:name=".Activities.ChoosePayTypeActivity"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        -->
-        <activity android:name="ru.acurresearch.dombyta.Activities.MainActivity">
-        </activity>
+            android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true"
+            tools:ignore="GoogleAppIndexingWarning,InnerclassSeparator,UnusedAttribute">
 
-
-        <activity android:name=".Activities.SelectPositionActivity">
+        <activity android:name="ru.acurresearch.dombyta_new.ui.order.complete.OrderFinalActivityWrapper">
         </activity>
-        <activity android:name=".Activities.OrderFinalActivity">
+        <activity android:name="ru.acurresearch.dombyta_new.ui.order.pay.OrderPayActivity">
         </activity>
-        <activity android:name=".Activities.OrderSearchActivity">
+        <activity android:name="ru.acurresearch.dombyta_new.ui.order.pay.add_good.AddGoodActivity">
         </activity>
-        <activity android:name=".Activities.TokenActivity">
+        <activity android:name="ru.acurresearch.dombyta_new.ui.order.search.OrderSearchActivity">
+        </activity>
+        <activity android:name="ru.acurresearch.dombyta_new.ui.token.TokenActivity">
         </activity>
 
         <activity
-                android:name="ru.acurresearch.dombyta.Activities.ChoosePayTypeActivity"
+                android:name="ru.acurresearch.dombyta_new.ui.order.ChoosePayTypeActivity"
                 android:icon="@mipmap/ic_launcher"
                 android:label="Заказы">
             <meta-data
@@ -52,12 +48,14 @@
                     android:value="#9CCC65" />
             <intent-filter>
                 <action android:name="ru.evotor.intent.action.SELL_MAIN" />
-                <category android:name="android.intent.category.EVOTOR" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.EVOTOR"/>
+                <category android:name="android.intent.category.LAUNCHER" />
 
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.MasterConsolActivity"
+        <activity android:name="ru.acurresearch.dombyta_new.ui.master_console.MasterConsoleActivity"
                   android:icon="@mipmap/ic_launcher"
                   android:label="Очередь работ">
             <meta-data
@@ -72,72 +70,12 @@
             </intent-filter>
         </activity>
 
-
-        <!--
-                <service
-                        android:name=".Services.WorkService"
-                        android:enabled="true"
-                        android:exported="true"
-                        android:icon="@mipmap/ic_launcher"
-                        android:label="dombyta">
-                    <intent-filter android:priority="20">
-                        <category android:name="android.intent.category.DEFAULT"/>
-
-                        <action android:name="evo.v2.receipt.sell.receiptDiscount"/>
-                    </intent-filter>
-
-                    <meta-data
-                            android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
-                            android:value="#00FF00"/>
-                </service>
-
-
-                                <service
-                                        android:name=".SplitGroupService"
-                                        android:enabled="true"
-                                        android:exported="true">
-
-                                    <intent-filter android:priority="20">
-
-                                        <action android:name="evo.v2.receipt.sell.printGroup.REQUIRED" />
-                                    </intent-filter>
-                                </service>
-
-                       <service
-                               android:name=".MyPrintPaybackService"
-                               android:enabled="true"
-                               android:exported="true">
-                           <intent-filter  android:priority="20">
-                               <action android:name="evo.v2.receipt.sell.printExtra.REQUIRED" />
-                           </intent-filter>
-                       </service>
-
-
-
-
-
-                                          <meta-data
-                                              android:name="app_uuid"
-                                              android:value="4134ce0a-d86b-46a8-88cd-93c9cdda5b3a"/>
-                -->
         <meta-data
                 android:name="app_uuid"
                 android:value="7eba6fde-bb08-42a9-89dd-c20d003c40e8"/>
 
-
-        <!--
-       <service
-               android:name=".PutExtraEventService"
-               android:enabled="true"
-               android:exported="true">
-           <intent-filter android:priority="20">
-                <action android:name="evo.v2.receipt.sell.printExtra.REQUIRED" />
-
-            </intent-filter>
-        </service>
-        -->
         <receiver
-                android:name=".Services.GlobalReceiver"
+                android:name="ru.acurresearch.dombyta_new.services.GlobalService"
                 android:enabled="true"
                 android:exported="true">
 
@@ -261,14 +199,8 @@
             </intent-filter>
         </receiver>
 
-
-
         <receiver
-                android:name="ru.acurresearch.dombyta.Services.AlarmTaskReciver"
-                android:enabled="true"
-                android:exported="true"/>
-        <receiver
-                android:name=".Services.CheckClosedReceiver"
+                android:name="ru.acurresearch.dombyta_new.services.CheckClosedService"
                 android:enabled="true"
                 android:exported="true">
             <intent-filter android:priority="20">
