@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.gson.Gson
 import ga.nk2ishere.dev.base.BaseLCE
 import ga.nk2ishere.dev.base.BasePresenter
+import ga.nk2ishere.dev.utils.NeverEqualItemContainer
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.functions.BiFunction
@@ -12,7 +13,11 @@ import org.koin.core.inject
 import ru.acurresearch.dombyta.App.fromJson
 import ru.acurresearch.dombyta_new.data.common.interactor.MasterInteractor
 import ru.acurresearch.dombyta_new.data.common.interactor.TaskInteractor
+import ru.acurresearch.dombyta_new.data.common.model.Task
 import ru.acurresearch.dombyta_new.data.network.interactor.TokenInteractor
+import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_COMPLETE
+import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_IN_WORK
+import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_NEW
 import java.lang.Exception
 
 @InjectViewState
@@ -44,7 +49,10 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                 }.map { (token, tasks, masters) -> MasterConsoleViewPM(
                     token = token,
                     tasks = tasks,
-                    masters = masters
+                    masters = masters,
+                    tasksPageNew = BaseLCE(false, NeverEqualItemContainer(tasks.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf()), null),
+                    tasksPageInWork = BaseLCE(false, NeverEqualItemContainer(tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf()), null),
+                    tasksPageComplete = BaseLCE(false, NeverEqualItemContainer(tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf()), null)
                 ) }
                 .doOnNext { handleState(it) }
                 .map { when {
@@ -105,9 +113,9 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                 .map { MasterConsoleViewUpdateTabsAction(it) }
         }
 
-    private fun handleTaskNewClickedEvent(): ObservableTransformer<MasterConsoleTaskNewClickedEvent, MasterConsoleViewAction> =
+    private fun handleTaskNewClickedEvent(): ObservableTransformer<MasterConsoleViewTaskNewClickedEvent, MasterConsoleViewAction> =
         ObservableTransformer {
-            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleTaskNewClickedEvent, state: MasterConsoleViewPM ->
+            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleViewTaskNewClickedEvent, state: MasterConsoleViewPM ->
                 event to state
             }).doOnNext { (event, state) -> handleState(state) }
                 .map { (event, state) -> MasterConsoleViewShowTaskNewToInWorkDialogAction(
@@ -116,15 +124,34 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                 ) }
         }
 
-    private fun handleTaskInWorkClickedEvent(): ObservableTransformer<MasterConsoleTaskInWorkClickedEvent, MasterConsoleViewAction> =
+    private fun handleTaskInWorkClickedEvent(): ObservableTransformer<MasterConsoleViewTaskInWorkClickedEvent, MasterConsoleViewAction> =
         ObservableTransformer {
-            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleTaskInWorkClickedEvent, state: MasterConsoleViewPM ->
+            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleViewTaskInWorkClickedEvent, state: MasterConsoleViewPM ->
                 event to state
             }).doOnNext { (event, state) -> handleState(state) }
                 .map { (event, state) -> MasterConsoleViewShowTaskInWorkToCompleteDialog(
                     task = event.task,
                     pm = state
                 ) }
+        }
+
+    private fun handlePageUpdatedEvent(): ObservableTransformer<MasterConsoleViewPageUpdatedEvent, MasterConsoleViewAction> =
+        ObservableTransformer {
+            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleViewPageUpdatedEvent, state: MasterConsoleViewPM ->
+                event to state
+            }).map { (event, state) -> when(event.pageId) {
+                TASK_ITEM_VIEW_NEW -> state.copy(
+                    tasksPageNew = BaseLCE(false, NeverEqualItemContainer(state.tasks.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf()), null)
+                )
+                TASK_ITEM_VIEW_IN_WORK -> state.copy(
+                    tasksPageInWork = BaseLCE(false, NeverEqualItemContainer(state.tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf()), null)
+                )
+                TASK_ITEM_VIEW_COMPLETE -> state.copy(
+                    tasksPageComplete = BaseLCE(false, NeverEqualItemContainer(state.tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf()), null)
+                )
+                else -> state
+            } }.doOnNext { handleState(it) }
+                .map { MasterConsoleViewUpdatePMAction(it) }
         }
 
     override fun onFirstViewAttach() {
@@ -140,7 +167,8 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
             shared.ofType(MasterConsoleViewTokenUpdatedEvent::class.java).compose(handleTokenUpdatedEvent()),
             shared.ofType(MasterConsoleViewTaskInWorkEvent::class.java).compose(handleTaskInWorkEvent()),
             shared.ofType(MasterConsoleViewTaskCompleteEvent::class.java).compose(handleTaskCompleteEvent()),
-            shared.ofType(MasterConsoleTaskNewClickedEvent::class.java).compose(handleTaskNewClickedEvent()),
-            shared.ofType(MasterConsoleTaskInWorkClickedEvent::class.java).compose(handleTaskInWorkClickedEvent())
+            shared.ofType(MasterConsoleViewTaskNewClickedEvent::class.java).compose(handleTaskNewClickedEvent()),
+            shared.ofType(MasterConsoleViewTaskInWorkClickedEvent::class.java).compose(handleTaskInWorkClickedEvent()),
+            shared.ofType(MasterConsoleViewPageUpdatedEvent::class.java).compose(handlePageUpdatedEvent())
         )
 }

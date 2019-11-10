@@ -50,7 +50,7 @@ class MasterConsolePageController(
 
     override fun renderTasks(tasks: BaseLCE<List<Task>>) {
         tasks.content?.let {
-            taskListAdapter.update(it.map { getTaskItemView(it) })
+            taskListAdapter.updateAsync(it.map { getTaskItemView(it) })
         }
     }
 

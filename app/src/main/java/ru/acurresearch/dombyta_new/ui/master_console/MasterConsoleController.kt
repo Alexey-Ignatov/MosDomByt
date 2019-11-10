@@ -11,14 +11,19 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.support.RouterPagerAdapter
 import ga.nk2ishere.dev.base.BaseController
+import ga.nk2ishere.dev.base.BaseLCE
+import ga.nk2ishere.dev.utils.NeverEqualItemContainer
 import kotlinx.android.synthetic.main.activity_master_consol.view.*
 import ru.acurresearch.dombyta.R
+import ru.acurresearch.dombyta_new.data.common.model.Master
 import ru.acurresearch.dombyta_new.data.common.model.Task
 import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController
+import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_COMPLETE
+import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_IN_WORK
+import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_NEW
 import ru.acurresearch.dombyta_new.ui.token.TokenActivity
 
-class MasterConsoleController(args: Bundle): BaseController(args), MasterConsoleView {
-
+class MasterConsoleController(args: Bundle): BaseController(args), MasterConsoleView, MasterConsoleViewPMRenderer {
     companion object {
         fun create() =
             MasterConsoleController(Bundle.EMPTY)
@@ -29,13 +34,16 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
         const val TAB_TITLE_NULL = "NULL"
     }
 
-    private lateinit var state: MasterConsoleViewPM
+    private val diffElement = MasterConsoleViewPMDiffDispatcher.Builder()
+        .target(this)
+        .build()
+    private var state: MasterConsoleViewPM? = null
 
     private val onTaskItemNewClicked: (Task) -> Unit = {
-        presenter.handleViewEvent(MasterConsoleTaskNewClickedEvent(it))
+        presenter.handleViewEvent(MasterConsoleViewTaskNewClickedEvent(it))
     }
     private val onTaskItemInWorkClicked: (Task) -> Unit = {
-        presenter.handleViewEvent(MasterConsoleTaskInWorkClickedEvent(it))
+        presenter.handleViewEvent(MasterConsoleViewTaskInWorkClickedEvent(it))
     }
     private val onTaskItemCompleteClicked: (Task) -> Unit = onTaskItemNewClicked
 
@@ -53,20 +61,20 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
             override fun configureRouter(router: Router, position: Int) { when(position) {
                 0 -> router.setRoot(RouterTransaction.with(MasterConsolePageController(
                     args,
-                    MasterConsolePageController.TASK_ITEM_VIEW_NEW,
-                    MasterConsolePageController.TASK_ITEM_VIEW_NEW,
+                    TASK_ITEM_VIEW_NEW,
+                    TASK_ITEM_VIEW_NEW,
                     onTaskItemNewClicked
                 )))
                 1 -> router.setRoot(RouterTransaction.with(MasterConsolePageController(
                     args,
-                    MasterConsolePageController.TASK_ITEM_VIEW_IN_WORK,
-                    MasterConsolePageController.TASK_ITEM_VIEW_IN_WORK,
+                    TASK_ITEM_VIEW_IN_WORK,
+                    TASK_ITEM_VIEW_IN_WORK,
                     onTaskItemInWorkClicked
                 )))
                 2 -> router.setRoot(RouterTransaction.with(MasterConsolePageController(
                     args,
-                    MasterConsolePageController.TASK_ITEM_VIEW_COMPLETE,
-                    MasterConsolePageController.TASK_ITEM_VIEW_COMPLETE,
+                    TASK_ITEM_VIEW_COMPLETE,
+                    TASK_ITEM_VIEW_COMPLETE,
                     onTaskItemCompleteClicked
                 )))
             } }
@@ -76,40 +84,49 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
         override fun onPageSelected(position: Int) {
-            updateCurrentPage()
+            updateCurrentTab(position)
         }
     }
-    private fun updateCurrentPage() {
-        pagerAdapter.getRouter(view?.view_pager?.currentItem ?: 0)
+
+    private fun updateCurrentTab(position: Int) {
+        pagerAdapter.getRouter(position)
             ?.backstack?.mapNotNull { it.controller() as? MasterConsolePageController }
-            ?.forEach { it.handleUpdateDataEventOutside(
-                masters = state.masters,
-                tasks = when(it.id) {
-                    MasterConsolePageController.TASK_ITEM_VIEW_NEW -> state.tasks.copy(
-                        content = state.tasks.content?.filter { it.status == Task.TaskStatus.NEW }
-                    )
-                    MasterConsolePageController.TASK_ITEM_VIEW_IN_WORK -> state.tasks.copy(
-                        content = state.tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK }
-                    )
-                    MasterConsolePageController.TASK_ITEM_VIEW_COMPLETE -> state.tasks.copy(
-                        content = state.tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE }
-                    )
-                    else -> state.tasks
-                }
-            ) }
+            ?.forEach { presenter.handleViewEvent(MasterConsoleViewPageUpdatedEvent(it.id)) }
+    }
+
+    private fun updateTabById(id: String, tasks: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>) {
+        (0 until pagerAdapter.count).mapNotNull { pagerAdapter.getRouter(it) }
+            .flatMap { it.backstack }
+            .mapNotNull { it.controller() as? MasterConsolePageController }
+            .filter { it.id == id }
+            .forEach { it.handleUpdateDataEventOutside(tasks, masters) }
+    }
+
+    override fun renderTasksPageNew(tasksPageNew: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>) {
+        updateTabById(TASK_ITEM_VIEW_NEW, BaseLCE(false, tasksPageNew.content?.item, null), masters)
+    }
+
+    override fun renderTasksPageInWork(tasksPageInWork: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>) {
+        updateTabById(TASK_ITEM_VIEW_IN_WORK, BaseLCE(false, tasksPageInWork.content?.item, null), masters)
+    }
+
+    override fun renderTasksPageComplete(tasksPageComplete: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>) {
+        updateTabById(TASK_ITEM_VIEW_COMPLETE, BaseLCE(false, tasksPageComplete.content?.item, null), masters)
+    }
+
+    private fun updatePMAction(action: MasterConsoleViewUpdatePMAction) {
+        diffElement.dispatch(action.pm, state)
+        state = action.pm
     }
 
     private fun initializeTabsAction(action: MasterConsoleViewInitializeTabsAction) {
         view?.view_pager?.adapter = pagerAdapter
         view?.tabs?.setupWithViewPager(view?.view_pager)
-
-        state = action.pm
-        updateCurrentPage()
+        updateCurrentTab(view?.view_pager?.currentItem ?: 0)
     }
 
     private fun updateTabsAction(action: MasterConsoleViewUpdateTabsAction) {
-        state = action.pm
-        updateCurrentPage()
+        updateCurrentTab(view?.view_pager?.currentItem ?: 0)
     }
 
     private fun showLoginAction(action: MasterConsoleViewShowLoginAction) {
@@ -160,6 +177,7 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
     }
 
     override fun applyAction(action: MasterConsoleViewAction) { when(action) {
+        is MasterConsoleViewUpdatePMAction -> updatePMAction(action)
         is MasterConsoleViewInitializeTabsAction -> initializeTabsAction(action)
         is MasterConsoleViewUpdateTabsAction -> updateTabsAction(action)
     } }
