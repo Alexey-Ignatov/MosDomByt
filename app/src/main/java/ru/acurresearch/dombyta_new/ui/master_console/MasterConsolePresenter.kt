@@ -15,9 +15,6 @@ import ru.acurresearch.dombyta_new.data.common.interactor.MasterInteractor
 import ru.acurresearch.dombyta_new.data.common.interactor.TaskInteractor
 import ru.acurresearch.dombyta_new.data.common.model.Task
 import ru.acurresearch.dombyta_new.data.network.interactor.TokenInteractor
-import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_COMPLETE
-import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_IN_WORK
-import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_NEW
 import java.lang.Exception
 
 @InjectViewState
@@ -50,14 +47,14 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                     token = token,
                     tasks = tasks,
                     masters = masters,
-                    tasksPageNew = BaseLCE(false, NeverEqualItemContainer(tasks.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf()), null),
-                    tasksPageInWork = BaseLCE(false, NeverEqualItemContainer(tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf()), null),
-                    tasksPageComplete = BaseLCE(false, NeverEqualItemContainer(tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf()), null)
+                    tasksPageNew = BaseLCE(false, tasks.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf(), null),
+                    tasksPageInWork = BaseLCE(false, tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf(), null),
+                    tasksPageComplete = BaseLCE(false, tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf(), null)
                 ) }
                 .doOnNext { handleState(it) }
                 .map { when {
                     it.token.content == null -> MasterConsoleViewShowLoginAction()
-                    else -> MasterConsoleViewInitializeTabsAction(it)
+                    else -> MasterConsoleViewUpdatePMAction(it)
                 } }
         }
 
@@ -69,7 +66,10 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                 taskInteractor.updateTasks(state.token.content!!).map { BaseLCE(false, it, null) }
                     .onErrorReturn { BaseLCE(false, listOf(), it as? Exception) }
                     .map { state.copy(
-                        tasks = it
+                        tasks = it,
+                        tasksPageNew = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf(), null),
+                        tasksPageInWork = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf(), null),
+                        tasksPageComplete = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf(), null)
                     ) }
             }.switchMapSingle { state ->
                 masterInteractor.updateMasters(state.token.content!!).map { BaseLCE(false, it, null) }
@@ -78,7 +78,7 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                         masters = it
                     ) }
             }.doOnNext { handleState(it) }
-                .map { MasterConsoleViewUpdateTabsAction(it) }
+                .map { MasterConsoleViewUpdatePMAction(it) }
         }
 
     private fun handleTaskInWorkEvent(): ObservableTransformer<MasterConsoleViewTaskInWorkEvent, MasterConsoleViewAction> =
@@ -91,10 +91,13 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                     .flatMap { taskInteractor.getTasks() }
                     .map { BaseLCE(false, it, null) }
                     .map { state.copy(
-                        tasks = it
+                        tasks = it,
+                        tasksPageNew = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf(), null),
+                        tasksPageInWork = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf(), null),
+                        tasksPageComplete = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf(), null)
                     ) }
             }.doOnNext { handleState(it) }
-                .map { MasterConsoleViewUpdateTabsAction(it) }
+                .map { MasterConsoleViewUpdatePMAction(it) }
         }
 
     private fun handleTaskCompleteEvent(): ObservableTransformer<MasterConsoleViewTaskCompleteEvent, MasterConsoleViewAction> =
@@ -107,10 +110,13 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                     .flatMap { taskInteractor.getTasks() }
                     .map { BaseLCE(false, it, null) }
                     .map { state.copy(
-                        tasks = it
+                        tasks = it,
+                        tasksPageNew = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf(), null),
+                        tasksPageInWork = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf(), null),
+                        tasksPageComplete = BaseLCE(false, it.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf(), null)
                     ) }
             }.doOnNext { handleState(it) }
-                .map { MasterConsoleViewUpdateTabsAction(it) }
+                .map { MasterConsoleViewUpdatePMAction(it) }
         }
 
     private fun handleTaskNewClickedEvent(): ObservableTransformer<MasterConsoleViewTaskNewClickedEvent, MasterConsoleViewAction> =
@@ -135,25 +141,6 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
                 ) }
         }
 
-    private fun handlePageUpdatedEvent(): ObservableTransformer<MasterConsoleViewPageUpdatedEvent, MasterConsoleViewAction> =
-        ObservableTransformer {
-            Observable.zip(it, it.flatMap { state }, BiFunction { event: MasterConsoleViewPageUpdatedEvent, state: MasterConsoleViewPM ->
-                event to state
-            }).map { (event, state) -> when(event.pageId) {
-                TASK_ITEM_VIEW_NEW -> state.copy(
-                    tasksPageNew = BaseLCE(false, NeverEqualItemContainer(state.tasks.content?.filter { it.status == Task.TaskStatus.NEW } ?: listOf()), null)
-                )
-                TASK_ITEM_VIEW_IN_WORK -> state.copy(
-                    tasksPageInWork = BaseLCE(false, NeverEqualItemContainer(state.tasks.content?.filter { it.status == Task.TaskStatus.IN_WORK } ?: listOf()), null)
-                )
-                TASK_ITEM_VIEW_COMPLETE -> state.copy(
-                    tasksPageComplete = BaseLCE(false, NeverEqualItemContainer(state.tasks.content?.filter { it.status == Task.TaskStatus.COMPLETE } ?: listOf()), null)
-                )
-                else -> state
-            } }.doOnNext { handleState(it) }
-                .map { MasterConsoleViewUpdatePMAction(it) }
-        }
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         handleViewEvent(MasterConsoleViewInitializeEvent())
@@ -168,7 +155,6 @@ class MasterConsolePresenter: BasePresenter<MasterConsoleViewAction, MasterConso
             shared.ofType(MasterConsoleViewTaskInWorkEvent::class.java).compose(handleTaskInWorkEvent()),
             shared.ofType(MasterConsoleViewTaskCompleteEvent::class.java).compose(handleTaskCompleteEvent()),
             shared.ofType(MasterConsoleViewTaskNewClickedEvent::class.java).compose(handleTaskNewClickedEvent()),
-            shared.ofType(MasterConsoleViewTaskInWorkClickedEvent::class.java).compose(handleTaskInWorkClickedEvent()),
-            shared.ofType(MasterConsoleViewPageUpdatedEvent::class.java).compose(handlePageUpdatedEvent())
+            shared.ofType(MasterConsoleViewTaskInWorkClickedEvent::class.java).compose(handleTaskInWorkClickedEvent())
         )
 }

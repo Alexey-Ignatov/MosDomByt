@@ -4,23 +4,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.viewpager.widget.ViewPager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.bluelinelabs.conductor.Router
-import com.bluelinelabs.conductor.RouterTransaction
-import com.bluelinelabs.conductor.support.RouterPagerAdapter
+import com.xwray.groupie.ExpandableGroup
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Section
 import ga.nk2ishere.dev.base.BaseController
 import ga.nk2ishere.dev.base.BaseLCE
-import ga.nk2ishere.dev.utils.NeverEqualItemContainer
 import kotlinx.android.synthetic.main.activity_master_consol.view.*
 import ru.acurresearch.dombyta.R
 import ru.acurresearch.dombyta_new.data.common.model.Master
 import ru.acurresearch.dombyta_new.data.common.model.Task
-import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController
-import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_COMPLETE
-import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_IN_WORK
-import ru.acurresearch.dombyta_new.ui.master_console.page.MasterConsolePageController.Companion.TASK_ITEM_VIEW_NEW
+import ru.acurresearch.dombyta_new.ui.master_console.item.ExpandableHeaderItem
+import ru.acurresearch.dombyta_new.ui.master_console.item.TaskItemComplete
+import ru.acurresearch.dombyta_new.ui.master_console.item.TaskItemInWork
+import ru.acurresearch.dombyta_new.ui.master_console.item.TaskItemNew
 import ru.acurresearch.dombyta_new.ui.token.TokenActivity
 
 class MasterConsoleController(args: Bundle): BaseController(args), MasterConsoleView, MasterConsoleViewPMRenderer {
@@ -31,7 +31,6 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
         const val TAB_TITLE_NEW = "Новые"
         const val TAB_TITLE_IN_WORK = "В работе"
         const val TAB_TITLE_COMPLETE = "Завершенные"
-        const val TAB_TITLE_NULL = "NULL"
     }
 
     private val diffElement = MasterConsoleViewPMDiffDispatcher.Builder()
@@ -47,86 +46,35 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
     }
     private val onTaskItemCompleteClicked: (Task) -> Unit = onTaskItemNewClicked
 
-    private val pagerAdapter: RouterPagerAdapter =
-        object: RouterPagerAdapter(this) {
-            override fun getCount(): Int = 3
-            override fun getPageTitle(position: Int): CharSequence? =
-                when(position) {
-                    0 -> TAB_TITLE_NEW
-                    1 -> TAB_TITLE_IN_WORK
-                    2 -> TAB_TITLE_COMPLETE
-                    else -> TAB_TITLE_NULL
-                }
+    private val tasksAdapter = GroupAdapter<GroupieViewHolder>()
+    private val newTasksExpandableGroup = ExpandableGroup(ExpandableHeaderItem(TAB_TITLE_NEW), true)
+    private val inWorkTasksExpandableGroup = ExpandableGroup(ExpandableHeaderItem(TAB_TITLE_IN_WORK), true)
+    private val completeTasksExpandableGroup = ExpandableGroup(ExpandableHeaderItem(TAB_TITLE_COMPLETE), true)
+    private val newTasksSection = Section()
+    private val inWorkTasksSection = Section()
+    private val completeTasksSection = Section()
 
-            override fun configureRouter(router: Router, position: Int) { when(position) {
-                0 -> router.setRoot(RouterTransaction.with(MasterConsolePageController(
-                    args,
-                    TASK_ITEM_VIEW_NEW,
-                    TASK_ITEM_VIEW_NEW,
-                    onTaskItemNewClicked
-                )))
-                1 -> router.setRoot(RouterTransaction.with(MasterConsolePageController(
-                    args,
-                    TASK_ITEM_VIEW_IN_WORK,
-                    TASK_ITEM_VIEW_IN_WORK,
-                    onTaskItemInWorkClicked
-                )))
-                2 -> router.setRoot(RouterTransaction.with(MasterConsolePageController(
-                    args,
-                    TASK_ITEM_VIEW_COMPLETE,
-                    TASK_ITEM_VIEW_COMPLETE,
-                    onTaskItemCompleteClicked
-                )))
-            } }
-        }
-    private val pageChangeListener = object: ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) = Unit
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
-
-        override fun onPageSelected(position: Int) {
-            updateCurrentTab(position)
-        }
+    override fun renderTasksPageNew(tasksPageNew: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>) {
+        newTasksSection.update(
+            tasksPageNew.content?.map { TaskItemNew(it, onTaskItemNewClicked) } ?: listOf()
+        )
     }
 
-    private fun updateCurrentTab(position: Int) {
-        pagerAdapter.getRouter(position)
-            ?.backstack?.mapNotNull { it.controller() as? MasterConsolePageController }
-            ?.forEach { presenter.handleViewEvent(MasterConsoleViewPageUpdatedEvent(it.id)) }
+    override fun renderTasksPageInWork(tasksPageInWork: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>) {
+        inWorkTasksSection.update(
+            tasksPageInWork.content?.map { TaskItemInWork(it, onTaskItemInWorkClicked) } ?: listOf()
+        )
     }
 
-    private fun updateTabById(id: String, tasks: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>) {
-        (0 until pagerAdapter.count).mapNotNull { pagerAdapter.getRouter(it) }
-            .flatMap { it.backstack }
-            .mapNotNull { it.controller() as? MasterConsolePageController }
-            .filter { it.id == id }
-            .forEach { it.handleUpdateDataEventOutside(tasks, masters) }
-    }
-
-    override fun renderTasksPageNew(tasksPageNew: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>) {
-        updateTabById(TASK_ITEM_VIEW_NEW, BaseLCE(false, tasksPageNew.content?.item, null), masters)
-    }
-
-    override fun renderTasksPageInWork(tasksPageInWork: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>) {
-        updateTabById(TASK_ITEM_VIEW_IN_WORK, BaseLCE(false, tasksPageInWork.content?.item, null), masters)
-    }
-
-    override fun renderTasksPageComplete(tasksPageComplete: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>) {
-        updateTabById(TASK_ITEM_VIEW_COMPLETE, BaseLCE(false, tasksPageComplete.content?.item, null), masters)
+    override fun renderTasksPageComplete(tasksPageComplete: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>) {
+        completeTasksSection.update(
+            tasksPageComplete.content?.map { TaskItemComplete(it, onTaskItemCompleteClicked) } ?: listOf()
+        )
     }
 
     private fun updatePMAction(action: MasterConsoleViewUpdatePMAction) {
         diffElement.dispatch(action.pm, state)
         state = action.pm
-    }
-
-    private fun initializeTabsAction(action: MasterConsoleViewInitializeTabsAction) {
-        view?.view_pager?.adapter = pagerAdapter
-        view?.tabs?.setupWithViewPager(view?.view_pager)
-        updateCurrentTab(view?.view_pager?.currentItem ?: 0)
-    }
-
-    private fun updateTabsAction(action: MasterConsoleViewUpdateTabsAction) {
-        updateCurrentTab(view?.view_pager?.currentItem ?: 0)
     }
 
     private fun showLoginAction(action: MasterConsoleViewShowLoginAction) {
@@ -173,13 +121,18 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
     override fun getLayoutId(): Int = R.layout.activity_master_consol
 
     override fun initView(view: View) {
-        view.view_pager.addOnPageChangeListener(pageChangeListener)
+        tasksAdapter.add(newTasksExpandableGroup)
+        tasksAdapter.add(inWorkTasksExpandableGroup)
+        tasksAdapter.add(completeTasksExpandableGroup)
+        newTasksExpandableGroup.add(newTasksSection)
+        inWorkTasksExpandableGroup.add(inWorkTasksSection)
+        completeTasksExpandableGroup.add(completeTasksSection)
+        view.task_list.adapter = tasksAdapter
+        view.task_list.layoutManager = GridLayoutManager(view.context, 1, GridLayoutManager.VERTICAL, false)
     }
 
     override fun applyAction(action: MasterConsoleViewAction) { when(action) {
         is MasterConsoleViewUpdatePMAction -> updatePMAction(action)
-        is MasterConsoleViewInitializeTabsAction -> initializeTabsAction(action)
-        is MasterConsoleViewUpdateTabsAction -> updateTabsAction(action)
     } }
 
     override fun applyActionWithSkip(action: MasterConsoleViewAction) { when(action) {

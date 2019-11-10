@@ -1,4 +1,4 @@
-package ru.acurresearch.dombyta_new.ui.master_console.page.item
+package ru.acurresearch.dombyta_new.ui.master_console.item
 
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -18,13 +18,17 @@ class TaskItemComplete(
     override fun getLayout(): Int = R.layout.list_item_complete_tasks_list
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        val time_diff = task.expDate!!.getTime() - Date().getTime()
+        val timeDiff = task.expDate!!.time - Date().time
         val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN, Locale.getDefault())
+        val hoursLeft = TimeUnit.HOURS.convert(timeDiff, TimeUnit.MILLISECONDS)
 
         viewHolder.itemView.complete_item_exp_in_holder.text = simpleDateFormat.format(task.expDate)
         viewHolder.itemView.complete_item_name.text = task.name ?: "???"
         viewHolder.itemView.complete_item_order_no_holder.text = task.orderInternalId?.toString() ?: "???"
-        viewHolder.itemView.complete_items_days_left.text = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS).toString()
+        viewHolder.itemView.complete_items_days_left.text = when {
+            hoursLeft < 0 -> "0, просрочено на ${-hoursLeft}"
+            else -> hoursLeft.toString()
+        }
         viewHolder.itemView.complete_item_master.text = task.master.target.name
 
         viewHolder.itemView.setOnClickListener { onTaskItemClicked(task) }

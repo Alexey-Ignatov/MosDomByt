@@ -134,9 +134,9 @@ class MasterConsolActivity : AppCompatActivity() {
 
 
 
-        view_pager.adapter = sectionsPagerAdapter
+//        view_pager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(ru.acurresearch.dombyta.R.id.tabs)
-        tabs.setupWithViewPager(view_pager)
+//        tabs.setupWithViewPager(view_pager)
 
     }
 

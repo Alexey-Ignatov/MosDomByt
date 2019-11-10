@@ -1,4 +1,4 @@
-package ru.acurresearch.dombyta_new.ui.master_console.page.item
+package ru.acurresearch.dombyta_new.ui.master_console.item
 
 import android.graphics.Color
 import com.xwray.groupie.GroupieViewHolder

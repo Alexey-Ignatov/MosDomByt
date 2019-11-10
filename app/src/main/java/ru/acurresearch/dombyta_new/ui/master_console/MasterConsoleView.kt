@@ -15,15 +15,15 @@ data class MasterConsoleViewPM(
     val token: BaseLCE<CashBoxServerData>,
     val tasks: BaseLCE<List<Task>>,
     val masters: BaseLCE<List<Master>>,
-    val tasksPageNew: BaseLCE<NeverEqualItemContainer<List<Task>>>,
-    val tasksPageInWork: BaseLCE<NeverEqualItemContainer<List<Task>>>,
-    val tasksPageComplete: BaseLCE<NeverEqualItemContainer<List<Task>>>
+    val tasksPageNew: BaseLCE<List<Task>>,
+    val tasksPageInWork: BaseLCE<List<Task>>,
+    val tasksPageComplete: BaseLCE<List<Task>>
 )
 
 interface MasterConsoleViewPMRenderer {
-    fun renderTasksPageNew(tasksPageNew: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>)
-    fun renderTasksPageInWork(tasksPageInWork: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>)
-    fun renderTasksPageComplete(tasksPageComplete: BaseLCE<NeverEqualItemContainer<List<Task>>>, masters: BaseLCE<List<Master>>)
+    fun renderTasksPageNew(tasksPageNew: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>)
+    fun renderTasksPageInWork(tasksPageInWork: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>)
+    fun renderTasksPageComplete(tasksPageComplete: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>)
 }
 
 sealed class MasterConsoleViewEvent
@@ -37,13 +37,10 @@ data class MasterConsoleViewTaskInWorkEvent(
 data class MasterConsoleViewTaskCompleteEvent(val task: Task): MasterConsoleViewEvent()
 data class MasterConsoleViewTaskNewClickedEvent(val task: Task): MasterConsoleViewEvent()
 data class MasterConsoleViewTaskInWorkClickedEvent(val task: Task): MasterConsoleViewEvent()
-data class MasterConsoleViewPageUpdatedEvent(val pageId: String): MasterConsoleViewEvent()
 
 sealed class MasterConsoleViewAction
 
 data class MasterConsoleViewUpdatePMAction(val pm: MasterConsoleViewPM): MasterConsoleViewAction()
-data class MasterConsoleViewInitializeTabsAction(val pm: MasterConsoleViewPM): MasterConsoleViewAction()
-data class MasterConsoleViewUpdateTabsAction(val pm: MasterConsoleViewPM): MasterConsoleViewAction()
 
 sealed class MasterConsoleViewSkipAction: MasterConsoleViewAction()
 
