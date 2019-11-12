@@ -1,0 +1,75 @@
+package ru.acurresearch.dombyta.data.network
+
+import io.reactivex.Single
+import retrofit2.http.*
+import ru.acurresearch.dombyta.data.common.model.*
+import ru.acurresearch.dombyta.data.network.model.*
+
+interface Api {
+    @GET("/checkneedpoll/{ID}/")
+    fun checkPollNeeded(
+        @Path("ID") customerId: String
+    ) : Single<NeedPollResult>
+
+    @GET("/compl_tels/{NUM}/")
+    fun getComplTels(
+        @Path("NUM") numberToShow: Int
+    ) : Single<List<String>>
+
+    @PUT("/setphone/{ID}/")
+    fun setPhone(
+        @Body phoneNumber: PhoneNumber,
+        @Path("ID") uuid: String
+    ): Single<String>
+
+
+    @POST("/api/orders/")
+    fun sendOrder(
+        @Body orderToSend: Order,
+        @Header("Authorization-Acur") token: String
+    ): Single<Order>
+
+
+    @GET("/api/servitems/")
+    fun fetchAllowedProds(
+        @Header("Authorization-Acur") token: String
+    ): Single<List<ServiceItemCustom>>
+
+    @GET("/api/masters/")
+    fun fetchMasters(
+        @Header("Authorization-Acur") token: String
+    ): Single<List<Master>>
+
+    @GET("/api/tasks/")
+    fun fetchTasks(
+        @Header("Authorization-Acur") token: String
+    ): Single<List<Task>>
+
+    @GET("/api/orders/search/{SEARCHSTR}/")
+    fun searchOrder(
+        @Path("SEARCHSTR") searchStr: String,
+        @Header("Authorization-Acur") token: String
+    ): Single<List<Order>>
+
+    @PUT("/api/tasks/{ID}/")
+    fun syncServerTask(
+        @Body task: Task,
+        @Path("ID") task_id: Int,
+        @Header("Authorization-Acur") token: String
+    ): Single<Task>
+
+    @PUT("/api/orders/update/{ID}/")
+    fun syncOrderStatus(
+        @Body order: Order,
+        @Path("ID") order_id: Int,
+        @Header("Authorization-Acur") token: String
+    ): Single<Order>
+
+    @POST("/api/cashbox/register-token/")
+    fun getToken(
+        @Body token: SiteToken
+    ):  Single<CashBoxServerData>
+
+
+}
+

@@ -18,7 +18,7 @@
     <uses-permission android:name="ru.evotor.pushnotifications.PUSH_RECEIVE"/>
 
     <application
-            android:name="ru.acurresearch.dombyta_new.App"
+            android:name=".App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -28,19 +28,19 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning,InnerclassSeparator,UnusedAttribute">
 
-        <activity android:name="ru.acurresearch.dombyta_new.ui.order.complete.OrderFinalActivityWrapper">
+        <activity android:name=".ui.order.complete.OrderFinalActivityWrapper">
         </activity>
-        <activity android:name="ru.acurresearch.dombyta_new.ui.order.pay.OrderPayActivity">
+        <activity android:name=".ui.order.pay.OrderPayActivity">
         </activity>
-        <activity android:name="ru.acurresearch.dombyta_new.ui.order.pay.add_good.AddGoodActivity">
+        <activity android:name=".ui.order.pay.add_good.AddGoodActivity">
         </activity>
-        <activity android:name="ru.acurresearch.dombyta_new.ui.order.search.OrderSearchActivity">
+        <activity android:name=".ui.order.search.OrderSearchActivity">
         </activity>
-        <activity android:name="ru.acurresearch.dombyta_new.ui.token.TokenActivity">
+        <activity android:name=".ui.token.TokenActivity">
         </activity>
 
         <activity
-                android:name="ru.acurresearch.dombyta_new.ui.order.ChoosePayTypeActivity"
+                android:name=".ui.order.ChoosePayTypeActivity"
                 android:icon="@mipmap/ic_launcher"
                 android:label="Заказы">
             <meta-data
@@ -55,7 +55,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="ru.acurresearch.dombyta_new.ui.master_console.MasterConsoleActivity"
+        <activity android:name=".ui.master_console.MasterConsoleActivity"
                   android:icon="@mipmap/ic_launcher"
                   android:label="Очередь работ">
             <meta-data
@@ -75,7 +75,7 @@
                 android:value="7eba6fde-bb08-42a9-89dd-c20d003c40e8"/>
 
         <receiver
-                android:name="ru.acurresearch.dombyta_new.services.GlobalService"
+                android:name=".services.GlobalService"
                 android:enabled="true"
                 android:exported="true">
 
@@ -200,7 +200,7 @@
         </receiver>
 
         <receiver
-                android:name="ru.acurresearch.dombyta_new.services.CheckClosedService"
+                android:name=".services.CheckClosedService"
                 android:enabled="true"
                 android:exported="true">
             <intent-filter android:priority="20">
