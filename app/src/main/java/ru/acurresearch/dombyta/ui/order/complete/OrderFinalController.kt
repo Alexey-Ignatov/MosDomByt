@@ -18,6 +18,7 @@ import com.xwray.groupie.GroupieViewHolder
 import ga.nk2ishere.dev.base.BaseController
 import ga.nk2ishere.dev.base.BaseLCE
 import kotlinx.android.synthetic.main.activity_order_final.view.*
+import ru.acurresearch.dombyta.App
 import ru.acurresearch.dombyta.R
 import ru.acurresearch.dombyta.data.common.model.Check
 import ru.acurresearch.dombyta.data.common.model.CheckPosition
@@ -66,7 +67,9 @@ class OrderFinalController(args: Bundle): BaseController(args), OrderFinalView, 
                     Constants.DEFAULT_DEVICE_INDEX,
                     PrinterDocument(PrintableText(text))
                 )
-            } catch (e: Exception) { /*pass*/ }
+            } catch (e: Exception) {
+                App.log(e)
+            }
         }).start()
     }
 
@@ -159,6 +162,8 @@ class OrderFinalController(args: Bundle): BaseController(args), OrderFinalView, 
     override fun initView(view: View) {
         view.order_list_final.layoutManager = GridLayoutManager(view.context, 1, GridLayoutManager.VERTICAL, false)
         view.order_list_final.adapter = positionsAdapter
+        DeviceServiceConnector.clearConnectionWrappers()
+        DeviceServiceConnector.startDeinitConnections()
         DeviceServiceConnector.startInitConnections(applicationContext, true)
         DeviceServiceConnector.addConnectionWrapper(object : ConnectionWrapper {
             override fun onPrinterServiceDisconnected() = Unit

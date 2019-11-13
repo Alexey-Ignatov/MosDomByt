@@ -78,7 +78,7 @@ class OrderFinalPresenter(
     private fun handlePrintClickedEvent(): ObservableTransformer<OrderFinalViewPrintClickedEvent, OrderFinalViewAction> =
         ObservableTransformer {
             it.flatMap { state }
-                .filter { it.printerInitialized.content == true }
+//                .filter { it.printerInitialized.content == true }
                 .switchMapSingle { state ->
                     orderInteractor.updateOrder(
                         state.token.content!!,

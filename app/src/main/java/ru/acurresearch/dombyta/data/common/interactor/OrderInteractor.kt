@@ -101,12 +101,18 @@ class OrderInteractor(
         token: CashBoxServerData,
         order: Order,
         orderAlreadyExists: Boolean
-    ) = when(orderAlreadyExists) {
-        true -> api.syncOrderStatus(order, order.id.toInt(), token.authHeader)
-        false -> api.sendOrder(order, token.authHeader)
-    }.flatMap {
-        mergeOrderPositionsInOrder(it)
-            .andThen(Single.just(it))
+    ) = when {
+        orderAlreadyExists -> api.syncOrderStatus(order, order.id.toInt(), token.authHeader)
+            .flatMap {
+                mergeOrderPositionsInOrder(it)
+                    .andThen(Single.just(it))
+            }
+        !orderAlreadyExists && order.status != Order.OrderStatus.PRE_CREATED -> api.sendOrder(order, token.authHeader)
+            .flatMap {
+                mergeOrderPositionsInOrder(it)
+                    .andThen(Single.just(it))
+            }
+        else -> Single.just(order)
     }
 
     fun updateServiceItems(
