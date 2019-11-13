@@ -18,6 +18,7 @@ class TokenInteractor(
     companion object {
         const val KEY_TOKEN = "TOKEN"
         const val KEY_DEV_TOKEN = "DEV"
+        const val KEY_PROD_TOKEN = "a"
     }
 
     fun updateToken(

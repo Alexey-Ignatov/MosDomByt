@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -70,6 +71,7 @@ class OrderFinalController(args: Bundle): BaseController(args), OrderFinalView, 
     }
 
     override fun renderCurrentOrder(currentOrder: BaseLCE<Order>) {
+        if(currentOrder.error != null) Toast.makeText(view?.context, "Ошибка: заказ не передан, попробуйте еще раз.", Toast.LENGTH_LONG).show()
         view?.order_client_name_holder?.text = currentOrder.content?.client?.target!!.name
         view?.order_client_phone_holder?.text = currentOrder.content?.client?.target!!.phone
         view?.order_final_total_price?.text = "${currentOrder.content?.price} руб."

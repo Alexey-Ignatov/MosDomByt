@@ -9,6 +9,7 @@ import ru.acurresearch.dombyta.data.common.model.Task
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class TaskItemComplete(
     private val task: Task,
@@ -25,10 +26,8 @@ class TaskItemComplete(
         viewHolder.itemView.complete_item_exp_in_holder.text = simpleDateFormat.format(task.expDate)
         viewHolder.itemView.complete_item_name.text = task.name ?: "???"
         viewHolder.itemView.complete_item_order_no_holder.text = task.orderInternalId?.toString() ?: "???"
-        viewHolder.itemView.complete_items_days_left.text = when {
-            hoursLeft < 0 -> "0, просрочено на ${-hoursLeft}"
-            else -> hoursLeft.toString()
-        }
+        viewHolder.itemView.complete_items_days_left.text = abs(hoursLeft).toString()
+        if(hoursLeft < 0) viewHolder.itemView.time_text.text = "Часов просрочено"
         viewHolder.itemView.complete_item_master.text = task.master.target.name
 
         viewHolder.itemView.setOnClickListener { onTaskItemClicked(task) }

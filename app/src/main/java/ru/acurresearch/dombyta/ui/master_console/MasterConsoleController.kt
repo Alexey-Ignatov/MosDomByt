@@ -3,6 +3,7 @@ package ru.acurresearch.dombyta.ui.master_console
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -53,6 +54,10 @@ class MasterConsoleController(args: Bundle): BaseController(args), MasterConsole
     private val newTasksSection = Section()
     private val inWorkTasksSection = Section()
     private val completeTasksSection = Section()
+
+    override fun renderTasks(tasks: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>) {
+        if(tasks.error != null || masters.error != null) Toast.makeText(view?.context, "Ошибка: работы не переданы, попробуйте еще раз.", Toast.LENGTH_LONG).show()
+    }
 
     override fun renderTasksPageNew(tasksPageNew: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>) {
         newTasksSection.update(

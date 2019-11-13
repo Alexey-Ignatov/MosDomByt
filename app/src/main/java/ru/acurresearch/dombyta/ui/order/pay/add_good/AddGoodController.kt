@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -33,6 +34,7 @@ class AddGoodController(args: Bundle): BaseController(args), AddGoodView, AddGoo
     }
 
     override fun renderGoods(goods: BaseLCE<List<ServiceItemCustom>>) {
+        if(goods.error != null) Toast.makeText(view?.context, "Ошибка: товары не переданы, попробуйте еще раз.", Toast.LENGTH_LONG).show()
         goodsAdapter.update(
             goods.content?.map { GoodItem(it, onGoodClicked) } ?: listOf()
         )

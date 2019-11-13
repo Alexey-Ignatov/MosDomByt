@@ -23,6 +23,7 @@ interface MasterConsoleViewPMRenderer {
     fun renderTasksPageNew(tasksPageNew: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>)
     fun renderTasksPageInWork(tasksPageInWork: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>)
     fun renderTasksPageComplete(tasksPageComplete: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>)
+    fun renderTasks(tasks: BaseLCE<List<Task>>, masters: BaseLCE<List<Master>>)
 }
 
 sealed class MasterConsoleViewEvent

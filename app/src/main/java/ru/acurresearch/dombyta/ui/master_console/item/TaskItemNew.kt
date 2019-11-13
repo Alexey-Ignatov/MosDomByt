@@ -10,6 +10,7 @@ import ru.acurresearch.dombyta.data.common.model.Task
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class TaskItemNew(
     private val task: Task,
@@ -19,13 +20,15 @@ class TaskItemNew(
     override fun getLayout(): Int = R.layout.list_item_new_tasks_list
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        val time_diff = task.expDate!!.getTime() - Date().getTime()
-        val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN)
-        val hoursLeft = TimeUnit.HOURS.convert(time_diff, TimeUnit.MILLISECONDS)
+        val timeDiff = task.expDate!!.time - Date().time
+        val simpleDateFormat = SimpleDateFormat(Constants.DATE_PATTERN, Locale.getDefault())
+        val hoursLeft = TimeUnit.HOURS.convert(timeDiff, TimeUnit.MILLISECONDS)
+
         viewHolder.itemView.new_task_item_exp_in_holder.text = simpleDateFormat.format(task.expDate)
         viewHolder.itemView.new_task_item_name.text = task.name ?: "???"
         viewHolder.itemView.new_task_item_order_no_holder.text = task.orderInternalId?.toString() ?: "???"
-        viewHolder.itemView.new_task_items_days_left.text = hoursLeft.toString()
+        if(hoursLeft < 0) viewHolder.itemView.time_text.text = "Часов просрочено"
+        viewHolder.itemView.new_task_items_days_left.text = abs(hoursLeft).toString()
         viewHolder.itemView.new_task_item_master.text = task.master.target?.name ?: "???"
 
         if (hoursLeft < 0) viewHolder.itemView.new_task_item_list_card.setCardBackgroundColor(Color.parseColor("#80EF5350"))

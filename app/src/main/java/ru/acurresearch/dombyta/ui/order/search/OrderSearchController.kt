@@ -2,6 +2,7 @@ package ru.acurresearch.dombyta.ui.order.search
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -33,6 +34,7 @@ class OrderSearchController(args: Bundle): BaseController(args), OrderSearchView
     }
 
     override fun renderFoundOrders(foundOrders: BaseLCE<List<Order>>) {
+        if(foundOrders.error != null) Toast.makeText(view?.context, "Ошибка: заказы не переданы, попробуйте еще раз.", Toast.LENGTH_LONG).show()
         foundOrdersAdapter.update(
             foundOrders.content?.map { OrderSearchItem(it, onOrderClicked) } ?: listOf()
         )

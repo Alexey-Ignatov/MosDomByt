@@ -3,6 +3,7 @@ package ru.acurresearch.dombyta.ui.token
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import ga.nk2ishere.dev.base.BaseController
@@ -26,7 +27,7 @@ class TokenController(args: Bundle): BaseController(args), TokenView, TokenViewP
     private var state: TokenViewPM? = null
 
     override fun renderToken(token: BaseLCE<CashBoxServerData>) {
-
+        if(token.error != null) Toast.makeText(view?.context, "Ошибка: токен не передан, попробуйте еще раз.", Toast.LENGTH_LONG).show()
     }
 
     private fun updatePMAction(action: TokenViewUpdatePMAction) {

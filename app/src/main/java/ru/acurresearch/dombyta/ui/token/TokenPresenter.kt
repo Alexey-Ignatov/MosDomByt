@@ -11,6 +11,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import ru.acurresearch.dombyta.data.network.interactor.TokenInteractor
 import ru.acurresearch.dombyta.data.network.interactor.TokenInteractor.Companion.KEY_DEV_TOKEN
+import ru.acurresearch.dombyta.data.network.interactor.TokenInteractor.Companion.KEY_PROD_TOKEN
 import ru.acurresearch.dombyta.data.network.model.CashBoxServerData
 import ru.acurresearch.dombyta.data.network.model.SiteToken
 import java.lang.Exception
@@ -33,7 +34,7 @@ class TokenPresenter: BasePresenter<TokenViewAction, TokenViewEvent, TokenView, 
     private fun handleLoginClickedEvent() =
         ObservableTransformer<TokenViewLoginClickedEvent, TokenViewAction> {
             Observable.zip(
-                it.switchMapSingle { tokenInteractor.updateToken(SiteToken(KEY_DEV_TOKEN)) }
+                it.switchMapSingle { tokenInteractor.updateToken(SiteToken(KEY_PROD_TOKEN)) }
                     .map { BaseLCE(false, it, null) }
                     .onErrorReturn { BaseLCE(false, null, it as? Exception) },
                 it.flatMap { state },

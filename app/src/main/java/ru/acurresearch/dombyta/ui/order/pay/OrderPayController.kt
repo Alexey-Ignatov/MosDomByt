@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -44,6 +45,7 @@ class OrderPayController(args: Bundle): BaseController(args), OrderPayView, Orde
     }
 
     override fun renderOrder(order: BaseLCE<NeverEqualItemContainer<Order>>) {
+        if(order.error != null) Toast.makeText(view?.context, "Ошибка: заказ не передан, попробуйте еще раз.", Toast.LENGTH_LONG).show()
         order.content?.item?.let {
             view?.total_count_txt?.text = "Услуги (${it.price} руб.)"
             goodsAdapter.update(it.positionsList.map {
